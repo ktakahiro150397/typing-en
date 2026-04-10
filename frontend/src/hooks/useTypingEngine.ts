@@ -4,6 +4,8 @@ export interface KeyEvent {
   key: string
   correct: boolean
   timestamp: number
+  /** そのとき入力しようとしていたテキスト上の位置 */
+  position: number
 }
 
 export interface TypingState {
@@ -12,7 +14,6 @@ export interface TypingState {
   typed: string
   cursor: number
   misses: number
-  /** 直前のキー入力がミスだったか（カーソル位置の赤表示用） */
   currentMiss: boolean
   keyHistory: KeyEvent[]
   isComplete: boolean
@@ -34,7 +35,6 @@ export function useTypingEngine(initialText: string): TypingEngine {
 
       const startedAt = prev.startedAt ?? Date.now()
 
-      // Backspace: 1文字戻る
       if (key === 'Backspace') {
         if (prev.cursor === 0) return { ...prev, currentMiss: false }
         return {
@@ -46,17 +46,21 @@ export function useTypingEngine(initialText: string): TypingEngine {
         }
       }
 
-      // 1文字以外は無視
       if (key.length !== 1) return prev
 
       const expected = prev.text[prev.cursor]
       const correct = key === expected
 
-      const event: KeyEvent = { key, correct, timestamp: Date.now() }
-      const newHistory = [...prev.keyHistory, event].slice(-20)
+      const event: KeyEvent = {
+        key,
+        correct,
+        timestamp: Date.now(),
+        position: prev.cursor,
+      }
+      // 最新100件を保持（分析用に多めに）
+      const newHistory = [...prev.keyHistory, event].slice(-100)
 
       if (!correct) {
-        // ミス: カーソルを進めない
         return {
           ...prev,
           misses: prev.misses + 1,
@@ -66,7 +70,6 @@ export function useTypingEngine(initialText: string): TypingEngine {
         }
       }
 
-      // 正解: カーソルを進める
       const newTyped = prev.typed + key
       const newCursor = prev.cursor + 1
       const isComplete = newCursor >= prev.text.length
