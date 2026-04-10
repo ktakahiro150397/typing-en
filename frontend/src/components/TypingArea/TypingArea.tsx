@@ -7,10 +7,8 @@ interface Props {
 }
 
 export function TypingArea({ state, onKey }: Props) {
-  // ブラウザにフォーカスがあれば入力を受け付ける（要素フォーカス不要）
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      // ブラウザデフォルト動作（スクロール・検索など）を抑制
       if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
         e.preventDefault()
       }
@@ -37,24 +35,25 @@ function TextDisplay({ state }: { state: TypingState }) {
   return (
     <div className="font-mono text-2xl leading-relaxed tracking-wider whitespace-pre-wrap break-all">
       {text.split('').map((char, i) => {
-        let className: string
+        const isSpace = char === ' '
+        const display = isSpace ? '·' : char
 
+        let className: string
         if (i < cursor) {
-          // 正しく入力済み
-          className = 'text-green-400'
+          className = isSpace ? 'text-green-600' : 'text-green-400'
         } else if (i === cursor) {
-          // 現在のカーソル位置
           className = currentMiss
             ? 'text-white bg-red-600 rounded animate-pulse'
-            : 'text-white bg-gray-600 rounded'
+            : isSpace
+              ? 'text-amber-300 bg-gray-600 rounded'
+              : 'text-white bg-gray-600 rounded'
         } else {
-          // 未入力
-          className = 'text-gray-500'
+          className = isSpace ? 'text-amber-500/60' : 'text-gray-500'
         }
 
         return (
           <span key={i} className={className}>
-            {char}
+            {display}
           </span>
         )
       })}
@@ -75,9 +74,9 @@ function CompleteBanner({
   const accuracy = Math.round(((text.length - misses) / text.length) * 100)
 
   return (
-    <div className="text-center py-8">
-      <p className="text-3xl font-bold text-green-400 mb-4">Complete!</p>
-      <div className="flex gap-8 justify-center text-lg text-gray-300">
+    <div className="text-center py-6">
+      <p className="text-2xl font-bold text-green-400 mb-3">Complete!</p>
+      <div className="flex gap-8 justify-center text-base text-gray-300">
         <span>
           精度 <strong className="text-white">{accuracy}%</strong>
         </span>
@@ -88,6 +87,7 @@ function CompleteBanner({
           時間 <strong className="text-white">{seconds.toFixed(1)}s</strong>
         </span>
       </div>
+      <p className="text-gray-500 text-sm mt-3 animate-pulse">次の問題へ移動中...</p>
     </div>
   )
 }
