@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 
 export interface KeyEvent {
   key: string
@@ -8,9 +8,12 @@ export interface KeyEvent {
 
 export interface TypingState {
   text: string
+  /** 正しく入力済みの文字列。length === cursor */
   typed: string
   cursor: number
   misses: number
+  /** 直前のキー入力がミスだったか（カーソル位置の赤表示用） */
+  currentMiss: boolean
   keyHistory: KeyEvent[]
   isComplete: boolean
   startedAt: number | null
@@ -24,7 +27,6 @@ export interface TypingEngine {
 
 export function useTypingEngine(initialText: string): TypingEngine {
   const [state, setState] = useState<TypingState>(() => makeInitialState(initialText))
-  const textRef = useRef(initialText)
 
   const handleKey = useCallback((key: string) => {
     setState((prev) => {
@@ -32,14 +34,14 @@ export function useTypingEngine(initialText: string): TypingEngine {
 
       const startedAt = prev.startedAt ?? Date.now()
 
-      // Backspace: 直前の文字を削除
+      // Backspace: 1文字戻る
       if (key === 'Backspace') {
-        if (prev.cursor === 0) return prev
-        const newTyped = prev.typed.slice(0, -1)
+        if (prev.cursor === 0) return { ...prev, currentMiss: false }
         return {
           ...prev,
-          typed: newTyped,
+          typed: prev.typed.slice(0, -1),
           cursor: prev.cursor - 1,
+          currentMiss: false,
           startedAt,
         }
       }
@@ -49,26 +51,31 @@ export function useTypingEngine(initialText: string): TypingEngine {
 
       const expected = prev.text[prev.cursor]
       const correct = key === expected
-      const newTyped = prev.typed + key
-      const newCursor = prev.cursor + 1
-      const newMisses = correct ? prev.misses : prev.misses + 1
 
-      const event: KeyEvent = {
-        key,
-        correct,
-        timestamp: Date.now(),
-      }
-
-      // 最新20件の打鍵履歴を保持
+      const event: KeyEvent = { key, correct, timestamp: Date.now() }
       const newHistory = [...prev.keyHistory, event].slice(-20)
 
-      const isComplete = newCursor >= prev.text.length && correct
+      if (!correct) {
+        // ミス: カーソルを進めない
+        return {
+          ...prev,
+          misses: prev.misses + 1,
+          currentMiss: true,
+          keyHistory: newHistory,
+          startedAt,
+        }
+      }
+
+      // 正解: カーソルを進める
+      const newTyped = prev.typed + key
+      const newCursor = prev.cursor + 1
+      const isComplete = newCursor >= prev.text.length
 
       return {
         ...prev,
         typed: newTyped,
         cursor: newCursor,
-        misses: newMisses,
+        currentMiss: false,
         keyHistory: newHistory,
         isComplete,
         startedAt,
@@ -77,7 +84,6 @@ export function useTypingEngine(initialText: string): TypingEngine {
   }, [])
 
   const reset = useCallback((text: string) => {
-    textRef.current = text
     setState(makeInitialState(text))
   }, [])
 
@@ -90,6 +96,7 @@ function makeInitialState(text: string): TypingState {
     typed: '',
     cursor: 0,
     misses: 0,
+    currentMiss: false,
     keyHistory: [],
     isComplete: false,
     startedAt: null,

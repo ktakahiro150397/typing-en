@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import type { TypingState } from '../../hooks/useTypingEngine'
 
 interface Props {
@@ -7,27 +7,21 @@ interface Props {
 }
 
 export function TypingArea({ state, onKey }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  // フォーカスを当ててキーイベントを受け取る
+  // ブラウザにフォーカスがあれば入力を受け付ける（要素フォーカス不要）
   useEffect(() => {
-    containerRef.current?.focus()
-  }, [])
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    // ブラウザデフォルト動作（スクロールなど）を抑制
-    if (e.key === ' ') e.preventDefault()
-    onKey(e.key)
-  }
+    function handleKeyDown(e: KeyboardEvent) {
+      // ブラウザデフォルト動作（スクロール・検索など）を抑制
+      if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+        e.preventDefault()
+      }
+      onKey(e.key)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onKey])
 
   return (
-    <div
-      ref={containerRef}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      className="outline-none select-none"
-      aria-label="タイピングエリア"
-    >
+    <div className="select-none">
       {state.isComplete ? (
         <CompleteBanner misses={state.misses} text={state.text} startedAt={state.startedAt} />
       ) : (
@@ -38,18 +32,26 @@ export function TypingArea({ state, onKey }: Props) {
 }
 
 function TextDisplay({ state }: { state: TypingState }) {
-  const { text, typed, cursor } = state
+  const { text, cursor, currentMiss } = state
 
   return (
     <div className="font-mono text-2xl leading-relaxed tracking-wider whitespace-pre-wrap break-all">
       {text.split('').map((char, i) => {
-        let className = 'text-gray-500' // 未入力
-        if (i < typed.length) {
-          // 入力済み: typed[i] と text[i] を比較
-          className = typed[i] === char ? 'text-green-400' : 'text-red-400 underline'
+        let className: string
+
+        if (i < cursor) {
+          // 正しく入力済み
+          className = 'text-green-400'
         } else if (i === cursor) {
-          className = 'text-white bg-gray-600 rounded'
+          // 現在のカーソル位置
+          className = currentMiss
+            ? 'text-white bg-red-600 rounded animate-pulse'
+            : 'text-white bg-gray-600 rounded'
+        } else {
+          // 未入力
+          className = 'text-gray-500'
         }
+
         return (
           <span key={i} className={className}>
             {char}
