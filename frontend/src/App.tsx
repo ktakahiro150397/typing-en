@@ -2,8 +2,11 @@ import { useState, useCallback, useEffect } from 'react'
 import { TypingArea } from './components/TypingArea/TypingArea'
 import { CommandHistory } from './components/CommandHistory/CommandHistory'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
+import { LoginScreen } from './components/LoginScreen/LoginScreen'
 import { useTypingSession } from './hooks/useTypingSession'
 import { generateWordSequence } from './utils/textGenerator'
+import { useAuthStore } from './stores/authStore'
+import { apiFetch } from './lib/api'
 
 function normalizeText(text: string): string {
   const t = text.trim()
@@ -16,7 +19,64 @@ function generateSessionTexts(count: number): string[] {
 
 const DEFAULT_COUNT = 3
 
+interface AuthMe {
+  id: string
+  name: string
+  email: string
+  createdAt: string
+}
+
 export default function App() {
+  const { user, token, setAuth, clearAuth } = useAuthStore()
+  const [authLoaded, setAuthLoaded] = useState(false)
+  const [authError, setAuthError] = useState(false)
+
+  // Handle OAuth callback token and session restore on mount
+  useEffect(() => {
+    // Debug: bypass Google OAuth with a dummy account
+    if (import.meta.env.VITE_AUTH_MOCK === 'true') {
+      setAuth({ id: 'mock-user', name: 'Mock User', email: 'mock@example.com' }, 'mock-token')
+      setAuthLoaded(true)
+      return
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    const callbackToken = params.get('token')
+    const errorParam = params.get('error')
+
+    if (errorParam) {
+      clearAuth()
+      setAuthError(true)
+      setAuthLoaded(true)
+      window.history.replaceState(null, '', '/')
+      return
+    }
+
+    const activeToken = callbackToken ?? token
+    if (!activeToken) {
+      setAuthLoaded(true)
+      return
+    }
+
+    // Store the callback token before fetching /auth/me
+    if (callbackToken) {
+      localStorage.setItem('token', callbackToken)
+    }
+
+    apiFetch<AuthMe>('/auth/me')
+      .then((me) => {
+        setAuth({ id: me.id, name: me.name, email: me.email }, activeToken)
+        if (callbackToken) {
+          window.history.replaceState(null, '', '/')
+        }
+      })
+      .catch(() => {
+        clearAuth()
+      })
+      .finally(() => setAuthLoaded(true))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const [texts, setTexts] = useState<string[]>(() => generateSessionTexts(DEFAULT_COUNT))
 
   const { engineState, handleKey, phase, currentIndex, totalCount, result, restartSession, sessionMisses } =
@@ -37,6 +97,18 @@ export default function App() {
     setTexts(next)
     restartSession(next)
   }, [restartSession])
+
+  if (!authLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-gray-600 border-t-indigo-400 rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LoginScreen error={authError} />
+  }
 
   if (phase === 'results' && result) {
     return <ResultsScreen result={result} totalCount={totalCount} onRestart={handleRestart} />

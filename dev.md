@@ -5,7 +5,7 @@
 | Phase | 内容 | 状態 |
 |---|---|---|
 | 1 | プロジェクト基盤構築 | ✅ 完了 |
-| 2 | Google OAuth + JWT 認証 | ⬜ 未着手 |
+| 2 | Google OAuth + JWT 認証 | ✅ 完了 |
 | 3 | 文章管理 (CRUD + CSV インポート) | ⬜ 未着手 |
 | 4 | タイピングエンジン（コア） | ✅ 完了 |
 | 5 | セッション保存 & 苦手ワード自動検出 | 🔄 フロントのみ実装済み |
@@ -75,7 +75,32 @@ BigramStat     ← Bigram（運指ペア）統計（User に属する）
 
 ## Phase 2: Google OAuth + JWT 認証
 
-（実装後に記載）
+### 実装内容
+
+- `backend/src/routes/auth.ts` — `@fastify/passport` + `passport-google-oauth20` による Google OAuth フロー
+  - `GET /auth/google` — Google の認証画面へリダイレクト
+  - `GET /auth/google/callback` — コールバック受信 → `prisma.user.upsert()` → JWT 署名 → `FRONTEND_URL?token=<jwt>` へリダイレクト
+  - `GET /auth/me` — JWT 検証済みユーザー情報を返す（`authenticateJWT` preHandler）
+  - `POST /auth/logout` — 200 OK（JWT はステートレス。クライアントが localStorage をクリア）
+- `backend/src/middleware/authenticate.ts` — Authorization ヘッダの Bearer JWT を検証し `req.user` にセット。失敗時 401
+- `backend/src/types.d.ts` — `PassportUser extends User`（Prisma）型拡張
+- `backend/src/index.ts` — `@fastify/session` / `fastifyPassport.initialize()` / `fastifyPassport.secureSession()` 登録
+- `frontend/src/components/LoginScreen/LoginScreen.tsx` — ダークテーマのログイン画面（"Sign in with Google" ボタン）
+- `frontend/src/App.tsx` — auth gate 追加。ローディング → LoginScreen → ゲーム画面の遷移
+  - `?token=` コールバック検知 → `/auth/me` 呼び出し → `setAuth()` → URL クリーン
+  - localStorage にトークンあり → `/auth/me` で session restore
+
+### 設計判断
+
+- **JWT 有効期限 7 日**（`expiresIn: '7d'`）。リフレッシュトークンは Phase 2 スコープ外
+- `@fastify/session` は OAuth コールバックのハンドシェイク用のみ使用。ゲーム機能はすべて JWT で認証
+- **デバッグ用モックフラグ**: `frontend/.env.local` に `VITE_AUTH_MOCK=true` を設定すると Google 認証をスキップしてダミーユーザーで即ログイン
+
+### 既知の問題・TODO
+
+- Google Cloud Console で `http://localhost:3000/auth/google/callback` を承認済みリダイレクト URI に登録する必要あり
+- ゲーム画面内のログアウトボタンは未実装（Phase 3 以降で追加予定）
+- JWT リフレッシュ未実装（7 日後は再ログインが必要）
 
 ---
 
