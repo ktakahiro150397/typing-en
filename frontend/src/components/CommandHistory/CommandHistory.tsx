@@ -15,7 +15,7 @@ export function CommandHistory({ history }: Props) {
   }
 
   return (
-    <div className="flex flex-row-reverse gap-1 items-center flex-wrap-reverse">
+    <div className="flex flex-row-reverse gap-1 items-center overflow-hidden">
       {[...history].reverse().map((event, i) => (
         <KeyBadge key={i} event={event} opacity={1 - i * 0.04} />
       ))}

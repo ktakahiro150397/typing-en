@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { TypingState } from '../../hooks/useTypingEngine'
 
 interface Props {
@@ -7,6 +7,9 @@ interface Props {
 }
 
 export function TypingArea({ state, onKey }: Props) {
+  const [lockRemaining, setLockRemaining] = useState(0)
+
+  // ブラウザフォーカスで入力受付
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code)) e.preventDefault()
@@ -16,9 +19,29 @@ export function TypingArea({ state, onKey }: Props) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onKey])
 
+  // ロックカウントダウン
+  useEffect(() => {
+    if (!state.lockedUntil) {
+      setLockRemaining(0)
+      return
+    }
+    const tick = () => setLockRemaining(Math.max(0, state.lockedUntil! - Date.now()))
+    tick()
+    const id = setInterval(tick, 50)
+    return () => clearInterval(id)
+  }, [state.lockedUntil])
+
   return (
     <div className="select-none">
       <TextDisplay state={state} />
+      {/* ロックタイマー表示 */}
+      <div className="h-6 mt-2 flex items-center justify-end">
+        {lockRemaining > 0 && (
+          <span className="font-mono text-sm text-red-400 animate-pulse">
+            ⛔ {(lockRemaining / 1000).toFixed(1)}s
+          </span>
+        )}
+      </div>
     </div>
   )
 }
@@ -35,7 +58,6 @@ function TextDisplay({ state }: { state: TypingState }) {
         let className: string
 
         if (isComplete) {
-          // 完了時: 全文字を緑に
           className = isSpace ? 'text-green-600' : 'text-green-400'
         } else if (i < cursor) {
           className = isSpace ? 'text-green-600' : 'text-green-400'

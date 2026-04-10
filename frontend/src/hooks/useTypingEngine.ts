@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
 export interface KeyEvent {
   key: string
@@ -15,6 +15,8 @@ export interface TypingState {
   cursor: number
   misses: number
   currentMiss: boolean
+  /** 入力ロック解除時刻 (ms)。null = ロックなし */
+  lockedUntil: number | null
   keyHistory: KeyEvent[]
   isComplete: boolean
   startedAt: number | null
@@ -26,10 +28,17 @@ export interface TypingEngine {
   reset: (text: string) => void
 }
 
+const MISS_LOCK_MS = 1000
+
 export function useTypingEngine(initialText: string): TypingEngine {
   const [state, setState] = useState<TypingState>(() => makeInitialState(initialText))
+  // ロック判定を setState の外で行うためのref
+  const lockedUntilRef = useRef<number>(0)
 
   const handleKey = useCallback((key: string) => {
+    // ロック中は文字入力を無視（Backspaceは許可）
+    if (key !== 'Backspace' && key.length === 1 && Date.now() < lockedUntilRef.current) return
+
     setState((prev) => {
       if (prev.isComplete) return prev
 
@@ -42,6 +51,7 @@ export function useTypingEngine(initialText: string): TypingEngine {
           typed: prev.typed.slice(0, -1),
           cursor: prev.cursor - 1,
           currentMiss: false,
+          lockedUntil: null,
           startedAt,
         }
       }
@@ -51,25 +61,24 @@ export function useTypingEngine(initialText: string): TypingEngine {
       const expected = prev.text[prev.cursor]
       const correct = key === expected
 
-      const event: KeyEvent = {
-        key,
-        correct,
-        timestamp: Date.now(),
-        position: prev.cursor,
-      }
-      // 最新100件を保持（分析用に多めに）
+      const event: KeyEvent = { key, correct, timestamp: Date.now(), position: prev.cursor }
       const newHistory = [...prev.keyHistory, event].slice(-100)
 
       if (!correct) {
+        const lockEnd = Date.now() + MISS_LOCK_MS
+        lockedUntilRef.current = lockEnd
         return {
           ...prev,
           misses: prev.misses + 1,
           currentMiss: true,
+          lockedUntil: lockEnd,
           keyHistory: newHistory,
           startedAt,
         }
       }
 
+      // 正解: ロック解除 + カーソル前進
+      lockedUntilRef.current = 0
       const newTyped = prev.typed + key
       const newCursor = prev.cursor + 1
       const isComplete = newCursor >= prev.text.length
@@ -79,6 +88,7 @@ export function useTypingEngine(initialText: string): TypingEngine {
         typed: newTyped,
         cursor: newCursor,
         currentMiss: false,
+        lockedUntil: null,
         keyHistory: newHistory,
         isComplete,
         startedAt,
@@ -87,6 +97,7 @@ export function useTypingEngine(initialText: string): TypingEngine {
   }, [])
 
   const reset = useCallback((text: string) => {
+    lockedUntilRef.current = 0
     setState(makeInitialState(text))
   }, [])
 
@@ -100,6 +111,7 @@ function makeInitialState(text: string): TypingState {
     cursor: 0,
     misses: 0,
     currentMiss: false,
+    lockedUntil: null,
     keyHistory: [],
     isComplete: false,
     startedAt: null,
