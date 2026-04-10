@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type { TypingState } from '../../hooks/useTypingEngine'
 
 interface Props {
   state: TypingState
   onKey: (key: string) => void
+  lockRemaining: number
 }
 
-export function TypingArea({ state, onKey }: Props) {
-  const [lockRemaining, setLockRemaining] = useState(0)
-
+export function TypingArea({ state, onKey, lockRemaining }: Props) {
   // ブラウザフォーカスで入力受付
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -18,18 +17,6 @@ export function TypingArea({ state, onKey }: Props) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onKey])
-
-  // ロックカウントダウン
-  useEffect(() => {
-    if (!state.lockedUntil) {
-      setLockRemaining(0)
-      return
-    }
-    const tick = () => setLockRemaining(Math.max(0, state.lockedUntil! - Date.now()))
-    tick()
-    const id = setInterval(tick, 50)
-    return () => clearInterval(id)
-  }, [state.lockedUntil])
 
   return (
     <div className="select-none">

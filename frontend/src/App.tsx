@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { TypingArea } from './components/TypingArea/TypingArea'
 import { CommandHistory } from './components/CommandHistory/CommandHistory'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
@@ -21,6 +21,16 @@ export default function App() {
 
   const { engineState, handleKey, phase, currentIndex, totalCount, result, restartSession, sessionMisses } =
     useTypingSession(texts)
+
+  // ロック残り時間（App側で持ち、枠色制御と TypingArea 表示に使う）
+  const [lockRemaining, setLockRemaining] = useState(0)
+  useEffect(() => {
+    if (!engineState.lockedUntil) { setLockRemaining(0); return }
+    const tick = () => setLockRemaining(Math.max(0, engineState.lockedUntil! - Date.now()))
+    tick()
+    const id = setInterval(tick, 50)
+    return () => clearInterval(id)
+  }, [engineState.lockedUntil])
 
   const handleRestart = useCallback(() => {
     const next = generateSessionTexts(DEFAULT_COUNT)
@@ -60,8 +70,8 @@ export default function App() {
         </div>
 
         {/* 現在の問題 */}
-        <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${engineState.currentMiss ? 'ring-red-600' : 'ring-gray-600'}`}>
-          <TypingArea state={engineState} onKey={handleKey} />
+        <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${lockRemaining > 0 ? 'ring-red-600' : 'ring-gray-600'}`}>
+          <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
         </div>
 
         {/* 次の問題 — 固定高さ */}
