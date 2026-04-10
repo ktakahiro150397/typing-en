@@ -64,7 +64,9 @@ export function ResultsScreen({ result, totalCount, onRestart }: Props) {
               {bigramStats.map((b) => (
                 <li key={b.bigram} className="flex items-center justify-between">
                   <span className="font-mono text-white tracking-widest">
-                    {b.bigram[0] === ' ' ? '·' : b.bigram[0]}→{b.bigram[1] === ' ' ? '·' : b.bigram[1]}
+                    {b.bigram[0] === ' '
+                      ? b.bigram[1]
+                      : `${b.bigram[0]}→${b.bigram[1]}`}
                   </span>
                   <span className="text-sm text-red-400 ml-4">
                     {b.misses}/{b.attempts}
