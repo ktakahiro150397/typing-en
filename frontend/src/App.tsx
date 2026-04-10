@@ -60,7 +60,7 @@ export default function App() {
         </div>
 
         {/* 現在の問題 */}
-        <div className="w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-1 ring-gray-600">
+        <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${engineState.currentMiss ? 'ring-red-600' : 'ring-gray-600'}`}>
           <TypingArea state={engineState} onKey={handleKey} />
         </div>
 
