@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String        @id @default(cuid())
+  googleId    String        @unique
+  email       String        @unique
+  name        String
+  createdAt   DateTime      @default(now())
+  sentences   Sentence[]
+  weakWords   WeakWord[]
+  sessions    Session[]
+  bigramStats BigramStat[]
+}
+
+model Sentence {
+  id        String    @id @default(cuid())
+  userId    String
+  text      String    @db.Text
+  note      String?   @db.Text
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions  Session[]
+
+  @@unique([userId, text(length: 500)])
+}
+
+model WeakWord {
+  id        String   @id @default(cuid())
+  userId    String
+  word      String
+  missRate  Float
+  note      String?  @db.Text
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, word])
+}
+
+model Session {
+  id          String        @id @default(cuid())
+  userId      String
+  sentenceId  String?
+  mode        String        @default("sentence") // "sentence" | "weak_word" | "random"
+  totalKeys   Int
+  missKeys    Int
+  durationMs  Int
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sentence    Sentence?     @relation(fields: [sentenceId], references: [id], onDelete: SetNull)
+  sessionWords SessionWord[]
+}
+
+model SessionWord {
+  id        String  @id @default(cuid())
+  sessionId String
+  word      String
+  misses    Int
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model BigramStat {
+  id       String @id @default(cuid())
+  userId   String
+  bigram   String // e.g. "wa", "qw"
+  attempts Int    @default(0)
+  misses   Int    @default(0)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bigram])
+}
