@@ -151,18 +151,14 @@ export function useTypingSession(texts: string[]) {
 
     const nextIndex = currentIndex + 1
 
-    // 0.5秒後に進める（完了フラッシュを見せるため）
-    const timer = setTimeout(() => {
-      if (nextIndex >= texts.length) {
-        setResult(analyzeProblems(recordsRef.current))
-        setPhase('results')
-      } else {
-        setCurrentIndex(nextIndex)
-        reset(texts[nextIndex])
-      }
-    }, 500)
-
-    return () => clearTimeout(timer)
+    // 即時遷移（遅延なし）
+    if (nextIndex >= texts.length) {
+      setResult(analyzeProblems(recordsRef.current))
+      setPhase('results')
+    } else {
+      setCurrentIndex(nextIndex)
+      reset(texts[nextIndex])
+    }
   }, [engineState.isComplete]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const restartSession = useCallback(

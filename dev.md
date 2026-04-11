@@ -6,10 +6,10 @@
 |---|---|---|
 | 1 | プロジェクト基盤構築 | ✅ 完了 |
 | 2 | Google OAuth + JWT 認証 | ✅ 完了 |
-| 3 | 文章管理 (CRUD + CSV インポート) | ⬜ 未着手 |
+| 3 | 文章管理 (CRUD + CSV インポート) | ✅ 完了 |
 | 4 | タイピングエンジン（コア） | ✅ 完了 |
-| 5 | セッション保存 & 苦手ワード自動検出 | 🔄 フロントのみ実装済み |
-| 6 | Bigram（運指ペア）分析 | 🔄 フロントのみ実装済み |
+| 5 | セッション保存 & 苦手ワード自動検出 | 🔄 フロント分析のみ実装済み（DB未保存） |
+| 6 | Bigram（運指ペア）分析 | 🔄 フロント分析のみ実装済み（DB未保存） |
 | 7 | 苦手ワード集中練習モード | ⬜ 未着手 |
 | 8 | テスト & 最終調整 | ⬜ 未着手 |
 
@@ -106,7 +106,44 @@ BigramStat     ← Bigram（運指ペア）統計（User に属する）
 
 ## Phase 3: 文章管理
 
-（実装後に記載）
+### 実装内容
+
+#### バックエンド API (`backend/src/routes/sentences.ts`)
+
+| メソッド | パス | 内容 |
+|---|---|---|
+| GET | /api/sentences | 一覧取得（最新200件 + total） |
+| POST | /api/sentences | 1件作成 |
+| PATCH | /api/sentences/:id | 更新（text / note） |
+| DELETE | /api/sentences/:id | 削除 |
+| POST | /api/sentences/import | CSV インポート（1ファイル） |
+
+- 全エンドポイント JWT 認証 + 所有者確認
+- 重複は Prisma P2002 で検知してスキップ（409 or skipped カウント）
+- `MAX_TEXT_LENGTH = 5000` 文字
+- CSV は `csv-parse` ライブラリ使用。ヘッダ必須: `text`（`note` は任意）
+- インポート結果: `{ created, skipped, errors }` で部分成功に対応
+
+#### フロントエンド
+
+- **SentenceManager** — 一覧・追加・CSV インポート・練習開始の親コンポーネント
+- **SentenceForm** — 1件追加フォーム
+- **SentenceList** — 一覧表示。ホバーで編集/削除ボタン表示。インライン編集 + 削除確認ダイアログ
+- **CsvImport** — 複数ファイル一括インポート。失敗ファイルのみ再試行に残す
+- **StartSessionModal** — 練習問題数を指定してランダム選択し、セッション開始
+
+#### 状態管理 (`frontend/src/stores/sentenceStore.ts`)
+
+- `importCsv(files: File[])` でファイル配列を受け取り、1ファイルずつ API 呼び出し
+- 全ファイルの created / skipped / errors を集計して返す
+- 全ファイル失敗時のみ例外を投げる（部分成功は正常扱い）
+- エラーメッセージに `[ファイル名]` プレフィックスを付与
+
+### 設計判断
+
+- バックエンドは1リクエスト1ファイル。複数ファイル対応はフロント側のループで吸収
+- `StartSessionModal` でテキスト末尾にピリオドがない場合はスペースを自動付与（`useTypingEngine` の完了条件に合わせる）
+- 200件超時は警告バナー表示（パフォーマンス考慮）
 
 ---
 
@@ -118,13 +155,72 @@ BigramStat     ← Bigram（運指ペア）統計（User に属する）
 
 ## Phase 5: セッション保存 & 苦手ワード
 
-（実装後に記載）
+### 実装済み（フロント分析のみ）
+
+#### `useTypingSession.ts` のセッション構造
+
+```typescript
+// 問題ごとのレコード（タイピング中に蓄積）
+ProblemRecord {
+  text: string
+  keyHistory: KeyEvent[]   // { position, correct } の配列
+  startedAt: number
+  endedAt: number
+}
+
+// セッション終了時に計算
+SessionResult {
+  wordStats: WordStat[]      // 単語ごとのミス数・ミス率
+  bigramStats: BigramStat[]  // Bigram ごとの試行数・ミス数
+  accuracy: number           // (総打鍵 - ミス) / 総打鍵 × 100
+  durationMs: number
+  wpm: number                // (正解文字数 / 5) / 分数
+  totalKeys: number
+  totalMisses: number
+}
+```
+
+#### 苦手ワード検出ロジック
+
+- 文章をスペース区切りで単語に分解
+- 各単語のミス回数を `keyHistory` から集計
+- `missRate = misses / word.length` でソート
+- 上位 10 件を `wordStats` として返す
+
+### 未実装
+
+- セッション結果のバックエンド保存（`Session` / `SessionWord` テーブルは存在するが API ルート未実装）
+- 苦手ワードの永続管理・累積集計
+- セッション履歴閲覧
 
 ---
 
 ## Phase 6: Bigram 分析
 
-（実装後に記載）
+### 実装済み（フロント分析のみ）
+
+#### Bigram 収集ロジック（`useTypingSession.ts`）
+
+```typescript
+// 各 KeyEvent の position > 0 のとき
+const bigram = text[position - 1] + text[position]
+bigramMap[bigram].attempts++
+if (!event.correct) bigramMap[bigram].misses++
+```
+
+- 全問のキー履歴をセッション終了時に一括集計
+- ミス数上位 10 件を `bigramStats` として返す
+
+#### 表示（`ResultsScreen.tsx`）
+
+- `a→b` 形式で bigram を表示（スペース始まりは単一文字表示）
+- `misses/attempts (X%)` 形式
+
+### 未実装
+
+- `BigramStat` テーブルへの永続保存（DB スキーマは存在）
+- 累積 Bigram ヒートマップ
+- 苦手 Bigram 優先の練習問題選択
 
 ---
 
