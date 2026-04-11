@@ -1,27 +1,48 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { SessionResult } from '../../hooks/useTypingSession'
 
 interface Props {
+  mode: 'sentence' | 'random' | 'weak_word'
   result: SessionResult
   totalCount: number
   onRestart: () => void
-  onGoToManager: () => void
+  onGoBack: () => void
   onStartWeakWordSession: () => Promise<void>
   isMockMode: boolean
+  returnLabel: string
 }
 
 export function ResultsScreen({
+  mode,
   result,
   totalCount,
   onRestart,
-  onGoToManager,
+  onGoBack,
   onStartWeakWordSession,
   isMockMode,
+  returnLabel,
 }: Props) {
   const { accuracy, wpm, durationMs, totalKeys, totalMisses, wordStats, bigramStats } = result
   const seconds = (durationMs / 1000).toFixed(1)
   const [startingWeakWordSession, setStartingWeakWordSession] = useState(false)
   const [weakWordError, setWeakWordError] = useState<string | null>(null)
+
+  const title = mode === 'weak_word'
+    ? '苦手ワード練習結果'
+    : mode === 'random'
+      ? 'ランダムワード練習結果'
+      : 'セッション結果'
+
+  useEffect(() => {
+    function handleRestartKey(event: KeyboardEvent) {
+      if (event.key !== 'r' && event.key !== 'R') return
+      event.preventDefault()
+      onRestart()
+    }
+
+    window.addEventListener('keydown', handleRestartKey)
+    return () => window.removeEventListener('keydown', handleRestartKey)
+  }, [onRestart])
 
   const handleWeakWordClick = async () => {
     setStartingWeakWordSession(true)
@@ -36,8 +57,8 @@ export function ResultsScreen({
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-start py-12 px-6">
-      <h2 className="text-3xl font-bold mb-2">Session Results</h2>
-      <p className="text-gray-500 text-sm mb-8">{totalCount} 問完了</p>
+      <h2 className="text-3xl font-bold mb-2">{title}</h2>
+      <p className="text-gray-500 text-sm mb-8">{totalCount} 問完了 / R でリスタート</p>
 
       {/* サマリー指標 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl mb-10">
@@ -79,7 +100,7 @@ export function ResultsScreen({
         {/* 苦手な運指（Bigram） */}
         <section>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">
-            苦手な運指
+            キー入力ミスの多い運指
           </h3>
           {bigramStats.length === 0 ? (
             <p className="text-gray-600 text-sm">苦手なし</p>
@@ -123,10 +144,10 @@ export function ResultsScreen({
           苦手ワード練習
         </button>
         <button
-          onClick={onGoToManager}
+          onClick={onGoBack}
           className="px-8 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold text-lg transition-colors"
         >
-          文章管理
+          {returnLabel}
         </button>
       </div>
 

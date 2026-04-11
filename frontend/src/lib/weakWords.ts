@@ -4,6 +4,7 @@ export interface WeakWord {
   id: string
   word: string
   missRate: number
+  isSolved: boolean
   note: string | null
   createdAt: string
   updatedAt: string
@@ -13,7 +14,10 @@ export function listWeakWords(): Promise<{ words: WeakWord[] }> {
   return apiFetch<{ words: WeakWord[] }>('/api/weak-words')
 }
 
-export function updateWeakWord(id: string, patch: { note: string }): Promise<WeakWord> {
+export function updateWeakWord(
+  id: string,
+  patch: { note?: string; isSolved?: boolean },
+): Promise<WeakWord> {
   return apiFetch<WeakWord>(`/api/weak-words/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(patch),

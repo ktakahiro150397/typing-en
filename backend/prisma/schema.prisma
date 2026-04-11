@@ -36,6 +36,7 @@ model WeakWord {
   userId    String
   word      String
   missRate  Float
+  isSolved  Boolean  @default(false)
   note      String?  @db.Text
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())

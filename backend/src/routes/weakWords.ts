@@ -8,6 +8,7 @@ const weakWordSelect = {
   id: true,
   word: true,
   missRate: true,
+  isSolved: true,
   note: true,
   createdAt: true,
   updatedAt: true,
@@ -34,13 +35,28 @@ export default async function weakWordRoutes(app: FastifyInstance) {
     async (req, reply) => {
       const userId = req.user!.id
       const { id } = req.params as { id: string }
-      const { note } = req.body as { note?: unknown }
+      const body = (req.body ?? {}) as { note?: unknown; isSolved?: unknown }
+      const data: { note?: string | null; isSolved?: boolean } = {}
 
-      if (typeof note !== 'string') {
-        return reply.status(400).send({ message: 'note must be a string' })
+      if ('note' in body) {
+        if (typeof body.note !== 'string') {
+          return reply.status(400).send({ message: 'note must be a string' })
+        }
+        if (body.note.length > MAX_NOTE_LENGTH) {
+          return reply.status(400).send({ message: `note must be ${MAX_NOTE_LENGTH} chars or less` })
+        }
+        data.note = body.note.trim() || null
       }
-      if (note.length > MAX_NOTE_LENGTH) {
-        return reply.status(400).send({ message: `note must be ${MAX_NOTE_LENGTH} chars or less` })
+
+      if ('isSolved' in body) {
+        if (typeof body.isSolved !== 'boolean') {
+          return reply.status(400).send({ message: 'isSolved must be a boolean' })
+        }
+        data.isSolved = body.isSolved
+      }
+
+      if (Object.keys(data).length === 0) {
+        return reply.status(400).send({ message: 'note or isSolved is required' })
       }
 
       const existing = await prisma.weakWord.findUnique({
@@ -53,7 +69,7 @@ export default async function weakWordRoutes(app: FastifyInstance) {
 
       const updated = await prisma.weakWord.update({
         where: { id },
-        data: { note: note.trim() || null },
+        data,
         select: weakWordSelect,
       })
       return updated

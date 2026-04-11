@@ -26,6 +26,7 @@ export interface BigramStat {
 
 export interface SessionResult {
   wordStats: WordStat[]
+  allWordStats: WordStat[]
   bigramStats: BigramStat[]
   allWordMisses: WordStat[]
   allBigramStats: BigramStat[]
@@ -96,8 +97,7 @@ function analyzeProblems(records: ProblemRecord[]): SessionResult {
   const minutes = durationMs / 60000
   const wpm = minutes > 0 ? Math.round(totalCorrectChars / 5 / minutes) : 0
 
-  const allWordMisses: WordStat[] = Object.entries(wordMissMap)
-    .filter(([, v]) => v.misses > 0)
+  const allWordStats: WordStat[] = Object.entries(wordMissMap)
     .map(([word, v]) => ({
       word,
       misses: v.misses,
@@ -105,6 +105,7 @@ function analyzeProblems(records: ProblemRecord[]): SessionResult {
     }))
     .sort((a, b) => b.misses - a.misses)
 
+  const allWordMisses = allWordStats.filter((word) => word.misses > 0)
   const wordStats = allWordMisses.slice(0, 10)
 
   const allBigramStats: BigramStat[] = Object.entries(bigramMap)
@@ -120,6 +121,7 @@ function analyzeProblems(records: ProblemRecord[]): SessionResult {
 
   return {
     wordStats,
+    allWordStats,
     bigramStats,
     allWordMisses,
     allBigramStats,

@@ -1,11 +1,19 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { TypingArea } from './components/TypingArea/TypingArea'
-import { CommandHistory } from './components/CommandHistory/CommandHistory'
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
 import { LoginScreen } from './components/LoginScreen/LoginScreen'
 import { SentenceManager } from './components/SentenceManager/SentenceManager'
-import { useTypingSession } from './hooks/useTypingSession'
-import { generateWordSequence } from './utils/textGenerator'
+import { PracticeScreen } from './components/PracticeScreen/PracticeScreen'
+import { WeakWordManager } from './components/SentenceManager/WeakWordManager'
+import type { SessionResult } from './hooks/useTypingSession'
+import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
 import { apiFetch } from './lib/api'
 import { normalizeSessionText, buildWeakWordPracticeTexts } from './lib/sessionText'
@@ -13,22 +21,38 @@ import { saveSession } from './lib/sessions'
 import type { Sentence } from './lib/sentences'
 import { listWeakWords } from './lib/weakWords'
 
-type Screen = 'manager' | 'game'
+type SessionMode = 'sentence' | 'random' | 'weak_word'
 
 interface SessionText {
   text: string
   sentenceId: string | null
 }
 
+interface SessionConfig {
+  mode: SessionMode
+  items: SessionText[]
+  returnPath: string
+}
+
+interface ResultsState {
+  mode: SessionMode
+  result: SessionResult
+  totalCount: number
+  returnPath: string
+}
+
 function normalizeText(text: string): string {
   return normalizeSessionText(text)
 }
 
-function generateRandomSessionItems(count: number): SessionText[] {
-  return Array.from({ length: count }, () => ({
-    text: normalizeText(generateWordSequence(5)),
+const RANDOM_TEXT_LENGTH = 30
+const MAX_WEAK_WORD_QUESTIONS = 10
+
+function generateRandomSessionItems(): SessionText[] {
+  return [{
+    text: generateRandomText(RANDOM_TEXT_LENGTH, 'full'),
     sentenceId: null,
-  }))
+  }]
 }
 
 function mapSentencesToSessionItems(sentences: Sentence[]): SessionText[] {
@@ -37,8 +61,6 @@ function mapSentencesToSessionItems(sentences: Sentence[]): SessionText[] {
     sentenceId: sentence.id,
   }))
 }
-
-const DEFAULT_COUNT = 3
 
 interface AuthMe {
   id: string
@@ -52,14 +74,8 @@ export default function App() {
   const isMockMode = import.meta.env.VITE_AUTH_MOCK === 'true'
   const [authLoaded, setAuthLoaded] = useState(false)
   const [authError, setAuthError] = useState(false)
-  const [screen, setScreen] = useState<Screen>('manager')
-  const [sessionMode, setSessionMode] = useState<'sentence' | 'random' | 'weak_word'>('random')
-  const [sessionItems, setSessionItems] = useState<SessionText[]>(() => generateRandomSessionItems(DEFAULT_COUNT))
-  const savedSessionRef = useRef(false)
 
-  // Handle OAuth callback token and session restore on mount
   useEffect(() => {
-    // Debug: bypass Google OAuth with a dummy account
     if (isMockMode) {
       setAuth({ id: 'mock-user', name: 'Mock User', email: 'mock@example.com' }, 'mock-token')
       setAuthLoaded(true)
@@ -74,7 +90,7 @@ export default function App() {
       clearAuth()
       setAuthError(true)
       setAuthLoaded(true)
-      window.history.replaceState(null, '', '/')
+      window.history.replaceState(null, '', window.location.pathname)
       return
     }
 
@@ -91,109 +107,17 @@ export default function App() {
 
     apiFetch<AuthMe>('/auth/me')
       .then((me) => {
+        setAuthError(false)
         setAuth({ id: me.id, name: me.name, email: me.email }, activeToken)
         if (callbackToken) {
-          window.history.replaceState(null, '', '/')
+          window.history.replaceState(null, '', window.location.pathname)
         }
       })
       .catch(() => {
         clearAuth()
       })
       .finally(() => setAuthLoaded(true))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const texts = sessionItems.map((item) => item.text)
-
-  const { engineState, handleKey, phase, currentIndex, totalCount, result, restartSession, sessionMisses } =
-    useTypingSession(texts)
-
-  useEffect(() => {
-    if (!result || savedSessionRef.current) return
-
-    savedSessionRef.current = true
-
-    if (isMockMode || !token) {
-      return
-    }
-
-    void saveSession({
-      mode: sessionMode,
-      totalKeys: result.totalKeys,
-      missKeys: result.totalMisses,
-      durationMs: result.durationMs,
-      sentenceIds: sessionItems.flatMap((item) => (item.sentenceId ? [item.sentenceId] : [])),
-      words: result.allWordMisses.map((word) => ({
-        word: word.word,
-        misses: word.misses,
-      })),
-      bigrams: result.allBigramStats.map((bigram) => ({
-        bigram: bigram.bigram,
-        attempts: bigram.attempts,
-        misses: bigram.misses,
-      })),
-    }).catch((error) => {
-      console.error('Failed to save session', error)
-    })
-  }, [isMockMode, result, sessionMode, sessionItems, token])
-
-  // ロック残り時間（App側で持ち、枠色制御と TypingArea 表示に使う）
-  const [lockRemaining, setLockRemaining] = useState(0)
-  useEffect(() => {
-    if (!engineState.lockedUntil) { setLockRemaining(0); return }
-    const tick = () => setLockRemaining(Math.max(0, engineState.lockedUntil! - Date.now()))
-    tick()
-    const id = setInterval(tick, 50)
-    return () => clearInterval(id)
-  }, [engineState.lockedUntil])
-
-  const handleRestart = useCallback(() => {
-    const nextItems = generateRandomSessionItems(DEFAULT_COUNT)
-    savedSessionRef.current = false
-    setSessionMode('random')
-    setSessionItems(nextItems)
-    restartSession(nextItems.map((item) => item.text))
-  }, [restartSession])
-
-  const handleStartSession = useCallback((sentences: Sentence[]) => {
-    const nextItems = mapSentencesToSessionItems(sentences)
-    savedSessionRef.current = false
-    setSessionMode('sentence')
-    setSessionItems(nextItems)
-    restartSession(nextItems.map((item) => item.text))
-    setScreen('game')
-  }, [restartSession])
-
-  const handleStartWeakWordSession = useCallback(async () => {
-    if (isMockMode) {
-      throw new Error('モック認証では苦手ワード機能を利用できません')
-    }
-    if (!token) {
-      throw new Error('認証情報がありません。再ログインしてください。')
-    }
-
-    const { words } = await listWeakWords()
-    if (words.length === 0) {
-      throw new Error('苦手ワードがまだありません。まず通常のセッションを完了してください。')
-    }
-
-    const nextTexts = buildWeakWordPracticeTexts(words.map((word) => word.word))
-    if (nextTexts.length === 0) {
-      throw new Error('練習対象の苦手ワードが見つかりませんでした。')
-    }
-
-    const nextItems = nextTexts.map((text) => ({ text, sentenceId: null }))
-    savedSessionRef.current = false
-    setSessionMode('weak_word')
-    setSessionItems(nextItems)
-    restartSession(nextTexts)
-    setScreen('game')
-  }, [isMockMode, restartSession, token])
-
-  const handleLogout = useCallback(() => {
-    clearAuth()
-  }, [clearAuth])
 
   if (!authLoaded) {
     return (
@@ -203,105 +127,243 @@ export default function App() {
     )
   }
 
+  return (
+    <BrowserRouter>
+      <AppRouter
+        user={user}
+        token={token}
+        authError={authError}
+        isMockMode={isMockMode}
+        onLogout={clearAuth}
+      />
+    </BrowserRouter>
+  )
+}
+
+interface AppRouterProps {
+  user: { id: string; name: string; email: string } | null
+  token: string | null
+  authError: boolean
+  isMockMode: boolean
+  onLogout: () => void
+}
+
+function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterProps) {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [activeSession, setActiveSession] = useState<SessionConfig | null>(null)
+  const [lastSessionConfig, setLastSessionConfig] = useState<SessionConfig | null>(null)
+  const [resultsState, setResultsState] = useState<ResultsState | null>(null)
+  const pendingSaveRef = useRef<Promise<void> | null>(null)
+
+  const beginSession = useCallback((config: SessionConfig) => {
+    setActiveSession(config)
+    setLastSessionConfig(config)
+    setResultsState(null)
+    navigate('/practice')
+  }, [navigate])
+
+  const handleStartSentenceSession = useCallback((sentences: Sentence[]) => {
+    beginSession({
+      mode: 'sentence',
+      items: mapSentencesToSessionItems(sentences),
+      returnPath: '/sentences',
+    })
+  }, [beginSession])
+
+  const handleStartWeakWordSession = useCallback(async () => {
+    await pendingSaveRef.current
+
+    if (isMockMode) {
+      throw new Error('モック認証では苦手ワード機能を利用できません')
+    }
+    if (!token) {
+      throw new Error('認証情報がありません。再ログインしてください。')
+    }
+
+    const { words } = await listWeakWords()
+    const activeWords = words.filter((word) => !word.isSolved)
+    if (activeWords.length === 0) {
+      throw new Error('未攻略の苦手ワードがありません。通常練習で追加するか、攻略済みを外してください。')
+    }
+
+    const nextTexts = buildWeakWordPracticeTexts(activeWords.map((word) => word.word))
+      .slice(0, MAX_WEAK_WORD_QUESTIONS)
+    if (nextTexts.length === 0) {
+      throw new Error('練習対象の苦手ワードが見つかりませんでした。')
+    }
+
+    beginSession({
+      mode: 'weak_word',
+      items: nextTexts.map((text) => ({ text, sentenceId: null })),
+      returnPath: '/weak-words',
+    })
+  }, [beginSession, isMockMode, token])
+
+  const handleStartRandomSession = useCallback(() => {
+    const returnPath = location.pathname === '/weak-words' ? '/weak-words' : '/sentences'
+    beginSession({
+      mode: 'random',
+      items: generateRandomSessionItems(),
+      returnPath,
+    })
+  }, [beginSession, location.pathname])
+
+  const handleSessionComplete = useCallback((result: SessionResult) => {
+    if (!activeSession) return
+
+    const completedSession = activeSession
+    setActiveSession(null)
+    setResultsState({
+      mode: completedSession.mode,
+      result,
+      totalCount: completedSession.items.length,
+      returnPath: completedSession.returnPath,
+    })
+
+    navigate('/results')
+
+    if (isMockMode || !token) {
+      return
+    }
+
+    const savePromise = saveSession({
+      mode: completedSession.mode,
+      totalKeys: result.totalKeys,
+      missKeys: result.totalMisses,
+      durationMs: result.durationMs,
+      sentenceIds: completedSession.items.flatMap((item) => (item.sentenceId ? [item.sentenceId] : [])),
+      words: completedSession.mode === 'random'
+        ? []
+        : result.allWordStats.map((word) => ({
+            word: word.word,
+            misses: word.misses,
+          })),
+      bigrams: result.allBigramStats.map((bigram) => ({
+        bigram: bigram.bigram,
+        attempts: bigram.attempts,
+        misses: bigram.misses,
+      })),
+    }).then(() => undefined).catch((error) => {
+      console.error('Failed to save session', error)
+    })
+
+    pendingSaveRef.current = savePromise.finally(() => {
+      pendingSaveRef.current = null
+    })
+  }, [activeSession, isMockMode, navigate, token])
+
+  const handleAbortSession = useCallback(() => {
+    const returnPath = activeSession?.returnPath ?? '/sentences'
+    setActiveSession(null)
+    navigate(returnPath)
+  }, [activeSession, navigate])
+
+  const handleRestartSession = useCallback(() => {
+    if (!lastSessionConfig) return
+
+    if (lastSessionConfig.mode === 'weak_word') {
+      void handleStartWeakWordSession()
+      return
+    }
+
+    const nextConfig = lastSessionConfig.mode === 'random'
+      ? {
+          ...lastSessionConfig,
+          items: generateRandomSessionItems(),
+        }
+      : lastSessionConfig
+
+    setActiveSession(nextConfig)
+    setLastSessionConfig(nextConfig)
+    setResultsState(null)
+    navigate('/practice')
+  }, [handleStartWeakWordSession, lastSessionConfig, navigate])
+
+  const handleGoBackFromResults = useCallback(() => {
+    setActiveSession(null)
+    navigate(resultsState?.returnPath ?? '/sentences')
+  }, [navigate, resultsState?.returnPath])
+
+  const handleLogout = useCallback(() => {
+    setActiveSession(null)
+    setResultsState(null)
+    onLogout()
+    navigate('/login', { replace: true })
+  }, [navigate, onLogout])
+
   if (!user) {
-    return <LoginScreen error={authError} />
-  }
-
-  if (screen === 'manager') {
     return (
-      <SentenceManager
-        onStartSession={handleStartSession}
-        onStartWeakWordSession={handleStartWeakWordSession}
-        isMockMode={isMockMode}
-        onLogout={handleLogout}
-        userName={user.name}
-      />
+      <Routes>
+        <Route path="/login" element={<LoginScreen error={authError} />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
     )
   }
-
-  if (phase === 'results' && result) {
-    return (
-      <ResultsScreen
-        result={result}
-        totalCount={totalCount}
-        onRestart={handleRestart}
-        onStartWeakWordSession={handleStartWeakWordSession}
-        isMockMode={isMockMode}
-        onGoToManager={() => setScreen('manager')}
-      />
-    )
-  }
-
-  const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
-  const nextText = currentIndex < texts.length - 1 ? texts[currentIndex + 1] : null
-  const isLast = currentIndex === totalCount - 1
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
-      {/* Header */}
-      <header className="border-b border-gray-700 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold tracking-wide">typing-en</h1>
-          <button
-            onClick={() => setScreen('manager')}
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            文章管理
-          </button>
-        </div>
-        <div className="flex items-center gap-4 text-sm text-gray-400">
-          <span>{currentIndex + 1} / {totalCount}</span>
-          <span className="text-red-400 font-mono">
-            misses: <strong>{sessionMisses}</strong>
-          </span>
-          <button
-            onClick={handleLogout}
-            className="text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            ログアウト
-          </button>
-        </div>
-      </header>
-
-      {/* Main */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-3 max-w-3xl mx-auto w-full">
-
-        {/* 前の問題 — 固定高さ */}
-        <div className="w-full h-8 overflow-hidden flex items-center">
-          {prevText && (
-            <div className="font-mono text-sm text-gray-600 line-through truncate">{prevText}</div>
-          )}
-        </div>
-
-        {/* 現在の問題 */}
-        <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${lockRemaining > 0 ? 'ring-red-600' : 'ring-gray-600'}`}>
-          <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
-        </div>
-
-        {/* 次の問題 — 固定高さ */}
-        <div className="w-full h-14 overflow-hidden">
-          {nextText ? (
-            <div className="h-full flex items-center bg-gray-800/40 rounded-lg px-4 border border-dashed border-gray-600">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest mr-3 shrink-0">
-                NEXT
-              </span>
-              <span className="font-mono text-sm text-gray-400 truncate">{nextText}</span>
-            </div>
-          ) : isLast ? (
-            <div className="h-full flex items-center bg-gray-800/40 rounded-lg px-4 border border-dashed border-indigo-800">
-              <span className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mr-3 shrink-0">
-                LAST
-              </span>
-              <span className="text-sm text-gray-500">これが最後の問題です</span>
-            </div>
-          ) : null}
-        </div>
-
-        {/* コマンド履歴 — 固定高さ・折り返しなし */}
-        <div className="w-full bg-gray-800 rounded-xl px-4 h-12 flex items-center overflow-hidden">
-          <CommandHistory history={engineState.keyHistory} />
-        </div>
-      </main>
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/sentences" replace />} />
+      <Route path="/login" element={<Navigate to="/sentences" replace />} />
+      <Route
+        path="/sentences"
+        element={(
+          <SentenceManager
+            onStartSession={handleStartSentenceSession}
+            onStartRandomSession={handleStartRandomSession}
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route
+        path="/weak-words"
+        element={(
+          <WeakWordManager
+            onStartWeakWordSession={handleStartWeakWordSession}
+            onStartRandomSession={handleStartRandomSession}
+            isMockMode={isMockMode}
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route
+        path="/practice"
+        element={activeSession ? (
+          <PracticeScreen
+            sessionItems={activeSession.items}
+            onComplete={handleSessionComplete}
+            onAbort={handleAbortSession}
+            onLogout={handleLogout}
+            returnPath={activeSession.returnPath}
+          />
+        ) : resultsState ? (
+          <Navigate to="/results" replace />
+        ) : (
+          <Navigate to="/sentences" replace />
+        )}
+      />
+      <Route
+        path="/results"
+        element={resultsState ? (
+          <ResultsScreen
+            mode={resultsState.mode}
+            result={resultsState.result}
+            totalCount={resultsState.totalCount}
+            onRestart={handleRestartSession}
+            onStartWeakWordSession={handleStartWeakWordSession}
+            isMockMode={isMockMode}
+            onGoBack={handleGoBackFromResults}
+            returnLabel={resultsState.returnPath === '/weak-words' ? '苦手ワードへ戻る' : '文章管理へ戻る'}
+          />
+        ) : activeSession ? (
+          <Navigate to="/practice" replace />
+        ) : (
+          <Navigate to="/sentences" replace />
+        )}
+      />
+      <Route path="*" element={<Navigate to="/sentences" replace />} />
+    </Routes>
   )
 }

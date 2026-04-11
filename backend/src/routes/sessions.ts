@@ -61,7 +61,7 @@ function parseWords(value: unknown): SessionWordInput[] | null {
     }
 
     const { word, misses } = item as Record<string, unknown>
-    if (typeof word !== 'string' || word.length === 0 || !isPositiveInteger(misses)) {
+    if (typeof word !== 'string' || word.length === 0 || !isNonNegativeInteger(misses)) {
       return null
     }
 
@@ -130,7 +130,7 @@ export default async function sessionRoutes(app: FastifyInstance) {
 
     const words = parseWords(body.words)
     if (!words) {
-      return sendBadRequest(reply, 'words must be an array of { word, misses } with positive integer misses')
+      return sendBadRequest(reply, 'words must be an array of { word, misses } with non-negative integer misses')
     }
 
     const bigrams = parseBigrams(body.bigrams)
@@ -174,7 +174,7 @@ export default async function sessionRoutes(app: FastifyInstance) {
         })
       }
 
-      if (words.length > 0) {
+      if (mode !== 'random' && words.length > 0) {
         await tx.sessionWord.createMany({
           data: words.map((word) => ({
             sessionId: createdSession.id,
@@ -191,6 +191,7 @@ export default async function sessionRoutes(app: FastifyInstance) {
               userId,
               word: word.word,
               missRate,
+              isSolved: false,
             },
             update: {
               missRate,

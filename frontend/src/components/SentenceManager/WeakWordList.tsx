@@ -4,6 +4,7 @@ import type { WeakWord } from '../../lib/weakWords'
 interface Props {
   weakWords: WeakWord[]
   onUpdateNote: (id: string, note: string) => Promise<void>
+  onToggleSolved: (id: string, isSolved: boolean) => Promise<void>
   onDelete: (id: string) => Promise<void>
 }
 
@@ -11,9 +12,10 @@ function formatMissRate(missRate: number): string {
   return `${Math.round(missRate * 100)}%`
 }
 
-function WeakWordRow({ weakWord, onUpdateNote, onDelete }: {
+function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete }: {
   weakWord: WeakWord
   onUpdateNote: (id: string, note: string) => Promise<void>
+  onToggleSolved: (id: string, isSolved: boolean) => Promise<void>
   onDelete: (id: string) => Promise<void>
 }) {
   const [editing, setEditing] = useState(false)
@@ -50,11 +52,35 @@ function WeakWordRow({ weakWord, onUpdateNote, onDelete }: {
     }
   }
 
+  const handleToggleSolved = async (isSolved: boolean) => {
+    setSaving(true)
+    setError(null)
+    try {
+      await onToggleSolved(weakWord.id, isSolved)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '更新に失敗しました')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   if (editing) {
     return (
       <tr className="border-b border-gray-700">
         <td className="px-4 py-3 font-mono text-sm text-white align-top">{weakWord.word}</td>
         <td className="px-4 py-3 text-sm text-amber-400 align-top">{formatMissRate(weakWord.missRate)}</td>
+        <td className="px-4 py-3 align-top">
+          <label className="inline-flex items-center gap-2 text-sm text-gray-300">
+            <input
+              type="checkbox"
+              checked={weakWord.isSolved}
+              disabled={saving}
+              onChange={(e) => void handleToggleSolved(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+            />
+            攻略済み
+          </label>
+        </td>
         <td className="px-4 py-3" colSpan={2}>
           <div className="space-y-2">
             <textarea
@@ -101,13 +127,25 @@ function WeakWordRow({ weakWord, onUpdateNote, onDelete }: {
       <td className="px-4 py-3 text-sm text-amber-400 whitespace-nowrap">
         {formatMissRate(weakWord.missRate)}
       </td>
+      <td className="px-4 py-3 text-sm text-gray-300 whitespace-nowrap">
+        <label className="inline-flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={weakWord.isSolved}
+            disabled={saving}
+            onChange={(e) => void handleToggleSolved(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+          />
+          <span>{weakWord.isSolved ? '済' : '未'}</span>
+        </label>
+      </td>
       <td className="px-4 py-3 text-sm text-gray-400 max-w-0 w-1/2">
         <span className="block truncate" title={weakWord.note ?? ''}>
           {weakWord.note ?? <span className="text-gray-600">—</span>}
         </span>
         {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
       </td>
-      <td className="px-4 py-3 text-right whitespace-nowrap">
+      <td className="px-4 py-3 text-right whitespace-nowrap w-28">
         {confirmDelete ? (
           <span className="inline-flex items-center gap-2 text-xs">
             <span className="text-gray-400">削除しますか?</span>
@@ -146,7 +184,7 @@ function WeakWordRow({ weakWord, onUpdateNote, onDelete }: {
   )
 }
 
-export function WeakWordList({ weakWords, onUpdateNote, onDelete }: Props) {
+export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete }: Props) {
   if (weakWords.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500 text-sm">
@@ -164,12 +202,15 @@ export function WeakWordList({ weakWords, onUpdateNote, onDelete }: Props) {
               Word
             </th>
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
-              Miss Rate
+              ミス率
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-28">
+              攻略済み
             </th>
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-1/2">
               攻略メモ
             </th>
-            <th className="px-4 py-3 w-24" />
+            <th className="px-4 py-3 w-28" />
           </tr>
         </thead>
         <tbody className="bg-gray-800/50">
@@ -178,6 +219,7 @@ export function WeakWordList({ weakWords, onUpdateNote, onDelete }: Props) {
               key={weakWord.id}
               weakWord={weakWord}
               onUpdateNote={onUpdateNote}
+              onToggleSolved={onToggleSolved}
               onDelete={onDelete}
             />
           ))}
