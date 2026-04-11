@@ -32,17 +32,24 @@ model Sentence {
 }
 
 model WeakWord {
-  id        String   @id @default(cuid())
-  userId    String
-  word      String
-  missRate  Float
-  isSolved  Boolean  @default(false)
-  note      String?  @db.Text
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String   @id @default(cuid())
+  userId           String
+  word             String
+  missRate         Float
+  activeDurationMs Int      @default(0)
+  msPerChar        Float    @default(0)
+  stallCount       Int      @default(0)
+  stallDurationMs  Int      @default(0)
+  weaknessScore    Float    @default(0)
+  primaryReason    String?
+  isSolved         Boolean  @default(false)
+  note             String?  @db.Text
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, word])
+  @@index([userId, weaknessScore])
 }
 
 model Session {
@@ -59,11 +66,14 @@ model Session {
 }
 
 model SessionWord {
-  id        String  @id @default(cuid())
-  sessionId String
-  word      String
-  misses    Int
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  id               String  @id @default(cuid())
+  sessionId        String
+  word             String
+  misses           Int
+  activeDurationMs Int     @default(0)
+  stallCount       Int     @default(0)
+  stallDurationMs  Int     @default(0)
+  session          Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
 model SessionSentence {

@@ -28,7 +28,7 @@ export interface TypingEngine {
   reset: (text: string) => void
 }
 
-const MISS_LOCK_MS = 1000
+export const MISS_LOCK_MS = 1000
 
 export function useTypingEngine(initialText: string): TypingEngine {
   const [state, setState] = useState<TypingState>(() => makeInitialState(initialText))
@@ -62,7 +62,7 @@ export function useTypingEngine(initialText: string): TypingEngine {
       const correct = key === expected
 
       const event: KeyEvent = { key, correct, timestamp: Date.now(), position: prev.cursor }
-      const newHistory = [...prev.keyHistory, event].slice(-100)
+      const newHistory = [...prev.keyHistory, event]
 
       if (!correct) {
         const lockEnd = Date.now() + MISS_LOCK_MS

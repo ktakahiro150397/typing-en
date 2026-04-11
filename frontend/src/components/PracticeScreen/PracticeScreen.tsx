@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CommandHistory } from '../CommandHistory/CommandHistory'
 import { TypingArea } from '../TypingArea/TypingArea'
 import { useTypingSession, type SessionResult } from '../../hooks/useTypingSession'
+import { getLiveTypingFeedback } from '../../lib/typingAnalysis'
 
 interface SessionText {
   text: string
@@ -31,6 +32,15 @@ export function PracticeScreen({
   const { engineState, handleKey, phase, currentIndex, totalCount, result, sessionMisses } = useTypingSession(texts)
   const [lockRemaining, setLockRemaining] = useState(0)
   const completedRef = useRef(false)
+  const liveFeedback = useMemo(
+    () => getLiveTypingFeedback({
+      text: engineState.text,
+      keyHistory: engineState.keyHistory,
+      startedAt: engineState.startedAt,
+      cursor: engineState.cursor,
+    }),
+    [engineState.cursor, engineState.keyHistory, engineState.startedAt, engineState.text],
+  )
 
   useEffect(() => {
     if (!engineState.lockedUntil) {
@@ -101,6 +111,20 @@ export function PracticeScreen({
 
         <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${lockRemaining > 0 ? 'ring-red-600' : 'ring-gray-600'}`}>
           <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
+        </div>
+
+        <div className="w-full h-8">
+          {liveFeedback && (
+            <div
+              className={`inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors ${
+                liveFeedback.reason === 'stall'
+                  ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'
+                  : 'border-sky-500/40 bg-sky-500/10 text-sky-300'
+              }`}
+            >
+              {liveFeedback.message}
+            </div>
+          )}
         </div>
 
         <div className="w-full h-14 overflow-hidden">

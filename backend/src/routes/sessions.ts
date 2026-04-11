@@ -1,6 +1,7 @@
 import type { User } from '@prisma/client'
 import type { FastifyInstance, FastifyReply } from 'fastify'
 import { prisma } from '../db.js'
+import { calculateWeakWordMetrics } from '../lib/weakWordMetrics.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
 
 const VALID_MODES = ['sentence', 'random', 'weak_word'] as const
@@ -10,6 +11,9 @@ type Mode = (typeof VALID_MODES)[number]
 interface SessionWordInput {
   word: string
   misses: number
+  activeDurationMs: number
+  stallCount: number
+  stallDurationMs: number
 }
 
 interface SessionBigramInput {
@@ -60,12 +64,19 @@ function parseWords(value: unknown): SessionWordInput[] | null {
       return null
     }
 
-    const { word, misses } = item as Record<string, unknown>
-    if (typeof word !== 'string' || word.length === 0 || !isNonNegativeInteger(misses)) {
+    const { word, misses, activeDurationMs, stallCount, stallDurationMs } = item as Record<string, unknown>
+    if (
+      typeof word !== 'string'
+      || word.length === 0
+      || !isNonNegativeInteger(misses)
+      || !isNonNegativeInteger(activeDurationMs)
+      || !isNonNegativeInteger(stallCount)
+      || !isNonNegativeInteger(stallDurationMs)
+    ) {
       return null
     }
 
-    words.push({ word, misses })
+    words.push({ word, misses, activeDurationMs, stallCount, stallDurationMs })
   }
 
   return words
@@ -130,7 +141,10 @@ export default async function sessionRoutes(app: FastifyInstance) {
 
     const words = parseWords(body.words)
     if (!words) {
-      return sendBadRequest(reply, 'words must be an array of { word, misses } with non-negative integer misses')
+      return sendBadRequest(
+        reply,
+        'words must be an array of { word, misses, activeDurationMs, stallCount, stallDurationMs } with non-negative integer metrics',
+      )
     }
 
     const bigrams = parseBigrams(body.bigrams)
@@ -154,6 +168,15 @@ export default async function sessionRoutes(app: FastifyInstance) {
     }
 
     const session = await prisma.$transaction(async (tx) => {
+      const existingWeakWords = words.length > 0
+        ? new Set(
+            (await tx.weakWord.findMany({
+              where: { userId, word: { in: words.map((word) => word.word) } },
+              select: { word: true },
+            })).map((word) => word.word),
+          )
+        : new Set<string>()
+
       const createdSession = await tx.session.create({
         data: {
           userId,
@@ -180,21 +203,40 @@ export default async function sessionRoutes(app: FastifyInstance) {
             sessionId: createdSession.id,
             word: word.word,
             misses: word.misses,
+            activeDurationMs: word.activeDurationMs,
+            stallCount: word.stallCount,
+            stallDurationMs: word.stallDurationMs,
           })),
         })
 
         for (const word of words) {
-          const missRate = word.word.length > 0 ? word.misses / word.word.length : 0
+          const metrics = calculateWeakWordMetrics(word)
+          if (metrics.weaknessScore <= 0 && mode !== 'weak_word' && !existingWeakWords.has(word.word)) {
+            continue
+          }
+
           await tx.weakWord.upsert({
             where: { userId_word: { userId, word: word.word } },
             create: {
               userId,
               word: word.word,
-              missRate,
+              missRate: metrics.missRate,
+              activeDurationMs: word.activeDurationMs,
+              msPerChar: metrics.msPerChar,
+              stallCount: word.stallCount,
+              stallDurationMs: word.stallDurationMs,
+              weaknessScore: metrics.weaknessScore,
+              primaryReason: metrics.primaryReason,
               isSolved: false,
             },
             update: {
-              missRate,
+              missRate: metrics.missRate,
+              activeDurationMs: word.activeDurationMs,
+              msPerChar: metrics.msPerChar,
+              stallCount: word.stallCount,
+              stallDurationMs: word.stallDurationMs,
+              weaknessScore: metrics.weaknessScore,
+              primaryReason: metrics.primaryReason,
             },
           })
         }

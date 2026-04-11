@@ -238,6 +238,9 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         : result.allWordStats.map((word) => ({
             word: word.word,
             misses: word.misses,
+            activeDurationMs: word.activeDurationMs,
+            stallCount: word.stallCount,
+            stallDurationMs: word.stallDurationMs,
           })),
       bigrams: result.allBigramStats.map((bigram) => ({
         bigram: bigram.bigram,

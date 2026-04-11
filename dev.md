@@ -183,9 +183,10 @@ SessionResult {
 #### 苦手ワード検出ロジック
 
 - 文章をスペース区切りで単語に分解
-- 各単語のミス回数を `keyHistory` から集計
-- `missRate = misses / word.length` でソート
-- 上位 10 件を `wordStats` として返す
+- 各単語について `misses`, `activeDurationMs`, `stallCount`, `stallDurationMs` を `keyHistory` から集計
+- ミス後ロック (`MISS_LOCK_MS`) は slow / stall 判定から除外
+- `missRate`, `msPerChar`, `stallCount` / `stallDurationMs` をもとに `mistype`, `slow`, `stall` の理由を付与
+- 理由ごとの重みから `weaknessScore` を算出し、上位 10 件を `wordStats` として返す
 
 ### 未実装
 
@@ -232,7 +233,7 @@ if (!event.correct) bigramMap[bigram].misses++
 
 | メソッド | パス | 内容 |
 |---|---|---|
-| GET | /api/weak-words | 苦手ワード一覧取得（`missRate` 降順） |
+| GET | /api/weak-words | 苦手ワード一覧取得（`weaknessScore` 降順） |
 | PATCH | /api/weak-words/:id | 攻略メモ更新 |
 | DELETE | /api/weak-words/:id | 苦手ワード削除 |
 
@@ -244,9 +245,10 @@ if (!event.correct) bigramMap[bigram].misses++
 - **SentenceManager**
   - ツールバーに「苦手ワード練習」ボタンを追加
   - 苦手ワード一覧セクションを追加
-  - `missRate` 表示、攻略メモのインライン編集、削除、再読込、空状態表示に対応
+  - 理由バッジ（ミス / 遅い / 停止）と `missRate` / `msPerChar` / `stallCount` 表示、攻略メモのインライン編集、削除、再読込、空状態表示に対応
 - **ResultsScreen**
   - セッション結果から直接「苦手ワード練習」を開始可能
+  - 苦手ワードの理由バッジと速度系メトリクスを表示
   - 開始失敗時は結果画面上にエラー表示
 - **App.tsx**
   - `weak_word` セッションモードを追加
@@ -254,7 +256,7 @@ if (!event.correct) bigramMap[bigram].misses++
 
 ### 設計判断
 
-- **ランキング基準**: `WeakWord.missRate` は Phase 5/6 の仕様どおり最新セッション値で上書きし、Phase 7 ではその値をそのまま利用
+- **ランキング基準**: `WeakWord` は最新セッションの `missRate` / `msPerChar` / `stallCount` / `stallDurationMs` から `weaknessScore` を再計算して上書き
 - **出題単位**: 苦手ワードは 5 単語ずつ連結して 1 問にする
 - **mock mode**: `VITE_AUTH_MOCK=true` 時は苦手ワード機能を無効化し、不要な API 呼び出しを避ける
 

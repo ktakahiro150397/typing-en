@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { SessionResult } from '../../hooks/useTypingSession'
+import { formatWeaknessReason } from '../../lib/typingAnalysis'
 
 interface Props {
   mode: 'sentence' | 'random' | 'weak_word'
@@ -72,25 +73,79 @@ export function ResultsScreen({
         />
       </div>
 
+      <div className="w-full max-w-2xl flex flex-col sm:flex-row gap-3 mb-8">
+        <button
+          onClick={onRestart}
+          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-lg transition-colors"
+        >
+          新しいセッション
+        </button>
+        <button
+          onClick={() => void handleWeakWordClick()}
+          disabled={isMockMode || startingWeakWordSession}
+          className="px-8 py-3 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 rounded-xl font-semibold text-lg transition-colors inline-flex items-center justify-center gap-2"
+        >
+          {startingWeakWordSession && (
+            <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+          )}
+          苦手ワード練習
+        </button>
+        <button
+          onClick={onGoBack}
+          className="px-8 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold text-lg transition-colors"
+        >
+          {returnLabel}
+        </button>
+      </div>
+
+      {weakWordError && (
+        <p className="w-full max-w-2xl mb-6 text-sm text-red-300">{weakWordError}</p>
+      )}
+
       <div className="w-full max-w-2xl grid sm:grid-cols-2 gap-6 mb-10">
         {/* ミスの多いワード */}
         <section>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">
-            ミスの多いワード
+            苦手ワード
           </h3>
+          <p className="mb-3 text-xs text-gray-500">
+            優先度は「ミス率・遅さ・停止」をまとめた並び順用の総合スコアです。
+          </p>
           {wordStats.length === 0 ? (
-            <p className="text-gray-600 text-sm">ミスなし</p>
+            <p className="text-gray-600 text-sm">目立った苦手ワードなし</p>
           ) : (
             <ul className="space-y-2">
               {wordStats.map((w) => (
-                <li key={w.word} className="flex items-center justify-between">
-                  <span className="font-mono text-white">{w.word}</span>
-                  <span className="text-sm text-red-400 ml-4">
-                    {w.misses} ミス
-                    <span className="text-gray-500 ml-1">
-                      ({Math.round(w.missRate * 100)}%)
+                <li key={w.word} className="rounded-xl border border-gray-800 bg-gray-800/40 px-4 py-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-white">{w.word}</span>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {w.weaknessReasons.map((reason) => (
+                          <span
+                            key={reason}
+                            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-300"
+                          >
+                            {formatWeaknessReason(reason)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-400 whitespace-nowrap">
+                      優先度 {Math.round(w.weaknessScore)}
                     </span>
-                  </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
+                    <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-rose-300">
+                      ミス率 {Math.round(w.missRate * 100)}%
+                    </span>
+                    <span className="rounded-full bg-sky-500/10 px-2.5 py-1 text-sky-300">
+                      {Math.round(w.msPerChar)} ms/char
+                    </span>
+                    <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-amber-300">
+                      停止 {w.stallCount}回
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -126,34 +181,6 @@ export function ResultsScreen({
         </section>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          onClick={onRestart}
-          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-lg transition-colors"
-        >
-          新しいセッション
-        </button>
-        <button
-          onClick={() => void handleWeakWordClick()}
-          disabled={isMockMode || startingWeakWordSession}
-          className="px-8 py-3 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 rounded-xl font-semibold text-lg transition-colors inline-flex items-center justify-center gap-2"
-        >
-          {startingWeakWordSession && (
-            <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-          )}
-          苦手ワード練習
-        </button>
-        <button
-          onClick={onGoBack}
-          className="px-8 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold text-lg transition-colors"
-        >
-          {returnLabel}
-        </button>
-      </div>
-
-      {weakWordError && (
-        <p className="mt-4 text-sm text-red-300">{weakWordError}</p>
-      )}
     </div>
   )
 }

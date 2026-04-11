@@ -1,137 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTypingEngine } from './useTypingEngine'
-import type { KeyEvent } from './useTypingEngine'
+import { analyzeProblems, type ProblemRecord, type SessionResult } from '../lib/typingAnalysis'
 
-// ---- 分析用型定義 ----
-
-interface ProblemRecord {
-  text: string
-  keyHistory: KeyEvent[]
-  startedAt: number
-  endedAt: number
-}
-
-export interface WordStat {
-  word: string
-  misses: number
-  missRate: number
-}
-
-export interface BigramStat {
-  bigram: string
-  attempts: number
-  misses: number
-  missRate: number
-}
-
-export interface SessionResult {
-  wordStats: WordStat[]
-  allWordStats: WordStat[]
-  bigramStats: BigramStat[]
-  allWordMisses: WordStat[]
-  allBigramStats: BigramStat[]
-  accuracy: number       // %
-  durationMs: number
-  wpm: number
-  totalKeys: number
-  totalMisses: number
-}
+export type {
+  BigramStat,
+  ProblemRecord,
+  SessionResult,
+  WeaknessReason,
+  WordStat,
+} from '../lib/typingAnalysis'
 
 // ---- セッション状態 ----
 
 export type SessionPhase = 'typing' | 'results'
-
-// ---- 分析ロジック ----
-
-function splitIntoWords(text: string): { word: string; start: number; end: number }[] {
-  const result: { word: string; start: number; end: number }[] = []
-  let start = 0
-  for (let i = 0; i <= text.length; i++) {
-    if (i === text.length || text[i] === ' ') {
-      if (i > start) {
-        result.push({ word: text.slice(start, i), start, end: i })
-      }
-      start = i + 1
-    }
-  }
-  return result
-}
-
-function analyzeProblems(records: ProblemRecord[]): SessionResult {
-  let totalKeys = 0
-  let totalMisses = 0
-  let durationMs = 0
-
-  const wordMissMap: Record<string, { misses: number; length: number }> = {}
-  const bigramMap: Record<string, { attempts: number; misses: number }> = {}
-
-  for (const record of records) {
-    durationMs += record.endedAt - record.startedAt
-    totalKeys += record.keyHistory.length
-    totalMisses += record.keyHistory.filter((e) => !e.correct).length
-
-    // Bigram 集計
-    for (const event of record.keyHistory) {
-      if (event.position > 0) {
-        const bigram = record.text[event.position - 1] + record.text[event.position]
-        if (!bigramMap[bigram]) bigramMap[bigram] = { attempts: 0, misses: 0 }
-        bigramMap[bigram].attempts++
-        if (!event.correct) bigramMap[bigram].misses++
-      }
-    }
-
-    // ワード別ミス集計
-    for (const { word, start, end } of splitIntoWords(record.text)) {
-      const misses = record.keyHistory.filter(
-        (e) => e.position >= start && e.position < end && !e.correct,
-      ).length
-      if (!wordMissMap[word]) wordMissMap[word] = { misses: 0, length: word.length }
-      wordMissMap[word].misses += misses
-    }
-  }
-
-  const accuracy = totalKeys > 0 ? Math.round(((totalKeys - totalMisses) / totalKeys) * 100) : 100
-
-  // WPM: (正解文字数 / 5) / 経過分
-  const totalCorrectChars = records.reduce((sum, r) => sum + r.text.replace(/ $/, '').length, 0)
-  const minutes = durationMs / 60000
-  const wpm = minutes > 0 ? Math.round(totalCorrectChars / 5 / minutes) : 0
-
-  const allWordStats: WordStat[] = Object.entries(wordMissMap)
-    .map(([word, v]) => ({
-      word,
-      misses: v.misses,
-      missRate: v.misses / v.length,
-    }))
-    .sort((a, b) => b.misses - a.misses)
-
-  const allWordMisses = allWordStats.filter((word) => word.misses > 0)
-  const wordStats = allWordMisses.slice(0, 10)
-
-  const allBigramStats: BigramStat[] = Object.entries(bigramMap)
-    .map(([bigram, v]) => ({
-      bigram,
-      attempts: v.attempts,
-      misses: v.misses,
-      missRate: v.attempts > 0 ? v.misses / v.attempts : 0,
-    }))
-    .sort((a, b) => b.misses - a.misses)
-
-  const bigramStats = allBigramStats.filter((bigram) => bigram.misses > 0).slice(0, 10)
-
-  return {
-    wordStats,
-    allWordStats,
-    bigramStats,
-    allWordMisses,
-    allBigramStats,
-    accuracy,
-    durationMs,
-    wpm,
-    totalKeys,
-    totalMisses,
-  }
-}
 
 // ---- セッションフック ----
 

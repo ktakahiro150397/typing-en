@@ -9,6 +9,9 @@ export interface SaveSessionRequest {
   words: Array<{
     word: string
     misses: number
+    activeDurationMs: number
+    stallCount: number
+    stallDurationMs: number
   }>
   bigrams: Array<{
     bigram: string

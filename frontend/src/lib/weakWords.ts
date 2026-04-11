@@ -1,9 +1,16 @@
 import { apiFetch } from './api'
+import type { WeaknessReason } from './typingAnalysis'
 
 export interface WeakWord {
   id: string
   word: string
   missRate: number
+  activeDurationMs: number
+  msPerChar: number
+  stallCount: number
+  stallDurationMs: number
+  weaknessScore: number
+  primaryReason: WeaknessReason | null
   isSolved: boolean
   note: string | null
   createdAt: string

@@ -8,6 +8,12 @@ const weakWordSelect = {
   id: true,
   word: true,
   missRate: true,
+  activeDurationMs: true,
+  msPerChar: true,
+  stallCount: true,
+  stallDurationMs: true,
+  weaknessScore: true,
+  primaryReason: true,
   isSolved: true,
   note: true,
   createdAt: true,
@@ -22,7 +28,7 @@ export default async function weakWordRoutes(app: FastifyInstance) {
       const userId = req.user!.id
       const words = await prisma.weakWord.findMany({
         where: { userId },
-        orderBy: [{ missRate: 'desc' }, { updatedAt: 'desc' }],
+        orderBy: [{ weaknessScore: 'desc' }, { updatedAt: 'desc' }],
         select: weakWordSelect,
       })
       return { words }

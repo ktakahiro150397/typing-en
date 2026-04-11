@@ -28,6 +28,7 @@ export function WeakWordManager({
   const [weakWordError, setWeakWordError] = useState<string | null>(null)
   const [practiceError, setPracticeError] = useState<string | null>(null)
   const [startingWeakWordSession, setStartingWeakWordSession] = useState(false)
+  const [hideSolved, setHideSolved] = useState(true)
 
   const loadWeakWords = useCallback(async () => {
     if (isMockMode) {
@@ -75,6 +76,10 @@ export function WeakWordManager({
   }, [])
 
   const activeCount = useMemo(() => weakWords.filter((word) => !word.isSolved).length, [weakWords])
+  const visibleWeakWords = useMemo(
+    () => (hideSolved ? weakWords.filter((word) => !word.isSolved) : weakWords),
+    [hideSolved, weakWords],
+  )
 
   return (
     <DashboardLayout
@@ -85,6 +90,15 @@ export function WeakWordManager({
       onStartRandomSession={onStartRandomSession}
       actions={!isMockMode ? (
         <>
+          <label className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-300">
+            <input
+              type="checkbox"
+              checked={hideSolved}
+              onChange={(e) => setHideSolved(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+            />
+            攻略済みを隠す
+          </label>
           <button
             onClick={() => void handleWeakWordClick()}
             disabled={startingWeakWordSession}
@@ -133,7 +147,7 @@ export function WeakWordManager({
         </div>
       ) : (
         <WeakWordList
-          weakWords={weakWords}
+          weakWords={visibleWeakWords}
           onUpdateNote={(id, note) => handleUpdateWeakWord(id, { note })}
           onToggleSolved={(id, isSolved) => handleUpdateWeakWord(id, { isSolved })}
           onDelete={handleDeleteWeakWord}
