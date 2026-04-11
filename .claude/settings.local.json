@@ -4,7 +4,15 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(copilot:*)"
+      "Bash(git diff:*)",
+      "Bash(git ls-files:*)",
+      "Bash(sort:*)",
+      "Bash(mktemp:*)",
+      "Bash(cat:*)",
+      "Bash(rm -f:*)",
+      "Bash(copilot:*)",
+      "Bash(wait)",
+      "Bash(git rm:*)"
     ]
   }
 }
