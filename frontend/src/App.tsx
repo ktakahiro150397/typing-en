@@ -3,10 +3,13 @@ import { TypingArea } from './components/TypingArea/TypingArea'
 import { CommandHistory } from './components/CommandHistory/CommandHistory'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
 import { LoginScreen } from './components/LoginScreen/LoginScreen'
+import { SentenceManager } from './components/SentenceManager/SentenceManager'
 import { useTypingSession } from './hooks/useTypingSession'
 import { generateWordSequence } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
 import { apiFetch } from './lib/api'
+
+type Screen = 'manager' | 'game'
 
 function normalizeText(text: string): string {
   const t = text.trim()
@@ -30,6 +33,7 @@ export default function App() {
   const { user, token, setAuth, clearAuth } = useAuthStore()
   const [authLoaded, setAuthLoaded] = useState(false)
   const [authError, setAuthError] = useState(false)
+  const [screen, setScreen] = useState<Screen>('manager')
 
   // Handle OAuth callback token and session restore on mount
   useEffect(() => {
@@ -98,6 +102,16 @@ export default function App() {
     restartSession(next)
   }, [restartSession])
 
+  const handleStartSession = useCallback((sessionTexts: string[]) => {
+    setTexts(sessionTexts)
+    restartSession(sessionTexts)
+    setScreen('game')
+  }, [restartSession])
+
+  const handleLogout = useCallback(() => {
+    clearAuth()
+  }, [clearAuth])
+
   if (!authLoaded) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -110,8 +124,25 @@ export default function App() {
     return <LoginScreen error={authError} />
   }
 
+  if (screen === 'manager') {
+    return (
+      <SentenceManager
+        onStartSession={handleStartSession}
+        onLogout={handleLogout}
+        userName={user.name}
+      />
+    )
+  }
+
   if (phase === 'results' && result) {
-    return <ResultsScreen result={result} totalCount={totalCount} onRestart={handleRestart} />
+    return (
+      <ResultsScreen
+        result={result}
+        totalCount={totalCount}
+        onRestart={handleRestart}
+        onGoToManager={() => setScreen('manager')}
+      />
+    )
   }
 
   const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
@@ -122,12 +153,26 @@ export default function App() {
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
       {/* Header */}
       <header className="border-b border-gray-700 px-6 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-bold tracking-wide">typing-en</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-bold tracking-wide">typing-en</h1>
+          <button
+            onClick={() => setScreen('manager')}
+            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            文章管理
+          </button>
+        </div>
         <div className="flex items-center gap-4 text-sm text-gray-400">
           <span>{currentIndex + 1} / {totalCount}</span>
           <span className="text-red-400 font-mono">
             misses: <strong>{sessionMisses}</strong>
           </span>
+          <button
+            onClick={handleLogout}
+            className="text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            ログアウト
+          </button>
         </div>
       </header>
 

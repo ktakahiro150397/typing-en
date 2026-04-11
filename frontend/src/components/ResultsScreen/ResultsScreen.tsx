@@ -4,9 +4,10 @@ interface Props {
   result: SessionResult
   totalCount: number
   onRestart: () => void
+  onGoToManager: () => void
 }
 
-export function ResultsScreen({ result, totalCount, onRestart }: Props) {
+export function ResultsScreen({ result, totalCount, onRestart, onGoToManager }: Props) {
   const { accuracy, wpm, durationMs, totalKeys, totalMisses, wordStats, bigramStats } = result
   const seconds = (durationMs / 1000).toFixed(1)
 
@@ -81,12 +82,20 @@ export function ResultsScreen({ result, totalCount, onRestart }: Props) {
         </section>
       </div>
 
-      <button
-        onClick={onRestart}
-        className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-lg transition-colors"
-      >
-        新しいセッション
-      </button>
+      <div className="flex gap-3">
+        <button
+          onClick={onRestart}
+          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-lg transition-colors"
+        >
+          新しいセッション
+        </button>
+        <button
+          onClick={onGoToManager}
+          className="px-8 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold text-lg transition-colors"
+        >
+          文章管理
+        </button>
+      </div>
     </div>
   )
 }
