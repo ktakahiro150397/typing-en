@@ -1,15 +1,15 @@
 import type { FastifyInstance } from 'fastify'
-import fastifyPassport from '@fastify/passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../db.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
+import { passport } from '../passport.js'
 
 export default async function authRoutes(app: FastifyInstance) {
   const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173'
 
   // Register Google OAuth strategy
-  fastifyPassport.use(
+  passport.use(
     'google',
     new GoogleStrategy(
       {
@@ -39,8 +39,8 @@ export default async function authRoutes(app: FastifyInstance) {
     ),
   )
 
-  fastifyPassport.registerUserSerializer(async (user: { id: string }) => user.id)
-  fastifyPassport.registerUserDeserializer(async (id: string) => {
+  passport.registerUserSerializer(async (user: { id: string }) => user.id)
+  passport.registerUserDeserializer(async (id: string) => {
     return prisma.user.findUnique({ where: { id } })
   })
 
@@ -48,7 +48,7 @@ export default async function authRoutes(app: FastifyInstance) {
   app.get(
     '/auth/google',
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    { preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'] }) as any },
+    { preValidation: passport.authenticate('google', { scope: ['profile', 'email'] }) as any },
     async () => {},
   )
 
@@ -57,7 +57,7 @@ export default async function authRoutes(app: FastifyInstance) {
     '/auth/google/callback',
     {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      preValidation: fastifyPassport.authenticate('google', {
+      preValidation: passport.authenticate('google', {
         failureRedirect: `${frontendUrl}?error=auth_failed`,
       }) as any,
     },

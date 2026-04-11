@@ -8,8 +8,10 @@ import { useTypingSession } from './hooks/useTypingSession'
 import { generateWordSequence } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
 import { apiFetch } from './lib/api'
+import { normalizeSessionText, buildWeakWordPracticeTexts } from './lib/sessionText'
 import { saveSession } from './lib/sessions'
 import type { Sentence } from './lib/sentences'
+import { listWeakWords } from './lib/weakWords'
 
 type Screen = 'manager' | 'game'
 
@@ -19,8 +21,7 @@ interface SessionText {
 }
 
 function normalizeText(text: string): string {
-  const t = text.trim()
-  return t.endsWith('.') ? t : t + ' '
+  return normalizeSessionText(text)
 }
 
 function generateRandomSessionItems(count: number): SessionText[] {
@@ -48,17 +49,18 @@ interface AuthMe {
 
 export default function App() {
   const { user, token, setAuth, clearAuth } = useAuthStore()
+  const isMockMode = import.meta.env.VITE_AUTH_MOCK === 'true'
   const [authLoaded, setAuthLoaded] = useState(false)
   const [authError, setAuthError] = useState(false)
   const [screen, setScreen] = useState<Screen>('manager')
-  const [sessionMode, setSessionMode] = useState<'sentence' | 'random'>('random')
+  const [sessionMode, setSessionMode] = useState<'sentence' | 'random' | 'weak_word'>('random')
   const [sessionItems, setSessionItems] = useState<SessionText[]>(() => generateRandomSessionItems(DEFAULT_COUNT))
   const savedSessionRef = useRef(false)
 
   // Handle OAuth callback token and session restore on mount
   useEffect(() => {
     // Debug: bypass Google OAuth with a dummy account
-    if (import.meta.env.VITE_AUTH_MOCK === 'true') {
+    if (isMockMode) {
       setAuth({ id: 'mock-user', name: 'Mock User', email: 'mock@example.com' }, 'mock-token')
       setAuthLoaded(true)
       return
@@ -99,6 +101,7 @@ export default function App() {
       })
       .finally(() => setAuthLoaded(true))
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const texts = sessionItems.map((item) => item.text)
@@ -111,7 +114,7 @@ export default function App() {
 
     savedSessionRef.current = true
 
-    if (import.meta.env.VITE_AUTH_MOCK === 'true' || !token) {
+    if (isMockMode || !token) {
       return
     }
 
@@ -133,7 +136,7 @@ export default function App() {
     }).catch((error) => {
       console.error('Failed to save session', error)
     })
-  }, [result, sessionMode, sessionItems, token])
+  }, [isMockMode, result, sessionMode, sessionItems, token])
 
   // ロック残り時間（App側で持ち、枠色制御と TypingArea 表示に使う）
   const [lockRemaining, setLockRemaining] = useState(0)
@@ -162,6 +165,32 @@ export default function App() {
     setScreen('game')
   }, [restartSession])
 
+  const handleStartWeakWordSession = useCallback(async () => {
+    if (isMockMode) {
+      throw new Error('モック認証では苦手ワード機能を利用できません')
+    }
+    if (!token) {
+      throw new Error('認証情報がありません。再ログインしてください。')
+    }
+
+    const { words } = await listWeakWords()
+    if (words.length === 0) {
+      throw new Error('苦手ワードがまだありません。まず通常のセッションを完了してください。')
+    }
+
+    const nextTexts = buildWeakWordPracticeTexts(words.map((word) => word.word))
+    if (nextTexts.length === 0) {
+      throw new Error('練習対象の苦手ワードが見つかりませんでした。')
+    }
+
+    const nextItems = nextTexts.map((text) => ({ text, sentenceId: null }))
+    savedSessionRef.current = false
+    setSessionMode('weak_word')
+    setSessionItems(nextItems)
+    restartSession(nextTexts)
+    setScreen('game')
+  }, [isMockMode, restartSession, token])
+
   const handleLogout = useCallback(() => {
     clearAuth()
   }, [clearAuth])
@@ -182,6 +211,8 @@ export default function App() {
     return (
       <SentenceManager
         onStartSession={handleStartSession}
+        onStartWeakWordSession={handleStartWeakWordSession}
+        isMockMode={isMockMode}
         onLogout={handleLogout}
         userName={user.name}
       />
@@ -194,6 +225,8 @@ export default function App() {
         result={result}
         totalCount={totalCount}
         onRestart={handleRestart}
+        onStartWeakWordSession={handleStartWeakWordSession}
+        isMockMode={isMockMode}
         onGoToManager={() => setScreen('manager')}
       />
     )

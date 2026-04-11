@@ -1,0 +1,25 @@
+import { apiFetch } from './api'
+
+export interface WeakWord {
+  id: string
+  word: string
+  missRate: number
+  note: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export function listWeakWords(): Promise<{ words: WeakWord[] }> {
+  return apiFetch<{ words: WeakWord[] }>('/api/weak-words')
+}
+
+export function updateWeakWord(id: string, patch: { note: string }): Promise<WeakWord> {
+  return apiFetch<WeakWord>(`/api/weak-words/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
+  })
+}
+
+export async function deleteWeakWord(id: string): Promise<void> {
+  await apiFetch<void>(`/api/weak-words/${id}`, { method: 'DELETE' })
+}

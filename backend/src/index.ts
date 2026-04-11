@@ -2,7 +2,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import cookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
-import fastifyPassport from '@fastify/passport'
+import { passport } from './passport.js'
 
 const app = Fastify({ logger: true })
 
@@ -24,8 +24,8 @@ await app.register(fastifySession, {
   saveUninitialized: false,
 })
 
-await app.register(fastifyPassport.initialize())
-await app.register(fastifyPassport.secureSession())
+await app.register(passport.initialize())
+await app.register(passport.secureSession())
 
 // Health check
 app.get('/health', async () => ({ status: 'ok' }))
@@ -33,7 +33,7 @@ app.get('/health', async () => ({ status: 'ok' }))
 // Routes
 await app.register(import('./routes/auth.js'))
 await app.register(import('./routes/sentences.js'), { prefix: '/api' })
-// await app.register(import('./routes/weakWords.js'), { prefix: '/api' })
+await app.register(import('./routes/weakWords.js'), { prefix: '/api' })
 await app.register(import('./routes/sessions.js'), { prefix: '/api' })
 // await app.register(import('./routes/stats.js'), { prefix: '/api' })
 

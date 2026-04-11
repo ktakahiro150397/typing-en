@@ -1,5 +1,5 @@
 import type { User } from '@prisma/client'
 
-declare module '@fastify/passport' {
+declare module 'fastify' {
   interface PassportUser extends User {}
 }

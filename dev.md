@@ -226,7 +226,42 @@ if (!event.correct) bigramMap[bigram].misses++
 
 ## Phase 7: 苦手ワード集中練習モード
 
-（実装後に記載）
+### 実装内容
+
+#### バックエンド API (`backend/src/routes/weakWords.ts`)
+
+| メソッド | パス | 内容 |
+|---|---|---|
+| GET | /api/weak-words | 苦手ワード一覧取得（`missRate` 降順） |
+| PATCH | /api/weak-words/:id | 攻略メモ更新 |
+| DELETE | /api/weak-words/:id | 苦手ワード削除 |
+
+- すべて JWT 認証 + 所有者確認つき
+- `backend/src/index.ts` で weakWords ルートを登録
+
+#### フロントエンド
+
+- **SentenceManager**
+  - ツールバーに「苦手ワード練習」ボタンを追加
+  - 苦手ワード一覧セクションを追加
+  - `missRate` 表示、攻略メモのインライン編集、削除、再読込、空状態表示に対応
+- **ResultsScreen**
+  - セッション結果から直接「苦手ワード練習」を開始可能
+  - 開始失敗時は結果画面上にエラー表示
+- **App.tsx**
+  - `weak_word` セッションモードを追加
+  - `GET /api/weak-words` で取得した単語を 5 単語ずつ 1 問にまとめてセッション化
+
+### 設計判断
+
+- **ランキング基準**: `WeakWord.missRate` は Phase 5/6 の仕様どおり最新セッション値で上書きし、Phase 7 ではその値をそのまま利用
+- **出題単位**: 苦手ワードは 5 単語ずつ連結して 1 問にする
+- **mock mode**: `VITE_AUTH_MOCK=true` 時は苦手ワード機能を無効化し、不要な API 呼び出しを避ける
+
+### 既知の制約
+
+- 苦手ワードの順位は累積平均ではなく最新セッションの結果に強く依存する
+- Bigram 優先の出題や苦手ワード履歴画面は Phase 7 の対象外
 
 ---
 

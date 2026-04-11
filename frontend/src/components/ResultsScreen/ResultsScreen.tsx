@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { SessionResult } from '../../hooks/useTypingSession'
 
 interface Props {
@@ -5,11 +6,33 @@ interface Props {
   totalCount: number
   onRestart: () => void
   onGoToManager: () => void
+  onStartWeakWordSession: () => Promise<void>
+  isMockMode: boolean
 }
 
-export function ResultsScreen({ result, totalCount, onRestart, onGoToManager }: Props) {
+export function ResultsScreen({
+  result,
+  totalCount,
+  onRestart,
+  onGoToManager,
+  onStartWeakWordSession,
+  isMockMode,
+}: Props) {
   const { accuracy, wpm, durationMs, totalKeys, totalMisses, wordStats, bigramStats } = result
   const seconds = (durationMs / 1000).toFixed(1)
+  const [startingWeakWordSession, setStartingWeakWordSession] = useState(false)
+  const [weakWordError, setWeakWordError] = useState<string | null>(null)
+
+  const handleWeakWordClick = async () => {
+    setStartingWeakWordSession(true)
+    setWeakWordError(null)
+    try {
+      await onStartWeakWordSession()
+    } catch (err) {
+      setWeakWordError(err instanceof Error ? err.message : '苦手ワード練習を開始できませんでした')
+      setStartingWeakWordSession(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-start py-12 px-6">
@@ -82,12 +105,22 @@ export function ResultsScreen({ result, totalCount, onRestart, onGoToManager }: 
         </section>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           onClick={onRestart}
           className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-lg transition-colors"
         >
           新しいセッション
+        </button>
+        <button
+          onClick={() => void handleWeakWordClick()}
+          disabled={isMockMode || startingWeakWordSession}
+          className="px-8 py-3 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 rounded-xl font-semibold text-lg transition-colors inline-flex items-center justify-center gap-2"
+        >
+          {startingWeakWordSession && (
+            <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+          )}
+          苦手ワード練習
         </button>
         <button
           onClick={onGoToManager}
@@ -96,6 +129,10 @@ export function ResultsScreen({ result, totalCount, onRestart, onGoToManager }: 
           文章管理
         </button>
       </div>
+
+      {weakWordError && (
+        <p className="mt-4 text-sm text-red-300">{weakWordError}</p>
+      )}
     </div>
   )
 }
