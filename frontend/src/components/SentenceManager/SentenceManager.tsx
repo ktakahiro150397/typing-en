@@ -4,9 +4,10 @@ import { SentenceList } from './SentenceList'
 import { SentenceForm } from './SentenceForm'
 import { CsvImport } from './CsvImport'
 import { StartSessionModal } from './StartSessionModal'
+import type { Sentence } from '../../lib/sentences'
 
 interface Props {
-  onStartSession: (texts: string[]) => void
+  onStartSession: (sentences: Sentence[]) => void
   onLogout: () => void
   userName: string
 }
@@ -97,7 +98,7 @@ export function SentenceManager({ onStartSession, onLogout, userName }: Props) {
       {showModal && (
         <StartSessionModal
           sentences={sentences}
-          onStart={(texts) => { setShowModal(false); onStartSession(texts) }}
+          onStart={(selectedSentences) => { setShowModal(false); onStartSession(selectedSentences) }}
           onClose={() => setShowModal(false)}
         />
       )}

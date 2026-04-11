@@ -3,7 +3,7 @@ import type { Sentence } from '../../lib/sentences'
 
 interface Props {
   sentences: Sentence[]
-  onStart: (texts: string[]) => void
+  onStart: (sentences: Sentence[]) => void
   onClose: () => void
 }
 
@@ -21,12 +21,7 @@ export function StartSessionModal({ sentences, onStart, onClose }: Props) {
   const [count, setCount] = useState(defaultCount)
 
   const handleStart = () => {
-    const selected = shuffle(sentences)
-      .slice(0, count)
-      .map((s) => {
-        const t = s.text.trim()
-        return t.endsWith('.') ? t : t + ' '
-      })
+    const selected = shuffle(sentences).slice(0, count)
     onStart(selected)
   }
 

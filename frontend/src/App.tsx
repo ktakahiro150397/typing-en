@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { TypingArea } from './components/TypingArea/TypingArea'
 import { CommandHistory } from './components/CommandHistory/CommandHistory'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
@@ -8,16 +8,33 @@ import { useTypingSession } from './hooks/useTypingSession'
 import { generateWordSequence } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
 import { apiFetch } from './lib/api'
+import { saveSession } from './lib/sessions'
+import type { Sentence } from './lib/sentences'
 
 type Screen = 'manager' | 'game'
+
+interface SessionText {
+  text: string
+  sentenceId: string | null
+}
 
 function normalizeText(text: string): string {
   const t = text.trim()
   return t.endsWith('.') ? t : t + ' '
 }
 
-function generateSessionTexts(count: number): string[] {
-  return Array.from({ length: count }, () => normalizeText(generateWordSequence(5)))
+function generateRandomSessionItems(count: number): SessionText[] {
+  return Array.from({ length: count }, () => ({
+    text: normalizeText(generateWordSequence(5)),
+    sentenceId: null,
+  }))
+}
+
+function mapSentencesToSessionItems(sentences: Sentence[]): SessionText[] {
+  return sentences.map((sentence) => ({
+    text: normalizeText(sentence.text),
+    sentenceId: sentence.id,
+  }))
 }
 
 const DEFAULT_COUNT = 3
@@ -34,6 +51,9 @@ export default function App() {
   const [authLoaded, setAuthLoaded] = useState(false)
   const [authError, setAuthError] = useState(false)
   const [screen, setScreen] = useState<Screen>('manager')
+  const [sessionMode, setSessionMode] = useState<'sentence' | 'random'>('random')
+  const [sessionItems, setSessionItems] = useState<SessionText[]>(() => generateRandomSessionItems(DEFAULT_COUNT))
+  const savedSessionRef = useRef(false)
 
   // Handle OAuth callback token and session restore on mount
   useEffect(() => {
@@ -81,10 +101,39 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [texts, setTexts] = useState<string[]>(() => generateSessionTexts(DEFAULT_COUNT))
+  const texts = sessionItems.map((item) => item.text)
 
   const { engineState, handleKey, phase, currentIndex, totalCount, result, restartSession, sessionMisses } =
     useTypingSession(texts)
+
+  useEffect(() => {
+    if (!result || savedSessionRef.current) return
+
+    savedSessionRef.current = true
+
+    if (import.meta.env.VITE_AUTH_MOCK === 'true' || !token) {
+      return
+    }
+
+    void saveSession({
+      mode: sessionMode,
+      totalKeys: result.totalKeys,
+      missKeys: result.totalMisses,
+      durationMs: result.durationMs,
+      sentenceIds: sessionItems.flatMap((item) => (item.sentenceId ? [item.sentenceId] : [])),
+      words: result.allWordMisses.map((word) => ({
+        word: word.word,
+        misses: word.misses,
+      })),
+      bigrams: result.allBigramStats.map((bigram) => ({
+        bigram: bigram.bigram,
+        attempts: bigram.attempts,
+        misses: bigram.misses,
+      })),
+    }).catch((error) => {
+      console.error('Failed to save session', error)
+    })
+  }, [result, sessionMode, sessionItems, token])
 
   // ロック残り時間（App側で持ち、枠色制御と TypingArea 表示に使う）
   const [lockRemaining, setLockRemaining] = useState(0)
@@ -97,14 +146,19 @@ export default function App() {
   }, [engineState.lockedUntil])
 
   const handleRestart = useCallback(() => {
-    const next = generateSessionTexts(DEFAULT_COUNT)
-    setTexts(next)
-    restartSession(next)
+    const nextItems = generateRandomSessionItems(DEFAULT_COUNT)
+    savedSessionRef.current = false
+    setSessionMode('random')
+    setSessionItems(nextItems)
+    restartSession(nextItems.map((item) => item.text))
   }, [restartSession])
 
-  const handleStartSession = useCallback((sessionTexts: string[]) => {
-    setTexts(sessionTexts)
-    restartSession(sessionTexts)
+  const handleStartSession = useCallback((sentences: Sentence[]) => {
+    const nextItems = mapSentencesToSessionItems(sentences)
+    savedSessionRef.current = false
+    setSessionMode('sentence')
+    setSessionItems(nextItems)
+    restartSession(nextItems.map((item) => item.text))
     setScreen('game')
   }, [restartSession])
 

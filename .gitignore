@@ -7,9 +7,6 @@ frontend/.env.local
 node_modules/
 dist/
 
-# Prisma
-backend/prisma/migrations/
-
 # OS
 .DS_Store
 Thumbs.db

@@ -27,6 +27,8 @@ export interface BigramStat {
 export interface SessionResult {
   wordStats: WordStat[]
   bigramStats: BigramStat[]
+  allWordMisses: WordStat[]
+  allBigramStats: BigramStat[]
   accuracy: number       // %
   durationMs: number
   wpm: number
@@ -94,7 +96,7 @@ function analyzeProblems(records: ProblemRecord[]): SessionResult {
   const minutes = durationMs / 60000
   const wpm = minutes > 0 ? Math.round(totalCorrectChars / 5 / minutes) : 0
 
-  const wordStats: WordStat[] = Object.entries(wordMissMap)
+  const allWordMisses: WordStat[] = Object.entries(wordMissMap)
     .filter(([, v]) => v.misses > 0)
     .map(([word, v]) => ({
       word,
@@ -102,20 +104,31 @@ function analyzeProblems(records: ProblemRecord[]): SessionResult {
       missRate: v.misses / v.length,
     }))
     .sort((a, b) => b.misses - a.misses)
-    .slice(0, 10)
 
-  const bigramStats: BigramStat[] = Object.entries(bigramMap)
-    .filter(([, v]) => v.misses > 0)
+  const wordStats = allWordMisses.slice(0, 10)
+
+  const allBigramStats: BigramStat[] = Object.entries(bigramMap)
     .map(([bigram, v]) => ({
       bigram,
       attempts: v.attempts,
       misses: v.misses,
-      missRate: v.misses / v.attempts,
+      missRate: v.attempts > 0 ? v.misses / v.attempts : 0,
     }))
     .sort((a, b) => b.misses - a.misses)
-    .slice(0, 10)
 
-  return { wordStats, bigramStats, accuracy, durationMs, wpm, totalKeys, totalMisses }
+  const bigramStats = allBigramStats.filter((bigram) => bigram.misses > 0).slice(0, 10)
+
+  return {
+    wordStats,
+    bigramStats,
+    allWordMisses,
+    allBigramStats,
+    accuracy,
+    durationMs,
+    wpm,
+    totalKeys,
+    totalMisses,
+  }
 }
 
 // ---- セッションフック ----

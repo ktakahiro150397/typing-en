@@ -20,13 +20,13 @@ model User {
 }
 
 model Sentence {
-  id        String    @id @default(cuid())
-  userId    String
-  text      String    @db.Text
-  note      String?   @db.Text
-  createdAt DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessions  Session[]
+  id           String           @id @default(cuid())
+  userId       String
+  text         String           @db.Text
+  note         String?          @db.Text
+  createdAt    DateTime         @default(now())
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionLinks SessionSentence[]
 
   @@unique([userId, text(length: 500)])
 }
@@ -45,17 +45,16 @@ model WeakWord {
 }
 
 model Session {
-  id          String        @id @default(cuid())
-  userId      String
-  sentenceId  String?
-  mode        String        @default("sentence") // "sentence" | "weak_word" | "random"
-  totalKeys   Int
-  missKeys    Int
-  durationMs  Int
-  createdAt   DateTime      @default(now())
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sentence    Sentence?     @relation(fields: [sentenceId], references: [id], onDelete: SetNull)
-  sessionWords SessionWord[]
+  id               String            @id @default(cuid())
+  userId           String
+  mode             String            @default("sentence") // "sentence" | "weak_word" | "random"
+  totalKeys        Int
+  missKeys         Int
+  durationMs       Int
+  createdAt        DateTime          @default(now())
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionWords     SessionWord[]
+  sessionSentences SessionSentence[]
 }
 
 model SessionWord {
@@ -64,6 +63,18 @@ model SessionWord {
   word      String
   misses    Int
   session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model SessionSentence {
+  id         String   @id @default(cuid())
+  sessionId  String
+  sentenceId String
+  position   Int
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sentence   Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, position])
+  @@index([sentenceId])
 }
 
 model BigramStat {
