@@ -18,7 +18,9 @@ interface Props {
 }
 
 function getReturnLabel(returnPath: string): string {
-  return returnPath === '/weak-words' ? '苦手ワードへ戻る' : '文章管理へ戻る'
+  if (returnPath === '/weak-words') return '苦手ワードへ戻る'
+  if (returnPath === '/fingering') return '苦手運指へ戻る'
+  return '文章管理へ戻る'
 }
 
 export function PracticeScreen({

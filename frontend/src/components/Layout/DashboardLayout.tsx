@@ -39,6 +39,9 @@ export function DashboardLayout({
             <NavLink to="/weak-words" className={navLinkClassName}>
               苦手ワード
             </NavLink>
+            <NavLink to="/fingering" className={navLinkClassName}>
+              苦手運指
+            </NavLink>
           </nav>
         </div>
 

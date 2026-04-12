@@ -12,6 +12,7 @@ import { LoginScreen } from './components/LoginScreen/LoginScreen'
 import { SentenceManager } from './components/SentenceManager/SentenceManager'
 import { PracticeScreen } from './components/PracticeScreen/PracticeScreen'
 import { WeakWordManager } from './components/SentenceManager/WeakWordManager'
+import { FingeringManager } from './components/FingeringManager/FingeringManager'
 import type { SessionResult } from './hooks/useTypingSession'
 import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
@@ -20,6 +21,7 @@ import { normalizeSessionText, buildWeakWordPracticeTexts } from './lib/sessionT
 import { saveSession } from './lib/sessions'
 import type { Sentence } from './lib/sentences'
 import { listWeakWords } from './lib/weakWords'
+import { listWeakBigrams, fetchWordsForBigrams } from './lib/bigramStats'
 
 type SessionMode = 'sentence' | 'random' | 'weak_word'
 
@@ -53,6 +55,15 @@ function generateRandomSessionItems(): SessionText[] {
     text: generateRandomText(RANDOM_TEXT_LENGTH, 'full'),
     sentenceId: null,
   }]
+}
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const result = [...arr]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
+  }
+  return result
 }
 
 function mapSentencesToSessionItems(sentences: Sentence[]): SessionText[] {
@@ -182,7 +193,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     }
 
     const { words } = await listWeakWords()
-    const activeWords = words.filter((word) => !word.isSolved)
+    const activeWords = words.filter((word) => !word.isSolved && word.weaknessScore > 0)
     if (activeWords.length === 0) {
       throw new Error('未攻略の苦手ワードがありません。通常練習で追加するか、攻略済みを外してください。')
     }
@@ -200,8 +211,47 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     })
   }, [beginSession, isMockMode, token])
 
+  // 苦手運指練習セッションを開始する。
+  // ミス率上位 10 バイグラムを取得し、それらを含む単語を文章コーパスから抽出して練習テキストを構築する。
+  // セッション保存は weak_word モードと同じ経路を通るため、ミスした単語は苦手ワードにも自動登録される。
+  const handleStartFingeringSession = useCallback(async () => {
+    await pendingSaveRef.current
+
+    if (isMockMode) {
+      throw new Error('モック認証では苦手運指機能を利用できません')
+    }
+    if (!token) {
+      throw new Error('認証情報がありません。再ログインしてください。')
+    }
+
+    const { bigrams } = await listWeakBigrams()
+    const topBigrams = bigrams.slice(0, 10)
+    if (topBigrams.length === 0) {
+      throw new Error('まだ十分な運指データがありません。通常練習を行うとデータが蓄積されます。')
+    }
+
+    const { words } = await fetchWordsForBigrams(topBigrams.map((b) => b.bigram))
+    if (words.length < 3) {
+      throw new Error(`対象の運指パターンを含む単語が少なすぎます（${words.length}件）。文章管理でより多くの文章を追加してください。`)
+    }
+
+    // シャッフルして最大 MAX_WEAK_WORD_QUESTIONS チャンク分の単語を使用する
+    const shuffled = shuffleArray(words).slice(0, MAX_WEAK_WORD_QUESTIONS * 5)
+    const texts = buildWeakWordPracticeTexts(shuffled).slice(0, MAX_WEAK_WORD_QUESTIONS)
+
+    beginSession({
+      mode: 'weak_word',
+      items: texts.map((text) => ({ text, sentenceId: null })),
+      returnPath: '/fingering',
+    })
+  }, [beginSession, isMockMode, token])
+
   const handleStartRandomSession = useCallback(() => {
-    const returnPath = location.pathname === '/weak-words' ? '/weak-words' : '/sentences'
+    const returnPath = location.pathname === '/weak-words'
+      ? '/weak-words'
+      : location.pathname === '/fingering'
+        ? '/fingering'
+        : '/sentences'
     beginSession({
       mode: 'random',
       items: generateRandomSessionItems(),
@@ -266,7 +316,11 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     if (!lastSessionConfig) return
 
     if (lastSessionConfig.mode === 'weak_word') {
-      void handleStartWeakWordSession()
+      if (lastSessionConfig.returnPath === '/fingering') {
+        void handleStartFingeringSession()
+      } else {
+        void handleStartWeakWordSession()
+      }
       return
     }
 
@@ -281,7 +335,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     setLastSessionConfig(nextConfig)
     setResultsState(null)
     navigate('/practice')
-  }, [handleStartWeakWordSession, lastSessionConfig, navigate])
+  }, [handleStartFingeringSession, handleStartWeakWordSession, lastSessionConfig, navigate])
 
   const handleGoBackFromResults = useCallback(() => {
     setActiveSession(null)
@@ -332,6 +386,18 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         )}
       />
       <Route
+        path="/fingering"
+        element={(
+          <FingeringManager
+            onStartFingeringSession={handleStartFingeringSession}
+            onStartRandomSession={handleStartRandomSession}
+            isMockMode={isMockMode}
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route
         path="/practice"
         element={activeSession ? (
           <PracticeScreen
@@ -358,7 +424,13 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             onStartWeakWordSession={handleStartWeakWordSession}
             isMockMode={isMockMode}
             onGoBack={handleGoBackFromResults}
-            returnLabel={resultsState.returnPath === '/weak-words' ? '苦手ワードへ戻る' : '文章管理へ戻る'}
+            returnLabel={
+              resultsState.returnPath === '/weak-words'
+                ? '苦手ワードへ戻る'
+                : resultsState.returnPath === '/fingering'
+                  ? '苦手運指へ戻る'
+                  : '文章管理へ戻る'
+            }
           />
         ) : activeSession ? (
           <Navigate to="/practice" replace />
