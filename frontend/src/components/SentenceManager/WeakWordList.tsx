@@ -7,9 +7,10 @@ interface Props {
   onUpdateNote: (id: string, note: string) => Promise<void>
   onToggleSolved: (id: string, isSolved: boolean) => Promise<void>
   onDelete: (id: string) => Promise<void>
+  onDrill: (word: WeakWord) => void
 }
 
-const GRID_COLUMNS = 'grid-cols-[minmax(0,1fr)_9rem_13rem_6.5rem_14rem_8.5rem]'
+const GRID_COLUMNS = 'grid-cols-[minmax(0,1fr)_9rem_13rem_6.5rem_minmax(0,1fr)_11rem]'
 
 function getWeakWordReasons(weakWord: WeakWord) {
   return getWeaknessReasons({
@@ -47,11 +48,12 @@ function WeakWordMetrics({ weakWord }: { weakWord: WeakWord }) {
   )
 }
 
-function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete }: {
+function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill }: {
   weakWord: WeakWord
   onUpdateNote: (id: string, note: string) => Promise<void>
   onToggleSolved: (id: string, isSolved: boolean) => Promise<void>
   onDelete: (id: string) => Promise<void>
+  onDrill: (word: WeakWord) => void
 }) {
   const [editing, setEditing] = useState(false)
   const [editNote, setEditNote] = useState(weakWord.note ?? '')
@@ -190,6 +192,12 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete }: {
         ) : (
           <>
             <button
+              onClick={() => onDrill(weakWord)}
+              className="rounded-md border border-sky-500/40 px-2 py-1 text-xs text-sky-300 hover:bg-sky-500/10"
+            >
+              ドリル
+            </button>
+            <button
               onClick={() => setEditing(true)}
               className="rounded-md border border-amber-500/40 px-2 py-1 text-xs text-amber-300 hover:bg-amber-500/10"
             >
@@ -208,7 +216,7 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete }: {
   )
 }
 
-export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete }: Props) {
+export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete, onDrill }: Props) {
   if (weakWords.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500 text-sm">
@@ -234,6 +242,7 @@ export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete
           onUpdateNote={onUpdateNote}
           onToggleSolved={onToggleSolved}
           onDelete={onDelete}
+          onDrill={onDrill}
         />
       ))}
     </div>

@@ -10,6 +10,7 @@ interface SessionText {
 }
 
 interface Props {
+  mode: 'sentence' | 'random' | 'weak_word' | 'word_drill'
   sessionItems: SessionText[]
   onComplete: (result: SessionResult) => void
   onAbort: () => void
@@ -24,6 +25,7 @@ function getReturnLabel(returnPath: string): string {
 }
 
 export function PracticeScreen({
+  mode,
   sessionItems,
   onComplete,
   onAbort,
@@ -35,13 +37,15 @@ export function PracticeScreen({
   const [lockRemaining, setLockRemaining] = useState(0)
   const completedRef = useRef(false)
   const liveFeedback = useMemo(
-    () => getLiveTypingFeedback({
-      text: engineState.text,
-      keyHistory: engineState.keyHistory,
-      startedAt: engineState.startedAt,
-      cursor: engineState.cursor,
-    }),
-    [engineState.cursor, engineState.keyHistory, engineState.startedAt, engineState.text],
+    () => (mode === 'word_drill'
+      ? null
+      : getLiveTypingFeedback({
+          text: engineState.text,
+          keyHistory: engineState.keyHistory,
+          startedAt: engineState.startedAt,
+          cursor: engineState.cursor,
+        })),
+    [engineState.cursor, engineState.keyHistory, engineState.startedAt, engineState.text, mode],
   )
 
   useEffect(() => {
@@ -115,19 +119,21 @@ export function PracticeScreen({
           <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
         </div>
 
-        <div className="w-full h-8">
-          {liveFeedback && (
-            <div
-              className={`inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors ${
-                liveFeedback.reason === 'stall'
-                  ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'
-                  : 'border-sky-500/40 bg-sky-500/10 text-sky-300'
-              }`}
-            >
-              {liveFeedback.message}
-            </div>
-          )}
-        </div>
+        {mode !== 'word_drill' && (
+          <div className="w-full h-8">
+            {liveFeedback && (
+              <div
+                className={`inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors ${
+                  liveFeedback.reason === 'stall'
+                    ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'
+                    : 'border-sky-500/40 bg-sky-500/10 text-sky-300'
+                }`}
+              >
+                {liveFeedback.message}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="w-full h-14 overflow-hidden">
           {nextText ? (

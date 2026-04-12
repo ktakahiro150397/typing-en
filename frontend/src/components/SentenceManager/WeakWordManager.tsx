@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { DashboardLayout } from '../Layout/DashboardLayout'
 import { WeakWordList } from './WeakWordList'
+import { WordDrillModal } from './WordDrillModal'
 import {
+  createWeakWord,
   deleteWeakWord as deleteWeakWordRequest,
   listWeakWords,
   updateWeakWord,
@@ -10,6 +12,7 @@ import {
 
 interface Props {
   onStartWeakWordSession: () => Promise<void>
+  onStartWordDrill: (word: string, count: number) => void
   onStartRandomSession: () => void
   isMockMode: boolean
   onLogout: () => void
@@ -18,6 +21,7 @@ interface Props {
 
 export function WeakWordManager({
   onStartWeakWordSession,
+  onStartWordDrill,
   onStartRandomSession,
   isMockMode,
   onLogout,
@@ -29,6 +33,10 @@ export function WeakWordManager({
   const [practiceError, setPracticeError] = useState<string | null>(null)
   const [startingWeakWordSession, setStartingWeakWordSession] = useState(false)
   const [hideSolved, setHideSolved] = useState(true)
+  const [addWordInput, setAddWordInput] = useState('')
+  const [addWordLoading, setAddWordLoading] = useState(false)
+  const [addWordFeedback, setAddWordFeedback] = useState<{ kind: 'error' | 'info'; message: string } | null>(null)
+  const [drillTarget, setDrillTarget] = useState<WeakWord | null>(null)
 
   const loadWeakWords = useCallback(async () => {
     if (isMockMode) {
@@ -74,6 +82,50 @@ export function WeakWordManager({
     await deleteWeakWordRequest(id)
     setWeakWords((current) => current.filter((word) => word.id !== id))
   }, [])
+
+  const handleAddWord = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const word = addWordInput.trim()
+    if (!word) {
+      setAddWordFeedback({ kind: 'error', message: '追加するワードを入力してください。' })
+      return
+    }
+    if (/\s/.test(word)) {
+      setAddWordFeedback({ kind: 'error', message: 'ワードは1語ずつ追加してください。' })
+      return
+    }
+
+    setAddWordLoading(true)
+    setAddWordFeedback(null)
+    try {
+      const result = await createWeakWord(word)
+      setWeakWords((current) => [
+        result.word,
+        ...current.filter((item) => item.id !== result.word.id),
+      ])
+      setAddWordInput('')
+      setAddWordFeedback({
+        kind: 'info',
+        message: result.created
+          ? `「${result.word.word}」を追加しました。`
+          : `「${result.word.word}」はすでに登録されています。`,
+      })
+    } catch (err) {
+      setAddWordFeedback({
+        kind: 'error',
+        message: err instanceof Error ? err.message : 'ワードの追加に失敗しました',
+      })
+    } finally {
+      setAddWordLoading(false)
+    }
+  }, [addWordInput])
+
+  const handleStartDrill = useCallback((word: string, count: number) => {
+    setDrillTarget(null)
+    setPracticeError(null)
+    onStartWordDrill(word, count)
+  }, [onStartWordDrill])
 
   const activeCount = useMemo(() => weakWords.filter((word) => !word.isSolved).length, [weakWords])
   const visibleWeakWords = useMemo(
@@ -146,11 +198,49 @@ export function WeakWordManager({
           </div>
         </div>
       ) : (
-        <WeakWordList
-          weakWords={visibleWeakWords}
-          onUpdateNote={(id, note) => handleUpdateWeakWord(id, { note })}
-          onToggleSolved={(id, isSolved) => handleUpdateWeakWord(id, { isSolved })}
-          onDelete={handleDeleteWeakWord}
+        <div className="space-y-4">
+          <form onSubmit={handleAddWord} className="rounded-xl border border-gray-700 bg-gray-800/50 p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+              <div className="min-w-0 flex-1">
+                <label className="mb-2 block text-sm font-semibold text-gray-300">ワードを手動追加</label>
+                <input
+                  type="text"
+                  value={addWordInput}
+                  onChange={(e) => setAddWordInput(e.target.value)}
+                  placeholder="例: acquisition"
+                  className="w-full rounded-lg bg-gray-700 px-4 py-2 font-mono text-gray-100 outline-none transition focus:ring-2 focus:ring-amber-500"
+                />
+                {addWordFeedback && (
+                  <p className={`mt-2 text-sm ${addWordFeedback.kind === 'error' ? 'text-red-300' : 'text-amber-300'}`}>
+                    {addWordFeedback.message}
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                disabled={addWordLoading || !addWordInput.trim()}
+                className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-500 disabled:opacity-40"
+              >
+                {addWordLoading ? '追加中...' : '追加'}
+              </button>
+            </div>
+          </form>
+
+          <WeakWordList
+            weakWords={visibleWeakWords}
+            onUpdateNote={(id, note) => handleUpdateWeakWord(id, { note })}
+            onToggleSolved={(id, isSolved) => handleUpdateWeakWord(id, { isSolved })}
+            onDelete={handleDeleteWeakWord}
+            onDrill={(word) => setDrillTarget(word)}
+          />
+        </div>
+      )}
+
+      {drillTarget && (
+        <WordDrillModal
+          word={drillTarget}
+          onStart={handleStartDrill}
+          onClose={() => setDrillTarget(null)}
         />
       )}
     </DashboardLayout>

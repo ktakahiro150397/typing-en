@@ -23,7 +23,7 @@ import type { Sentence } from './lib/sentences'
 import { listWeakWords } from './lib/weakWords'
 import { listWeakBigrams, fetchWordsForBigrams } from './lib/bigramStats'
 
-type SessionMode = 'sentence' | 'random' | 'weak_word'
+type SessionMode = 'sentence' | 'random' | 'weak_word' | 'word_drill'
 
 interface SessionText {
   text: string
@@ -49,6 +49,14 @@ function normalizeText(text: string): string {
 
 const RANDOM_TEXT_LENGTH = 30
 const MAX_WEAK_WORD_QUESTIONS = 10
+
+function createWordDrillItems(word: string, count: number): SessionText[] {
+  const text = normalizeText(word)
+  return Array.from({ length: count }, () => ({
+    text,
+    sentenceId: null,
+  }))
+}
 
 function generateRandomSessionItems(): SessionText[] {
   return [{
@@ -259,6 +267,14 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     })
   }, [beginSession, location.pathname])
 
+  const handleStartWordDrill = useCallback((word: string, count: number) => {
+    beginSession({
+      mode: 'word_drill',
+      items: createWordDrillItems(word, count),
+      returnPath: '/weak-words',
+    })
+  }, [beginSession])
+
   const handleSessionComplete = useCallback((result: SessionResult) => {
     if (!activeSession) return
 
@@ -287,6 +303,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         ? []
         : result.allWordStats.map((word) => ({
             word: word.word,
+            totalChars: word.totalChars,
             misses: word.misses,
             activeDurationMs: word.activeDurationMs,
             stallCount: word.stallCount,
@@ -378,6 +395,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         element={(
           <WeakWordManager
             onStartWeakWordSession={handleStartWeakWordSession}
+            onStartWordDrill={handleStartWordDrill}
             onStartRandomSession={handleStartRandomSession}
             isMockMode={isMockMode}
             onLogout={handleLogout}
@@ -401,6 +419,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         path="/practice"
         element={activeSession ? (
           <PracticeScreen
+            mode={activeSession.mode}
             sessionItems={activeSession.items}
             onComplete={handleSessionComplete}
             onAbort={handleAbortSession}

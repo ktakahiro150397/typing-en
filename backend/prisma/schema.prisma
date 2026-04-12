@@ -55,7 +55,7 @@ model WeakWord {
 model Session {
   id               String            @id @default(cuid())
   userId           String
-  mode             String            @default("sentence") // "sentence" | "weak_word" | "random"
+  mode             String            @default("sentence") // "sentence" | "weak_word" | "random" | "word_drill"
   totalKeys        Int
   missKeys         Int
   durationMs       Int

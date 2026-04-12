@@ -15,6 +15,7 @@ export interface ProblemRecord {
 
 export interface WordStat {
   word: string
+  totalChars: number
   misses: number
   missRate: number
   activeDurationMs: number
@@ -60,7 +61,7 @@ interface WordRange {
 
 interface WordAggregate {
   word: string
-  length: number
+  totalChars: number
   misses: number
   activeDurationMs: number
   stallCount: number
@@ -112,7 +113,7 @@ function buildWordPositionMap(text: string, words: WordRange[]): Array<number | 
 function createWordAggregate(word: WordRange): WordAggregate {
   return {
     word: word.word,
-    length: word.word.length,
+    totalChars: word.word.length,
     misses: 0,
     activeDurationMs: 0,
     stallCount: 0,
@@ -181,8 +182,8 @@ export function formatWeaknessReason(reason: WeaknessReason): string {
 }
 
 function finalizeWordStat(aggregate: WordAggregate): WordStat {
-  const missRate = aggregate.length > 0 ? aggregate.misses / aggregate.length : 0
-  const msPerChar = aggregate.length > 0 ? aggregate.activeDurationMs / aggregate.length : 0
+  const missRate = aggregate.totalChars > 0 ? aggregate.misses / aggregate.totalChars : 0
+  const msPerChar = aggregate.totalChars > 0 ? aggregate.activeDurationMs / aggregate.totalChars : 0
   const metrics = {
     misses: aggregate.misses,
     missRate,
@@ -193,6 +194,7 @@ function finalizeWordStat(aggregate: WordAggregate): WordStat {
 
   return {
     word: aggregate.word,
+    totalChars: aggregate.totalChars,
     misses: aggregate.misses,
     missRate: round(missRate),
     activeDurationMs: aggregate.activeDurationMs,
@@ -229,6 +231,15 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
     const words = splitIntoWords(record.text)
     const wordPositionMap = buildWordPositionMap(record.text, words)
 
+    for (const word of words) {
+      const existing = wordMap.get(word.word)
+      if (existing) {
+        existing.totalChars += word.word.length
+      } else {
+        wordMap.set(word.word, createWordAggregate(word))
+      }
+    }
+
     let previousTimestamp = record.startedAt
     let previousWasMiss = false
 
@@ -246,10 +257,11 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
       const wordIndex = getWordIndexAtPosition(wordPositionMap, event.position)
       if (wordIndex !== null && wordIndex !== undefined) {
         const word = words[wordIndex]
-        const aggregate = wordMap.get(word.word) ?? createWordAggregate(word)
+        const aggregate = wordMap.get(word.word)
+        if (!aggregate) {
+          continue
+        }
         applyEventToWordAggregate(aggregate, event, adjustedGap)
-
-        wordMap.set(word.word, aggregate)
       }
 
       previousTimestamp = event.timestamp

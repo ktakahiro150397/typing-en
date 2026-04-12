@@ -4,12 +4,13 @@ import { prisma } from '../db.js'
 import { calculateWeakWordMetrics } from '../lib/weakWordMetrics.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
 
-const VALID_MODES = ['sentence', 'random', 'weak_word'] as const
+const VALID_MODES = ['sentence', 'random', 'weak_word', 'word_drill'] as const
 
 type Mode = (typeof VALID_MODES)[number]
 
 interface SessionWordInput {
   word: string
+  totalChars: number
   misses: number
   activeDurationMs: number
   stallCount: number
@@ -64,10 +65,11 @@ function parseWords(value: unknown): SessionWordInput[] | null {
       return null
     }
 
-    const { word, misses, activeDurationMs, stallCount, stallDurationMs } = item as Record<string, unknown>
+    const { word, totalChars, misses, activeDurationMs, stallCount, stallDurationMs } = item as Record<string, unknown>
     if (
       typeof word !== 'string'
       || word.length === 0
+      || !isPositiveInteger(totalChars)
       || !isNonNegativeInteger(misses)
       || !isNonNegativeInteger(activeDurationMs)
       || !isNonNegativeInteger(stallCount)
@@ -76,7 +78,7 @@ function parseWords(value: unknown): SessionWordInput[] | null {
       return null
     }
 
-    words.push({ word, misses, activeDurationMs, stallCount, stallDurationMs })
+    words.push({ word, totalChars, misses, activeDurationMs, stallCount, stallDurationMs })
   }
 
   return words
@@ -119,7 +121,7 @@ export default async function sessionRoutes(app: FastifyInstance) {
 
     const mode = parseMode(body.mode)
     if (!mode) {
-      return sendBadRequest(reply, 'mode must be one of sentence, random, weak_word')
+      return sendBadRequest(reply, 'mode must be one of sentence, random, weak_word, word_drill')
     }
     if (!isNonNegativeInteger(totalKeys)) {
       return sendBadRequest(reply, 'totalKeys must be a non-negative integer')
@@ -143,7 +145,7 @@ export default async function sessionRoutes(app: FastifyInstance) {
     if (!words) {
       return sendBadRequest(
         reply,
-        'words must be an array of { word, misses, activeDurationMs, stallCount, stallDurationMs } with non-negative integer metrics',
+        'words must be an array of { word, totalChars, misses, activeDurationMs, stallCount, stallDurationMs } with valid integer metrics',
       )
     }
 
@@ -168,7 +170,8 @@ export default async function sessionRoutes(app: FastifyInstance) {
     }
 
     const session = await prisma.$transaction(async (tx) => {
-      const existingWeakWords = words.length > 0
+      const shouldUpdateWeakWords = mode !== 'word_drill'
+      const existingWeakWords = shouldUpdateWeakWords && words.length > 0
         ? new Set(
             (await tx.weakWord.findMany({
               where: { userId, word: { in: words.map((word) => word.word) } },
@@ -209,36 +212,38 @@ export default async function sessionRoutes(app: FastifyInstance) {
           })),
         })
 
-        for (const word of words) {
-          const metrics = calculateWeakWordMetrics(word)
-          if (metrics.weaknessScore <= 0 && mode !== 'weak_word' && !existingWeakWords.has(word.word)) {
-            continue
-          }
+        if (shouldUpdateWeakWords) {
+          for (const word of words) {
+            const metrics = calculateWeakWordMetrics(word)
+            if (metrics.weaknessScore <= 0 && mode !== 'weak_word' && !existingWeakWords.has(word.word)) {
+              continue
+            }
 
-          await tx.weakWord.upsert({
-            where: { userId_word: { userId, word: word.word } },
-            create: {
-              userId,
-              word: word.word,
-              missRate: metrics.missRate,
-              activeDurationMs: word.activeDurationMs,
-              msPerChar: metrics.msPerChar,
-              stallCount: word.stallCount,
-              stallDurationMs: word.stallDurationMs,
-              weaknessScore: metrics.weaknessScore,
-              primaryReason: metrics.primaryReason,
-              isSolved: false,
-            },
-            update: {
-              missRate: metrics.missRate,
-              activeDurationMs: word.activeDurationMs,
-              msPerChar: metrics.msPerChar,
-              stallCount: word.stallCount,
-              stallDurationMs: word.stallDurationMs,
-              weaknessScore: metrics.weaknessScore,
-              primaryReason: metrics.primaryReason,
-            },
-          })
+            await tx.weakWord.upsert({
+              where: { userId_word: { userId, word: word.word } },
+              create: {
+                userId,
+                word: word.word,
+                missRate: metrics.missRate,
+                activeDurationMs: word.activeDurationMs,
+                msPerChar: metrics.msPerChar,
+                stallCount: word.stallCount,
+                stallDurationMs: word.stallDurationMs,
+                weaknessScore: metrics.weaknessScore,
+                primaryReason: metrics.primaryReason,
+                isSolved: false,
+              },
+              update: {
+                missRate: metrics.missRate,
+                activeDurationMs: word.activeDurationMs,
+                msPerChar: metrics.msPerChar,
+                stallCount: word.stallCount,
+                stallDurationMs: word.stallDurationMs,
+                weaknessScore: metrics.weaknessScore,
+                primaryReason: metrics.primaryReason,
+              },
+            })
+          }
         }
       }
 
