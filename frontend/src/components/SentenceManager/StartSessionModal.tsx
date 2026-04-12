@@ -26,33 +26,41 @@ export function StartSessionModal({ sentences, onStart, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl border border-gray-700 space-y-6">
-        <h3 className="text-lg font-bold text-gray-100">セッション開始</h3>
+    <div className="app-modal-backdrop">
+      <div className="app-modal-panel max-w-md space-y-6 p-8">
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">問題数（登録文章からランダム選択）</label>
+          <div className="app-chip app-chip-info">Session setup</div>
+          <h3 className="text-xl font-bold text-slate-900">セッション開始</h3>
+          <p className="text-sm text-slate-500">
+            登録文章からランダムに出題します。最初は少なめに設定して、正確性を優先して進めるのがおすすめです。
+          </p>
+        </div>
+
+        <div className="app-card-soft space-y-2 px-4 py-4">
+          <label className="block text-sm font-semibold text-slate-700">問題数</label>
           <input
             type="number"
             min={1}
             max={sentences.length}
             value={count}
             onChange={(e) => setCount(Math.max(1, Math.min(sentences.length, Number(e.target.value))))}
-            className="w-full bg-gray-700 text-gray-100 rounded-lg px-4 py-2 text-center text-xl font-mono outline-none focus:ring-2 focus:ring-indigo-500"
+            className="app-input text-center font-mono text-2xl"
           />
-          <p className="text-xs text-gray-500 text-center">
-            登録文章: {sentences.length}件
+          <p className="text-center text-sm text-slate-500">
+            登録文章 {sentences.length}件の中から出題します
           </p>
         </div>
-        <div className="flex gap-3">
+
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={handleStart}
-            className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors"
+            className="app-button app-button-primary flex-1"
           >
             スタート
           </button>
           <button
             onClick={onClose}
-            className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-xl transition-colors"
+            className="app-button app-button-subtle flex-1"
           >
             キャンセル
           </button>

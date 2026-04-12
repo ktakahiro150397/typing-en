@@ -140,8 +140,14 @@ export default function App() {
 
   if (!authLoaded) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-gray-600 border-t-indigo-400 rounded-full animate-spin" />
+      <div className="app-page flex items-center justify-center">
+        <div className="app-card flex items-center gap-4 px-6 py-5">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#d6e3ed] border-t-[#3ea8ff]" />
+          <div>
+            <p className="text-sm font-semibold text-slate-900">認証状態を確認しています</p>
+            <p className="text-sm text-slate-500">少しお待ちください。</p>
+          </div>
+        </div>
       </div>
     )
   }

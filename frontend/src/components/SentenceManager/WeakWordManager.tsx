@@ -128,6 +128,7 @@ export function WeakWordManager({
   }, [onStartWordDrill])
 
   const activeCount = useMemo(() => weakWords.filter((word) => !word.isSolved).length, [weakWords])
+  const solvedCount = useMemo(() => weakWords.filter((word) => word.isSolved).length, [weakWords])
   const visibleWeakWords = useMemo(
     () => (hideSolved ? weakWords.filter((word) => !word.isSolved) : weakWords),
     [hideSolved, weakWords],
@@ -142,29 +143,29 @@ export function WeakWordManager({
       onStartRandomSession={onStartRandomSession}
       actions={!isMockMode ? (
         <>
-          <label className="inline-flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-300">
+          <label className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#d6e3ed] bg-white px-4 py-2 text-sm text-slate-600">
             <input
               type="checkbox"
               checked={hideSolved}
               onChange={(e) => setHideSolved(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+              className="h-4 w-4 rounded border-[#d6e3ed] bg-white text-emerald-500 focus:ring-emerald-500"
             />
             攻略済みを隠す
           </label>
           <button
             onClick={() => void handleWeakWordClick()}
             disabled={startingWeakWordSession}
-            className="px-4 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-sm font-semibold rounded-lg transition-colors inline-flex items-center gap-2"
+            className="app-button app-button-primary"
           >
             {startingWeakWordSession && (
-              <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             )}
             苦手ワード練習
           </button>
           <button
             onClick={() => void loadWeakWords()}
             disabled={loadingWeakWords}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-sm rounded-lg transition-colors"
+            className="app-button app-button-subtle"
           >
             再読込
           </button>
@@ -172,59 +173,83 @@ export function WeakWordManager({
       ) : undefined}
     >
       {practiceError && (
-        <div className="rounded-lg border border-red-700 bg-red-900/30 px-4 py-3 text-sm text-red-300">
+        <div className="app-banner app-banner-danger">
           {practiceError}
         </div>
       )}
 
       {isMockMode ? (
-        <div className="rounded-xl border border-gray-700 bg-gray-800/50 px-4 py-6 text-sm text-gray-400">
+        <div className="app-card-soft px-4 py-6 text-sm text-slate-500">
           モック認証では苦手ワード機能は無効です。
         </div>
       ) : loadingWeakWords ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-gray-600 border-t-amber-400 rounded-full animate-spin" />
+        <div className="app-card-soft flex justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#d6e3ed] border-t-[#3ea8ff]" />
         </div>
       ) : weakWordError ? (
-        <div className="rounded-xl border border-red-700 bg-red-900/30 px-4 py-4 text-sm text-red-300">
-          <div className="flex items-center justify-between gap-3">
-            <span>{weakWordError}</span>
-            <button
-              onClick={() => void loadWeakWords()}
-              className="shrink-0 rounded-lg bg-red-800 px-3 py-1 text-xs font-semibold text-red-100 hover:bg-red-700 transition-colors"
-            >
-              再試行
-            </button>
-          </div>
+        <div className="app-banner app-banner-danger flex items-center justify-between gap-3">
+          <span>{weakWordError}</span>
+          <button
+            onClick={() => void loadWeakWords()}
+            className="app-button app-button-danger min-h-0 px-3 py-1.5 text-xs"
+          >
+            再試行
+          </button>
         </div>
       ) : (
         <div className="space-y-4">
-          <form onSubmit={handleAddWord} className="rounded-xl border border-gray-700 bg-gray-800/50 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-              <div className="min-w-0 flex-1">
-                <label className="mb-2 block text-sm font-semibold text-gray-300">ワードを手動追加</label>
-                <input
-                  type="text"
-                  value={addWordInput}
-                  onChange={(e) => setAddWordInput(e.target.value)}
-                  placeholder="例: acquisition"
-                  className="w-full rounded-lg bg-gray-700 px-4 py-2 font-mono text-gray-100 outline-none transition focus:ring-2 focus:ring-amber-500"
-                />
-                {addWordFeedback && (
-                  <p className={`mt-2 text-sm ${addWordFeedback.kind === 'error' ? 'text-red-300' : 'text-amber-300'}`}>
-                    {addWordFeedback.message}
-                  </p>
-                )}
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)]">
+            <div className="app-card-soft px-5 py-5">
+              <p className="text-sm font-semibold text-slate-900">優先して潰したいワードを管理</p>
+              <p className="mt-2 text-sm text-slate-500">
+                セッション結果から自動追加されたワードを中心に、手動追加や攻略メモ更新、ドリル起動までをここで行います。
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl bg-white px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">未攻略</p>
+                  <p className="mt-2 text-3xl font-bold text-slate-900">{activeCount}</p>
+                </div>
+                <div className="rounded-2xl bg-white px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">攻略済み</p>
+                  <p className="mt-2 text-3xl font-bold text-slate-900">{solvedCount}</p>
+                </div>
+                <div className="rounded-2xl bg-white px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">表示中</p>
+                  <p className="mt-2 text-3xl font-bold text-slate-900">{visibleWeakWords.length}</p>
+                </div>
               </div>
-              <button
-                type="submit"
-                disabled={addWordLoading || !addWordInput.trim()}
-                className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-500 disabled:opacity-40"
-              >
-                {addWordLoading ? '追加中...' : '追加'}
-              </button>
             </div>
-          </form>
+
+            <form onSubmit={handleAddWord} className="app-card-soft p-5">
+              <div className="flex h-full flex-col gap-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">ワードを手動追加</h3>
+                  <p className="text-sm text-slate-500">通常練習前に集中的に打ちたい単語を直接登録できます。</p>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <input
+                    type="text"
+                    value={addWordInput}
+                    onChange={(e) => setAddWordInput(e.target.value)}
+                    placeholder="例: acquisition"
+                    className="app-input font-mono"
+                  />
+                  {addWordFeedback && (
+                    <p className={`mt-2 text-sm ${addWordFeedback.kind === 'error' ? 'text-rose-600' : 'text-[#1d4ed8]'}`}>
+                      {addWordFeedback.message}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={addWordLoading || !addWordInput.trim()}
+                  className="app-button app-button-secondary w-full"
+                >
+                  {addWordLoading ? '追加中...' : 'ワードを追加'}
+                </button>
+              </div>
+            </form>
+          </div>
 
           <WeakWordList
             weakWords={visibleWeakWords}

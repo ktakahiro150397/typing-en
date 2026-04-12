@@ -8,7 +8,7 @@ interface Props {
 export function CommandHistory({ history }: Props) {
   if (history.length === 0) {
     return (
-      <div className="text-gray-600 text-sm font-mono text-right">
+      <div className="text-right font-mono text-sm text-slate-300">
         — no input —
       </div>
     )
@@ -26,12 +26,12 @@ export function CommandHistory({ history }: Props) {
 function KeyBadge({ event, opacity }: { event: KeyEvent; opacity: number }) {
   const label = event.key === ' ' ? '␣' : event.key
   const colorClass = event.correct
-    ? 'bg-green-800 text-green-200 border-green-600'
-    : 'bg-red-900 text-red-200 border-red-600'
+    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+    : 'border-rose-200 bg-rose-50 text-rose-600'
 
   return (
     <span
-      className={`inline-flex items-center justify-center min-w-[2rem] h-8 px-2 rounded border font-mono text-sm font-bold ${colorClass}`}
+      className={`inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg border px-2 font-mono text-sm font-bold ${colorClass}`}
       style={{ opacity: Math.max(opacity, 0.15) }}
     >
       {label}

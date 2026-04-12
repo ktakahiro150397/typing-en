@@ -26,11 +26,11 @@ function WeakWordReasonBadges({ weakWord }: { weakWord: WeakWord }) {
   const reasons = getWeakWordReasons(weakWord)
 
   if (reasons.length === 0) {
-    return <span className="text-gray-600">—</span>
+    return <span className="text-slate-300">—</span>
   }
 
   return (
-    <div className="truncate text-xs font-semibold text-amber-300 whitespace-nowrap">
+    <div className="truncate whitespace-nowrap text-xs font-semibold text-amber-600">
       {reasons.map((reason) => formatWeaknessReason(reason)).join(' / ')}
     </div>
   )
@@ -38,12 +38,12 @@ function WeakWordReasonBadges({ weakWord }: { weakWord: WeakWord }) {
 
 function WeakWordMetrics({ weakWord }: { weakWord: WeakWord }) {
   return (
-    <div className="overflow-hidden truncate text-xs text-gray-400 whitespace-nowrap">
-      <span className="text-rose-300">{Math.round(weakWord.missRate * 100)}%</span>
-      <span className="mx-2 text-gray-600">/</span>
-      <span className="text-sky-300">{Math.round(weakWord.msPerChar)} ms/char</span>
-      <span className="mx-2 text-gray-600">/</span>
-      <span className="text-amber-300">停止 {weakWord.stallCount}回</span>
+    <div className="overflow-hidden truncate whitespace-nowrap text-xs text-slate-500">
+      <span className="text-rose-500">{Math.round(weakWord.missRate * 100)}%</span>
+      <span className="mx-2 text-slate-300">/</span>
+      <span className="text-sky-600">{Math.round(weakWord.msPerChar)} ms/char</span>
+      <span className="mx-2 text-slate-300">/</span>
+      <span className="text-amber-600">停止 {weakWord.stallCount}回</span>
     </div>
   )
 }
@@ -103,17 +103,17 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
 
   if (editing) {
     return (
-      <div className={`grid ${GRID_COLUMNS} items-start gap-0 border-b border-gray-700 px-4 py-2.5`}>
-        <div className="truncate font-mono text-sm text-white" title={weakWord.word}>{weakWord.word}</div>
+      <div className={`grid ${GRID_COLUMNS} items-start gap-0 border-b border-[#d6e3ed] bg-[#f8fbff] px-4 py-3`}>
+        <div className="truncate font-mono text-sm text-slate-900" title={weakWord.word}>{weakWord.word}</div>
         <div><WeakWordReasonBadges weakWord={weakWord} /></div>
         <div><WeakWordMetrics weakWord={weakWord} /></div>
-        <label className="inline-flex items-center gap-2 text-sm text-gray-300 whitespace-nowrap">
+        <label className="inline-flex items-center gap-2 whitespace-nowrap text-sm text-slate-600">
           <input
             type="checkbox"
             checked={weakWord.isSolved}
             disabled={saving}
             onChange={(e) => void handleToggleSolved(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+            className="h-4 w-4 rounded border-[#d6e3ed] bg-white text-emerald-500 focus:ring-emerald-500"
           />
           攻略済み
         </label>
@@ -123,15 +123,15 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
             onChange={(e) => setEditNote(e.target.value)}
             placeholder="攻略メモ..."
             rows={2}
-            className="w-full bg-gray-700 text-gray-100 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-amber-500 resize-none placeholder-gray-500"
+            className="app-input resize-none text-sm"
             autoFocus
           />
-          {error && <p className="text-red-400 text-xs">{error}</p>}
+          {error && <p className="text-xs text-rose-600">{error}</p>}
           <div className="flex gap-2">
             <button
               onClick={() => void handleSave()}
               disabled={saving}
-              className="px-3 py-1 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-xs font-semibold rounded-lg transition-colors"
+              className="app-button app-button-primary min-h-0 px-3 py-1.5 text-xs"
             >
               保存
             </button>
@@ -141,7 +141,7 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
                 setEditNote(weakWord.note ?? '')
                 setError(null)
               }}
-              className="px-3 py-1 bg-gray-600 hover:bg-gray-500 text-gray-300 text-xs rounded-lg transition-colors"
+              className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
             >
               キャンセル
             </button>
@@ -152,25 +152,25 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
   }
 
   return (
-    <div className={`grid ${GRID_COLUMNS} items-center gap-0 border-b border-gray-700 px-4 py-2.5 hover:bg-gray-750`}>
-      <div className="truncate font-mono text-sm text-white" title={weakWord.word}>{weakWord.word}</div>
+    <div className={`grid ${GRID_COLUMNS} items-center gap-0 border-b border-[#d6e3ed] px-4 py-3 transition-colors hover:bg-[#f8fbff]`}>
+      <div className="truncate font-mono text-sm text-slate-900" title={weakWord.word}>{weakWord.word}</div>
       <div className="whitespace-nowrap"><WeakWordReasonBadges weakWord={weakWord} /></div>
       <div className="whitespace-nowrap"><WeakWordMetrics weakWord={weakWord} /></div>
-      <label className="inline-flex items-center gap-2 text-sm text-gray-300 whitespace-nowrap">
+      <label className="inline-flex items-center gap-2 whitespace-nowrap text-sm text-slate-600">
         <input
           type="checkbox"
           checked={weakWord.isSolved}
           disabled={saving}
           onChange={(e) => void handleToggleSolved(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500"
+          className="h-4 w-4 rounded border-[#d6e3ed] bg-white text-emerald-500 focus:ring-emerald-500"
         />
         <span>{weakWord.isSolved ? '済' : '未'}</span>
       </label>
-      <div className="min-w-0 text-sm text-gray-400">
+      <div className="min-w-0 text-sm text-slate-500">
         <span className="block truncate" title={weakWord.note ?? ''}>
-          {weakWord.note ?? <span className="text-gray-600">—</span>}
+          {weakWord.note ?? <span className="text-slate-300">—</span>}
         </span>
-        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+        {error && <p className="mt-1 text-xs text-rose-600">{error}</p>}
       </div>
       <div className="flex items-center justify-end gap-2 whitespace-nowrap">
         {confirmDelete ? (
@@ -178,34 +178,34 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
             <button
               onClick={() => void handleDelete()}
               disabled={saving}
-              className="rounded-md border border-red-500/40 px-2 py-1 text-xs text-red-400 hover:bg-red-500/10 disabled:opacity-40"
+              className="app-button app-button-danger min-h-0 px-2.5 py-1 text-xs"
             >
-              Yes
+              削除
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="rounded-md border border-gray-600 px-2 py-1 text-xs text-gray-300 hover:bg-gray-700"
+              className="app-button app-button-subtle min-h-0 px-2.5 py-1 text-xs"
             >
-              No
+              戻す
             </button>
           </>
         ) : (
           <>
             <button
               onClick={() => onDrill(weakWord)}
-              className="rounded-md border border-sky-500/40 px-2 py-1 text-xs text-sky-300 hover:bg-sky-500/10"
+              className="app-button app-button-secondary min-h-0 px-2.5 py-1 text-xs"
             >
               ドリル
             </button>
             <button
               onClick={() => setEditing(true)}
-              className="rounded-md border border-amber-500/40 px-2 py-1 text-xs text-amber-300 hover:bg-amber-500/10"
+              className="app-button app-button-warning min-h-0 px-2.5 py-1 text-xs"
             >
               メモ
             </button>
             <button
               onClick={() => setConfirmDelete(true)}
-              className="rounded-md border border-red-500/40 px-2 py-1 text-xs text-red-400 hover:bg-red-500/10"
+              className="app-button app-button-danger min-h-0 px-2.5 py-1 text-xs"
             >
               削除
             </button>
@@ -219,15 +219,15 @@ function WeakWordRow({ weakWord, onUpdateNote, onToggleSolved, onDelete, onDrill
 export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete, onDrill }: Props) {
   if (weakWords.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500 text-sm">
+      <div className="app-card-soft px-6 py-12 text-center text-sm text-slate-500">
         表示対象の苦手ワードはありません。
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-700 bg-gray-800/50">
-      <div className={`grid ${GRID_COLUMNS} border-b border-gray-700 bg-gray-800 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500`}>
+    <div className="app-table overflow-x-auto">
+      <div className={`app-table-head grid min-w-[920px] ${GRID_COLUMNS} border-b border-[#d6e3ed] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]`}>
         <div>Word</div>
         <div className="whitespace-nowrap">理由</div>
         <div className="whitespace-nowrap">指標</div>
@@ -236,14 +236,15 @@ export function WeakWordList({ weakWords, onUpdateNote, onToggleSolved, onDelete
         <div />
       </div>
       {weakWords.map((weakWord) => (
-        <WeakWordRow
-          key={weakWord.id}
-          weakWord={weakWord}
-          onUpdateNote={onUpdateNote}
-          onToggleSolved={onToggleSolved}
-          onDelete={onDelete}
-          onDrill={onDrill}
-        />
+        <div key={weakWord.id} className="min-w-[920px]">
+          <WeakWordRow
+            weakWord={weakWord}
+            onUpdateNote={onUpdateNote}
+            onToggleSolved={onToggleSolved}
+            onDelete={onDelete}
+            onDrill={onDrill}
+          />
+        </div>
       ))}
     </div>
   )
