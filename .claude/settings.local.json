@@ -13,7 +13,17 @@
       "Bash(copilot:*)",
       "Bash(wait)",
       "Bash(git rm:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(chmod +x /mnt/c/Users/Takahiro/source/repos/typing-en/deploy.sh)",
+      "Bash(docker build:*)",
+      "Bash(docker run:*)",
+      "Bash(curl -s http://localhost:8080/)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(curl:*)",
+      "Bash(netstat -tlnp)"
     ]
   }
 }
