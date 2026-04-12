@@ -24,6 +24,13 @@ function getReturnLabel(returnPath: string): string {
   return '文章管理へ戻る'
 }
 
+function getModeLabel(mode: Props['mode']) {
+  if (mode === 'weak_word') return 'Weak words'
+  if (mode === 'word_drill') return 'Word drill'
+  if (mode === 'random') return 'Random'
+  return 'Sentence'
+}
+
 export function PracticeScreen({
   mode,
   sessionItems,
@@ -82,51 +89,52 @@ export function PracticeScreen({
   const isLast = currentIndex === totalCount - 1
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
-      <header className="border-b border-gray-700 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold tracking-wide">typing-en</h1>
-          <button
-            onClick={onAbort}
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            {getReturnLabel(returnPath)}
-          </button>
-        </div>
-        <div className="flex items-center gap-4 text-sm text-gray-400">
-          <span>{currentIndex + 1} / {totalCount}</span>
-          <span className="text-red-400 font-mono">
-            misses: <strong>{sessionMisses}</strong>
-          </span>
-          <span className="text-gray-500">Esc: 中断</span>
-          <button
-            onClick={onLogout}
-            className="text-gray-500 hover:text-gray-300 transition-colors"
-          >
-            ログアウト
-          </button>
+    <div className="app-page flex flex-col">
+      <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#3ea8ff]">typing-en</p>
+            <div className="app-chip app-chip-info">{getModeLabel(mode)}</div>
+            <button
+              onClick={onAbort}
+              className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+            >
+              {getReturnLabel(returnPath)}
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <div className="app-chip app-chip-info">{currentIndex + 1} / {totalCount}</div>
+            <div className="app-chip app-chip-danger">misses {sessionMisses}</div>
+            <div className="app-chip app-chip-warning">Esc で中断</div>
+            <button
+              onClick={onLogout}
+              className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+            >
+              ログアウト
+            </button>
+          </div>
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-3 max-w-3xl mx-auto w-full">
-        <div className="w-full h-8 overflow-hidden flex items-center">
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center gap-4 px-5 py-8 lg:px-8">
+        <div className="app-card-soft flex min-h-[64px] items-center px-5 py-4">
           {prevText && (
-            <div className="font-mono text-sm text-gray-600 line-through truncate">{prevText}</div>
+            <div className="truncate font-mono text-sm text-slate-400 line-through">{prevText}</div>
           )}
         </div>
 
-        <div className={`w-full bg-gray-800 rounded-xl p-8 shadow-lg ring-2 transition-colors ${lockRemaining > 0 ? 'ring-red-600' : 'ring-gray-600'}`}>
+        <div className={`app-card w-full p-6 shadow-[0_4px_12px_rgba(15,23,42,0.08)] ring-2 transition-colors sm:p-8 ${lockRemaining > 0 ? 'ring-rose-300' : 'ring-[#d6e3ed]'}`}>
           <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
         </div>
 
         {mode !== 'word_drill' && (
-          <div className="w-full h-8">
+          <div className="min-h-[32px]">
             {liveFeedback && (
               <div
-                className={`inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors ${
+                className={`app-chip ${
                   liveFeedback.reason === 'stall'
-                    ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'
-                    : 'border-sky-500/40 bg-sky-500/10 text-sky-300'
+                    ? 'app-chip-warning'
+                    : 'app-chip-info'
                 }`}
               >
                 {liveFeedback.message}
@@ -135,26 +143,32 @@ export function PracticeScreen({
           </div>
         )}
 
-        <div className="w-full h-14 overflow-hidden">
+        <div className="min-h-[72px]">
           {nextText ? (
-            <div className="h-full flex items-center bg-gray-800/40 rounded-lg px-4 border border-dashed border-gray-600">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest mr-3 shrink-0">
+            <div className="app-card-soft flex h-full items-center border-dashed px-4 py-4">
+              <span className="mr-3 shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                 NEXT
               </span>
-              <span className="font-mono text-sm text-gray-400 truncate">{nextText}</span>
+              <span className="truncate font-mono text-sm text-slate-500">{nextText}</span>
             </div>
           ) : isLast ? (
-            <div className="h-full flex items-center bg-gray-800/40 rounded-lg px-4 border border-dashed border-indigo-800">
-              <span className="text-xs font-semibold text-indigo-500 uppercase tracking-widest mr-3 shrink-0">
+            <div className="app-card-soft flex h-full items-center border-dashed px-4 py-4">
+              <span className="mr-3 shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[#1d4ed8]">
                 LAST
               </span>
-              <span className="text-sm text-gray-500">これが最後の問題です</span>
+              <span className="text-sm text-slate-500">これが最後の問題です</span>
             </div>
           ) : null}
         </div>
 
-        <div className="w-full bg-gray-800 rounded-xl px-4 h-12 flex items-center overflow-hidden">
-          <CommandHistory history={engineState.keyHistory} />
+        <div className="app-card flex min-h-[80px] flex-col gap-3 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Command history</p>
+            <p className="text-xs text-slate-400">入力の流れを右から確認できます</p>
+          </div>
+          <div className="overflow-hidden">
+            <CommandHistory history={engineState.keyHistory} />
+          </div>
         </div>
       </main>
     </div>

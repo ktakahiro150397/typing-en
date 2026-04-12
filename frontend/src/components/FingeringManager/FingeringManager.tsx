@@ -62,6 +62,7 @@ export function FingeringManager({
   }, [onStartFingeringSession])
 
   const bigramCount = useMemo(() => bigrams.length, [bigrams])
+  const topBigram = bigrams[0] ?? null
 
   return (
     <DashboardLayout
@@ -75,17 +76,17 @@ export function FingeringManager({
           <button
             onClick={() => void handleStartSession()}
             disabled={startingSession || bigramCount === 0}
-            className="px-4 py-2 bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-white text-sm font-semibold rounded-lg transition-colors inline-flex items-center gap-2"
+            className="app-button app-button-primary"
           >
             {startingSession && (
-              <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             )}
             練習する
           </button>
           <button
             onClick={() => void loadBigrams()}
             disabled={loadingBigrams}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-sm rounded-lg transition-colors"
+            className="app-button app-button-subtle"
           >
             再読込
           </button>
@@ -93,37 +94,59 @@ export function FingeringManager({
       ) : undefined}
     >
       {practiceError && (
-        <div className="rounded-lg border border-red-700 bg-red-900/30 px-4 py-3 text-sm text-red-300">
+        <div className="app-banner app-banner-danger">
           {practiceError}
         </div>
       )}
 
       {isMockMode ? (
-        <div className="rounded-xl border border-gray-700 bg-gray-800/50 px-4 py-6 text-sm text-gray-400">
+        <div className="app-card-soft px-4 py-6 text-sm text-slate-500">
           モック認証では苦手運指機能は無効です。
         </div>
       ) : loadingBigrams ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-gray-600 border-t-sky-400 rounded-full animate-spin" />
+        <div className="app-card-soft flex justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#d6e3ed] border-t-[#3ea8ff]" />
         </div>
       ) : bigramError ? (
-        <div className="rounded-xl border border-red-700 bg-red-900/30 px-4 py-4 text-sm text-red-300">
-          <div className="flex items-center justify-between gap-3">
-            <span>{bigramError}</span>
-            <button
-              onClick={() => void loadBigrams()}
-              className="shrink-0 rounded-lg bg-red-800 px-3 py-1 text-xs font-semibold text-red-100 hover:bg-red-700 transition-colors"
-            >
-              再試行
-            </button>
-          </div>
+        <div className="app-banner app-banner-danger flex items-center justify-between gap-3">
+          <span>{bigramError}</span>
+          <button
+            onClick={() => void loadBigrams()}
+            className="app-button app-button-danger min-h-0 px-3 py-1.5 text-xs"
+          >
+            再試行
+          </button>
         </div>
       ) : bigrams.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 text-sm">
+        <div className="app-card-soft px-6 py-12 text-center text-sm text-slate-500">
           まだデータがありません。通常練習を行うとデータが蓄積されます。
         </div>
       ) : (
-        <BigramTable bigrams={bigrams} />
+        <div className="space-y-4">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)]">
+            <div className="app-card-soft px-5 py-5">
+              <p className="text-sm font-semibold text-slate-900">苦手なキー遷移を優先して練習</p>
+              <p className="mt-2 text-sm text-slate-500">
+                bigram ごとのミス率を見て、同じ手癖で崩れやすい運指パターンを抽出します。数値が高いものほど優先的に潰したい候補です。
+              </p>
+            </div>
+            <div className="app-card-soft px-5 py-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">最優先パターン</p>
+              {topBigram ? (
+                <>
+                  <p className="mt-2 font-mono text-3xl font-bold text-slate-900">{displayBigram(topBigram.bigram)}</p>
+                  <p className="text-sm text-slate-500">
+                    ミス率 {Math.round(topBigram.missRate * 100)}% / {topBigram.misses} miss / {topBigram.attempts} attempts
+                  </p>
+                </>
+              ) : (
+                <p className="mt-2 text-sm text-slate-500">まだ十分なデータがありません。</p>
+              )}
+            </div>
+          </div>
+
+          <BigramTable bigrams={bigrams} />
+        </div>
       )}
     </DashboardLayout>
   )
@@ -135,8 +158,8 @@ interface BigramTableProps {
 
 function BigramTable({ bigrams }: BigramTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-700 bg-gray-800/50">
-      <div className="grid grid-cols-[minmax(0,1fr)_8rem_8rem_8rem] border-b border-gray-700 bg-gray-800 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+    <div className="app-table overflow-x-auto">
+      <div className="app-table-head grid min-w-[640px] grid-cols-[minmax(0,1fr)_8rem_8rem_8rem] border-b border-[#d6e3ed] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
         <div>運指パターン</div>
         <div className="text-right">ミス率</div>
         <div className="text-right">ミス数</div>
@@ -149,23 +172,23 @@ function BigramTable({ bigrams }: BigramTableProps) {
   )
 }
 
-function BigramRow({ bigram }: { bigram: BigramStatEntry }) {
-  // スペース文字を □ に変換して表示する
-  // □→X: 単語先頭への遷移 / X→□: 単語末尾からの遷移 / XY: 通常のキー遷移
-  const displayBigram = bigram.bigram[0] === ' ' && bigram.bigram[1] === ' '
+function displayBigram(bigram: string) {
+  return bigram[0] === ' ' && bigram[1] === ' '
     ? '□→□'
-    : bigram.bigram[0] === ' '
-      ? `□→${bigram.bigram[1]}`
-      : bigram.bigram[1] === ' '
-        ? `${bigram.bigram[0]}→□`
-        : `${bigram.bigram[0]}→${bigram.bigram[1]}`
+    : bigram[0] === ' '
+      ? `□→${bigram[1]}`
+      : bigram[1] === ' '
+        ? `${bigram[0]}→□`
+        : `${bigram[0]}→${bigram[1]}`
+}
 
+function BigramRow({ bigram }: { bigram: BigramStatEntry }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_8rem_8rem_8rem] items-center gap-0 border-b border-gray-700 px-4 py-3 hover:bg-gray-750">
-      <div className="font-mono text-sm text-white">{displayBigram}</div>
-      <div className="text-right text-sm text-rose-300">{Math.round(bigram.missRate * 100)}%</div>
-      <div className="text-right text-sm text-sky-300">{bigram.misses}</div>
-      <div className="text-right text-sm text-gray-400">{bigram.attempts}</div>
+    <div className="grid min-w-[640px] grid-cols-[minmax(0,1fr)_8rem_8rem_8rem] items-center gap-0 border-b border-[#d6e3ed] px-4 py-3 transition-colors hover:bg-[#f8fbff]">
+      <div className="font-mono text-sm text-slate-900">{displayBigram(bigram.bigram)}</div>
+      <div className="text-right text-sm text-rose-500">{Math.round(bigram.missRate * 100)}%</div>
+      <div className="text-right text-sm text-sky-600">{bigram.misses}</div>
+      <div className="text-right text-sm text-slate-500">{bigram.attempts}</div>
     </div>
   )
 }

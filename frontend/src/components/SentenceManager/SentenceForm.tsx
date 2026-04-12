@@ -28,42 +28,52 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-gray-800 rounded-xl p-5 border border-gray-700 space-y-3"
+      className="app-card-soft space-y-5 p-5"
     >
+      <div className="space-y-1">
+        <h3 className="text-lg font-bold text-slate-900">文章を追加</h3>
+        <p className="text-sm text-slate-500">練習に使う文章と、必要なら攻略メモを登録します。</p>
+      </div>
+
       <div>
+        <label className="mb-2 block text-sm font-semibold text-slate-700">文章</label>
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type a sentence..."
-          className="w-full bg-gray-700 text-gray-100 rounded-lg px-4 py-2 font-mono text-sm outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500"
+          placeholder="例: The quick brown fox jumps over the lazy dog."
+          className="app-input font-mono text-sm"
           autoFocus
         />
       </div>
+
       <div>
+        <label className="mb-2 block text-sm font-semibold text-slate-700">攻略メモ</label>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="攻略メモ (optional)..."
-          rows={2}
-          className="w-full bg-gray-700 text-gray-100 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500 resize-none"
+          placeholder="運指のコツや注意点を残せます。"
+          rows={3}
+          className="app-input resize-none text-sm"
         />
       </div>
-      {error && <p className="text-red-400 text-sm">{error}</p>}
-      <div className="flex gap-2">
+
+      {error && <p className="text-sm text-rose-600">{error}</p>}
+
+      <div className="flex flex-wrap gap-3">
         <button
           type="submit"
           disabled={!text.trim() || submitting}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white text-sm font-semibold rounded-lg transition-colors"
+          className="app-button app-button-primary"
         >
-          Add
+          {submitting ? '追加中...' : '追加する'}
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-colors"
+          className="app-button app-button-subtle"
         >
-          Cancel
+          閉じる
         </button>
       </div>
     </form>

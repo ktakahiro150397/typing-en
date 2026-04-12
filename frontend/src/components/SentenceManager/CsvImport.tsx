@@ -18,32 +18,33 @@ export function CsvImport({ onClose }: { onClose: () => void }) {
     try {
       const res = await importCsv(files)
       setResult(res)
-      // failedFiles = HTTPレベルで失敗したファイルのみ（行レベルエラーは部分的に保存済みのため除外）
       if (res.failedFiles.length === 0) {
         setFiles([])
       } else {
-        // リクエスト失敗したファイルのみ選択状態に残して再試行しやすくする
         setFiles(res.failedFiles)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
-      // throwされた場合も含め常にinputをクリアして同名ファイルの再選択でonChangeが発火するようにする
       if (fileRef.current) fileRef.current.value = ''
       setImporting(false)
     }
   }
 
   return (
-    <div className="bg-gray-800 rounded-xl p-5 border border-gray-700 space-y-3">
-      <p className="text-gray-400 text-sm">
-        CSV フォーマット: ヘッダー行あり、<code className="text-indigo-400">text</code> 列必須、
-        <code className="text-indigo-400">note</code> 列任意
-      </p>
-      <div className="flex items-center gap-3">
-        <label className="cursor-pointer px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-colors">
+    <div className="app-card-soft space-y-5 p-5">
+      <div className="space-y-1">
+        <h3 className="text-lg font-bold text-slate-900">CSV インポート</h3>
+        <p className="text-sm text-slate-500">
+          ヘッダー行ありの CSV をまとめて読み込みます。<code className="font-mono text-[#1d4ed8]">text</code> 列は必須、
+          <code className="font-mono text-[#1d4ed8]">note</code> 列は任意です。
+        </p>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="app-button app-button-subtle cursor-pointer">
           {files.length === 0
-            ? 'ファイルを選択...'
+            ? 'ファイルを選択'
             : files.length === 1
               ? files[0].name
               : `${files.length} 件のファイルを選択`}
@@ -59,35 +60,38 @@ export function CsvImport({ onClose }: { onClose: () => void }) {
         <button
           onClick={handleImport}
           disabled={files.length === 0 || importing}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white text-sm font-semibold rounded-lg transition-colors"
+          className="app-button app-button-primary"
         >
           {importing ? 'インポート中...' : 'インポート'}
         </button>
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-colors"
+          className="app-button app-button-subtle"
         >
           閉じる
         </button>
       </div>
+
       {files.length > 1 && (
-        <ul className="text-xs text-gray-400 ml-1 space-y-0.5">
+        <ul className="ml-1 space-y-0.5 text-xs text-slate-500">
           {files.map((f) => (
             <li key={`${f.name}-${f.lastModified}`}>{f.name}</li>
           ))}
         </ul>
       )}
-      {error && <p className="text-red-400 text-sm whitespace-pre-line">{error}</p>}
+
+      {error && <p className="whitespace-pre-line text-sm text-rose-600">{error}</p>}
+
       {result && (
-        <div className="text-sm space-y-1">
-          <p className="text-green-400">
+        <div className="space-y-2 text-sm">
+          <p className="text-emerald-600">
             作成: <strong>{result.created}</strong>件 / スキップ（重複）:{' '}
             <strong>{result.skipped}</strong>件
           </p>
           {result.errors.length > 0 && (
-            <details className="text-yellow-400">
+            <details className="app-banner app-banner-warning">
               <summary className="cursor-pointer">エラー {result.errors.length}件</summary>
-              <ul className="mt-1 ml-4 list-disc space-y-1 text-xs text-yellow-300">
+              <ul className="mt-2 ml-4 list-disc space-y-1 text-xs text-amber-700">
                 {result.errors.map((e, i) => (
                   <li key={i}>{e}</li>
                 ))}
