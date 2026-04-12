@@ -20,7 +20,7 @@ await app.register(cookie, {
 const sessionSecret = process.env.JWT_SECRET ?? 'dev-secret-must-be-32chars-long!!'
 await app.register(fastifySession, {
   secret: sessionSecret,
-  cookie: { secure: false },
+  cookie: { secure: process.env.NODE_ENV === 'production' },
   saveUninitialized: false,
 })
 
