@@ -3,7 +3,7 @@ import type { SessionResult } from '../../hooks/useTypingSession'
 import { formatWeaknessReason } from '../../lib/typingAnalysis'
 
 interface Props {
-  mode: 'sentence' | 'random' | 'weak_word'
+  mode: 'sentence' | 'random' | 'weak_word' | 'word_drill'
   result: SessionResult
   totalCount: number
   onRestart: () => void
@@ -30,9 +30,12 @@ export function ResultsScreen({
 
   const title = mode === 'weak_word'
     ? '苦手ワード練習結果'
+    : mode === 'word_drill'
+      ? 'ワードドリル結果'
     : mode === 'random'
       ? 'ランダムワード練習結果'
       : 'セッション結果'
+  const completedLabel = mode === 'word_drill' ? '回完了' : '問完了'
 
   useEffect(() => {
     function handleRestartKey(event: KeyboardEvent) {
@@ -59,7 +62,7 @@ export function ResultsScreen({
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-start py-12 px-6">
       <h2 className="text-3xl font-bold mb-2">{title}</h2>
-      <p className="text-gray-500 text-sm mb-8">{totalCount} 問完了 / R でリスタート</p>
+      <p className="text-gray-500 text-sm mb-8">{totalCount} {completedLabel} / R でリスタート</p>
 
       {/* サマリー指標 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl mb-10">

@@ -6,6 +6,7 @@ export type WeaknessReason = 'mistype' | 'slow' | 'stall'
 
 interface WordWeaknessMetrics {
   word: string
+  totalChars: number
   misses: number
   activeDurationMs: number
   stallCount: number
@@ -40,8 +41,9 @@ function getReasonComponents(metrics: {
 }
 
 export function calculateWeakWordMetrics(word: WordWeaknessMetrics): SavedWeakWordMetrics {
-  const missRate = word.word.length > 0 ? word.misses / word.word.length : 0
-  const msPerChar = word.word.length > 0 ? word.activeDurationMs / word.word.length : 0
+  const totalChars = word.totalChars > 0 ? word.totalChars : word.word.length
+  const missRate = totalChars > 0 ? word.misses / totalChars : 0
+  const msPerChar = totalChars > 0 ? word.activeDurationMs / totalChars : 0
   const reasonComponents = getReasonComponents({
     misses: word.misses,
     missRate,

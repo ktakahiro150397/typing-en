@@ -17,8 +17,23 @@ export interface WeakWord {
   updatedAt: string
 }
 
+export interface CreateWeakWordResponse {
+  word: WeakWord
+  created: boolean
+}
+
 export function listWeakWords(): Promise<{ words: WeakWord[] }> {
   return apiFetch<{ words: WeakWord[] }>('/api/weak-words')
+}
+
+export function createWeakWord(word: string, note?: string): Promise<CreateWeakWordResponse> {
+  return apiFetch<CreateWeakWordResponse>('/api/weak-words', {
+    method: 'POST',
+    body: JSON.stringify({
+      word,
+      ...(note !== undefined ? { note } : {}),
+    }),
+  })
 }
 
 export function updateWeakWord(

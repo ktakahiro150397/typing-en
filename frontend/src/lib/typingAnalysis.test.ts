@@ -77,6 +77,43 @@ describe('analyzeProblems', () => {
     })
     expect(result.wordStats[0].weaknessReasons).toEqual(['stall'])
   })
+
+  it('averages metrics across repeated occurrences of the same word', () => {
+    const result = analyzeProblems([
+      {
+        text: 'cat ',
+        startedAt: 0,
+        endedAt: 200,
+        keyHistory: [
+          { key: 'c', correct: true, timestamp: 0, position: 0 },
+          { key: 'a', correct: true, timestamp: 100, position: 1 },
+          { key: 't', correct: true, timestamp: 200, position: 2 },
+        ],
+      },
+      {
+        text: 'cat ',
+        startedAt: 0,
+        endedAt: 150,
+        keyHistory: [
+          { key: 'c', correct: true, timestamp: 0, position: 0 },
+          { key: 'x', correct: false, timestamp: 50, position: 1 },
+          { key: 'a', correct: true, timestamp: 100, position: 1 },
+          { key: 't', correct: true, timestamp: 150, position: 2 },
+        ],
+      },
+    ])
+
+    expect(result.wordStats).toHaveLength(1)
+    expect(result.wordStats[0]).toMatchObject({
+      word: 'cat',
+      totalChars: 6,
+      misses: 1,
+      activeDurationMs: 300,
+      missRate: 0.17,
+      msPerChar: 50,
+    })
+    expect(result.wordStats[0].weaknessReasons).toEqual(['mistype'])
+  })
 })
 
 describe('getLiveTypingFeedback', () => {
