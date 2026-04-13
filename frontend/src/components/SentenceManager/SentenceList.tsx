@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSentenceStore } from '../../stores/sentenceStore'
 import type { Sentence } from '../../lib/sentences'
+import { formatCategoryInput, parseCategoryInput } from '../../lib/sentenceCategories'
 
 function SentenceRow({ sentence }: { sentence: Sentence }) {
   const patchSentence = useSentenceStore((s) => s.patchSentence)
@@ -9,6 +10,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
   const [editing, setEditing] = useState(false)
   const [editText, setEditText] = useState(sentence.text)
   const [editNote, setEditNote] = useState(sentence.note ?? '')
+  const [editCategories, setEditCategories] = useState(formatCategoryInput(sentence.categories))
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
@@ -21,6 +23,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
       await patchSentence(sentence.id, {
         text: editText.trim(),
         note: editNote.trim(),
+        categories: parseCategoryInput(editCategories),
       })
       setEditing(false)
     } catch (err) {
@@ -41,7 +44,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
   if (editing) {
     return (
       <tr className="border-b border-[#d6e3ed] bg-[#f8fbff]">
-        <td colSpan={3} className="px-4 py-3">
+        <td colSpan={4} className="px-4 py-3">
           <div className="space-y-3">
             <input
               type="text"
@@ -57,6 +60,13 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
               rows={2}
               className="app-input resize-none text-sm"
             />
+            <input
+              type="text"
+              value={editCategories}
+              onChange={(e) => setEditCategories(e.target.value)}
+              placeholder="daily-conversation, internet"
+              className="app-input text-sm"
+            />
             {error && <p className="text-xs text-rose-600">{error}</p>}
             <div className="flex gap-2">
               <button
@@ -67,7 +77,12 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
                 保存
               </button>
               <button
-                onClick={() => { setEditing(false); setEditText(sentence.text); setEditNote(sentence.note ?? '') }}
+                onClick={() => {
+                  setEditing(false)
+                  setEditText(sentence.text)
+                  setEditNote(sentence.note ?? '')
+                  setEditCategories(formatCategoryInput(sentence.categories))
+                }}
                 className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
               >
                 キャンセル
@@ -86,7 +101,20 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
           {sentence.text}
         </span>
       </td>
-      <td className="max-w-0 w-2/5 px-4 py-4 text-sm text-slate-500">
+      <td className="max-w-0 w-1/5 px-4 py-4 text-sm text-slate-500">
+        {sentence.categories.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {sentence.categories.map((category) => (
+              <span key={category} className="app-chip app-chip-info max-w-full">
+                {category}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="text-slate-300">—</span>
+        )}
+      </td>
+      <td className="max-w-0 w-[30%] px-4 py-4 text-sm text-slate-500">
         <span className="block truncate" title={sentence.note ?? ''}>
           {sentence.note ?? <span className="text-slate-300">—</span>}
         </span>
@@ -146,7 +174,10 @@ export function SentenceList({ sentences }: { sentences: Sentence[] }) {
             <th className="w-1/2 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
               Text
             </th>
-            <th className="w-2/5 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+            <th className="w-1/5 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+              カテゴリ
+            </th>
+            <th className="w-[30%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
               攻略メモ
             </th>
             <th className="px-4 py-3 w-24" />

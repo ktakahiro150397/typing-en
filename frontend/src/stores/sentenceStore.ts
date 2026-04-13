@@ -14,9 +14,9 @@ interface SentenceState {
   loading: boolean
   error: string | null
   fetchSentences: () => Promise<void>
-  addSentence: (text: string, note?: string) => Promise<void>
+  addSentence: (text: string, note?: string, categories?: string[]) => Promise<void>
   importCsv: (files: File[]) => Promise<ImportResult & { failedFiles: File[] }>
-  patchSentence: (id: string, patch: { text?: string; note?: string }) => Promise<void>
+  patchSentence: (id: string, patch: { text?: string; note?: string; categories?: string[] }) => Promise<void>
   removeSentence: (id: string) => Promise<void>
 }
 
@@ -36,8 +36,8 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
     }
   },
 
-  addSentence: async (text, note) => {
-    const sentence = await createSentence(text, note)
+  addSentence: async (text, note, categories) => {
+    const sentence = await createSentence(text, note, categories)
     set((s) => ({ sentences: [sentence, ...s.sentences], total: s.total + 1 }))
   },
 
