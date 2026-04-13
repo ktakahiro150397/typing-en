@@ -30,6 +30,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       FRONTEND_URL: ${FRONTEND_URL}
       PORT: ${PORT}
+      AUTH_MOCK: ${AUTH_MOCK:-false}
     depends_on:
       mysql:
         condition: service_healthy
@@ -48,6 +49,7 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: http://localhost:3000
+        VITE_AUTH_MOCK: ${VITE_AUTH_MOCK:-false}
     ports:
       - "5173:80"
     depends_on:
