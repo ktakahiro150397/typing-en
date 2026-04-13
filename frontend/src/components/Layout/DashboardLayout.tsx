@@ -6,7 +6,6 @@ interface Props {
   subtitle?: string
   userName: string
   onLogout: () => void
-  onStartRandomSession: () => void
   actions?: ReactNode
   children: ReactNode
 }
@@ -25,7 +24,6 @@ export function DashboardLayout({
   subtitle,
   userName,
   onLogout,
-  onStartRandomSession,
   actions,
   children,
 }: Props) {
@@ -40,25 +38,19 @@ export function DashboardLayout({
                 <h1 className="text-lg font-bold text-slate-900">English typing refinement</h1>
               </div>
               <nav className="flex flex-wrap items-center gap-2">
-                <NavLink to="/sentences" className={navLinkClassName}>
-                  文章管理
+                <NavLink to="/" end className={navLinkClassName}>
+                  練習する
                 </NavLink>
-                <NavLink to="/weak-words" className={navLinkClassName}>
-                  苦手ワード
+                <NavLink to="/analysis" className={navLinkClassName}>
+                  分析
                 </NavLink>
-                <NavLink to="/fingering" className={navLinkClassName}>
-                  苦手運指
+                <NavLink to="/library" className={navLinkClassName}>
+                  ライブラリ
                 </NavLink>
               </nav>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <button
-                onClick={onStartRandomSession}
-                className="app-button app-button-secondary"
-              >
-                ランダムワード練習
-              </button>
               <div className="rounded-full border border-[#d6e3ed] bg-[#f8fbff] px-3 py-2 text-sm text-slate-600">
                 {userName}
               </div>

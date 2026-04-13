@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ReactNode } from 'react'
 import { DashboardLayout } from '../Layout/DashboardLayout'
 import {
   listWeakBigrams,
@@ -7,18 +8,18 @@ import {
 
 interface Props {
   onStartFingeringSession: () => Promise<void>
-  onStartRandomSession: () => void
   isMockMode: boolean
   onLogout: () => void
   userName: string
+  tabSwitcher?: ReactNode
 }
 
 export function FingeringManager({
   onStartFingeringSession,
-  onStartRandomSession,
   isMockMode,
   onLogout,
   userName,
+  tabSwitcher,
 }: Props) {
   const [bigrams, setBigrams] = useState<BigramStatEntry[]>([])
   const [loadingBigrams, setLoadingBigrams] = useState(false)
@@ -70,9 +71,9 @@ export function FingeringManager({
       subtitle={!isMockMode ? `${bigramCount}件のパターンを検出` : 'モック認証では利用できません'}
       userName={userName}
       onLogout={onLogout}
-      onStartRandomSession={onStartRandomSession}
       actions={!isMockMode ? (
         <>
+          {tabSwitcher}
           <button
             onClick={() => void handleStartSession()}
             disabled={startingSession || bigramCount === 0}

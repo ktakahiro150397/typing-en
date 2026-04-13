@@ -19,9 +19,9 @@ interface Props {
 }
 
 function getReturnLabel(returnPath: string): string {
-  if (returnPath === '/weak-words') return '苦手ワードへ戻る'
-  if (returnPath === '/fingering') return '苦手運指へ戻る'
-  return '文章管理へ戻る'
+  if (returnPath === '/analysis') return '分析へ戻る'
+  if (returnPath === '/library') return 'ライブラリへ戻る'
+  return 'ホームへ戻る'
 }
 
 function getModeLabel(mode: Props['mode']) {

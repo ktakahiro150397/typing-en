@@ -9,14 +9,12 @@ import { DashboardLayout } from '../Layout/DashboardLayout'
 
 interface Props {
   onStartSession: (sentences: Sentence[]) => void
-  onStartRandomSession: () => void
   onLogout: () => void
   userName: string
 }
 
 export function SentenceManager({
   onStartSession,
-  onStartRandomSession,
   onLogout,
   userName,
 }: Props) {
@@ -31,11 +29,10 @@ export function SentenceManager({
 
   return (
     <DashboardLayout
-      title="文章管理"
+      title="ライブラリ"
       subtitle={`${total}件の登録文章を管理`}
       userName={userName}
       onLogout={onLogout}
-      onStartRandomSession={onStartRandomSession}
       actions={(
         <>
           <button
