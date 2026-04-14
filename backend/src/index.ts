@@ -32,6 +32,7 @@ app.get('/health', async () => ({ status: 'ok' }))
 
 // Routes
 await app.register(import('./routes/auth.js'))
+await app.register(import('./routes/publicSentences.js'), { prefix: '/api' })
 await app.register(import('./routes/sentences.js'), { prefix: '/api' })
 await app.register(import('./routes/weakWords.js'), { prefix: '/api' })
 await app.register(import('./routes/bigramStats.js'), { prefix: '/api' })

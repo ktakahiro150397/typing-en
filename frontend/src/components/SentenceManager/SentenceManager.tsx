@@ -135,7 +135,7 @@ export function SentenceManager({
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-slate-900">カテゴリで絞り込む</p>
-                  <p className="text-xs text-slate-500">複数選択時は OR 条件で表示します。</p>
+                  <p className="text-xs text-slate-500">選んだカテゴリを含む文章を表示します。</p>
                 </div>
                 {filterCategories.length > 0 && (
                   <button

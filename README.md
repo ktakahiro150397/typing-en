@@ -6,14 +6,15 @@
 
 ## 主な特徴
 
-- **文章・単語練習** — 登録した文章を基本単位として練習。カテゴリ単位の出題や記号・数字・ランダム英数字にも対応
+- **登録不要の通常練習** — 共有の練習問題から 5 問をすぐに開始。初見ユーザーでもそのまま試せます
+- **共有問題 + 管理者運用** — 練習文章は全員共通。管理は `.env` で許可した Gmail のみが行えます
 - **苦手ワード自動検出** — 練習中にミス率が高かった単語を自動検出し、苦手ワードリストへ追加
 - **苦手ワード集中練習モード** — 苦手リストの単語を繰り返し練習して克服
 - **Bigram（運指ペア）分析** — "w→a" のような連続2打鍵ペアごとにミス率を集計し、苦手な指の動きを特定
 - **リアルタイム入力履歴** — 練習中、格闘ゲームのコマンド履歴のように打鍵履歴をリアルタイム表示
-- **攻略メモ / カテゴリ** — 文章・苦手ワードごとに運指のコツなどを自由記述で保存し、文章には複数カテゴリも付与可能
-- **CSV インポート** — 練習したい文章をCSVで一括登録。ファイル名カテゴリも自動付与
-- **Google アカウント認証** — ログインにより統計・練習データをユーザーごとに保存（未ログイン時は保存不可）
+- **攻略メモ / カテゴリ** — 管理者は共有文章にメモやカテゴリを付けて整理できます
+- **CSV インポート** — 管理者は CSV で共有問題を一括登録できます
+- **Google アカウント認証** — ログインにより統計・苦手分析・設定をユーザーごとに保存できます
 
 ---
 
@@ -38,6 +39,7 @@ cp .env.example .env
 #   GOOGLE_CLIENT_SECRET=...
 #   JWT_SECRET=...
 #   MYSQL_ROOT_PASSWORD=...
+#   ADMIN_GOOGLE_EMAILS=admin1@gmail.com,admin2@gmail.com
 
 # 3. 起動
 docker compose up -d
@@ -145,7 +147,7 @@ text,note,categories
 - `note`（任意）: 攻略メモ
 - `category` / `categories`（任意）: カンマ区切りのカテゴリ
 - CSVファイル名（拡張子除く）は自動でカテゴリとして付与
-- 同一ユーザー・同一テキストの重複は無視されます
+- 同一テキストの重複は無視されます
 - `word-csv/` にはスターター用CSVを同梱しており、`tricky-long-sentences.csv` と `lookalike-confusion.csv` はタイピングゲーム向けの誤打しやすい文章セットです
 
 ---
@@ -156,9 +158,10 @@ text,note,categories
 GET    /auth/google              Google OAuth ログイン開始
 GET    /auth/me                  ログインユーザー情報
 
-GET    /api/sentences            文章一覧
-POST   /api/sentences            文章登録
-POST   /api/sentences/import     CSV一括インポート
+GET    /api/public/sentences     公開用の練習問題を取得
+GET    /api/sentences            文章一覧（管理者）
+POST   /api/sentences            文章登録（管理者）
+POST   /api/sentences/import     CSV一括インポート（管理者）
 
 GET    /api/weak-words           苦手ワード一覧
 PATCH  /api/weak-words/:id       攻略メモ更新

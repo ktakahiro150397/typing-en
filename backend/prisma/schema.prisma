@@ -13,7 +13,7 @@ model User {
   email       String        @unique
   name        String
   createdAt   DateTime      @default(now())
-  sentences   Sentence[]
+  createdSentences Sentence[] @relation("SentenceCreator")
   weakWords   WeakWord[]
   sessions    Session[]
   bigramStats BigramStat[]
@@ -21,16 +21,17 @@ model User {
 }
 
 model Sentence {
-  id           String           @id @default(cuid())
-  userId       String
-  text         String           @db.Text
-  note         String?          @db.Text
-  createdAt    DateTime         @default(now())
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  categories   SentenceCategory[]
-  sessionLinks SessionSentence[]
+  id              String           @id @default(cuid())
+  createdByUserId String?
+  text            String           @db.Text
+  note            String?          @db.Text
+  createdAt       DateTime         @default(now())
+  createdBy       User?            @relation("SentenceCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  categories      SentenceCategory[]
+  sessionLinks    SessionSentence[]
 
-  @@unique([userId, text(length: 500)])
+  @@unique([text(length: 500)])
+  @@index([createdByUserId])
 }
 
 model SentenceCategory {
