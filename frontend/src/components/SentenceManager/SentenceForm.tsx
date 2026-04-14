@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useSentenceStore } from '../../stores/sentenceStore'
+import { parseCategoryInput } from '../../lib/sentenceCategories'
 
 export function SentenceForm({ onClose }: { onClose: () => void }) {
   const addSentence = useSentenceStore((s) => s.addSentence)
   const [text, setText] = useState('')
   const [note, setNote] = useState('')
+  const [categories, setCategories] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -14,9 +16,10 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
     setSubmitting(true)
     setError(null)
     try {
-      await addSentence(text.trim(), note.trim() || undefined)
+      await addSentence(text.trim(), note.trim() || undefined, parseCategoryInput(categories))
       setText('')
       setNote('')
+      setCategories('')
       onClose()
     } catch (err) {
       setError((err as Error).message)
@@ -56,6 +59,18 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
           rows={3}
           className="app-input resize-none text-sm"
         />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-slate-700">カテゴリ</label>
+        <input
+          type="text"
+          value={categories}
+          onChange={(e) => setCategories(e.target.value)}
+          placeholder="例: daily-conversation, internet"
+          className="app-input text-sm"
+        />
+        <p className="mt-1 text-xs text-slate-500">カンマ区切りで複数指定できます。未入力も可能です。</p>
       </div>
 
       {error && <p className="text-sm text-rose-600">{error}</p>}

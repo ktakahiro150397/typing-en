@@ -6,13 +6,13 @@
 
 ## 主な特徴
 
-- **文章・単語練習** — 登録した文章を基本単位として練習。記号・数字・ランダム英数字にも対応
+- **文章・単語練習** — 登録した文章を基本単位として練習。カテゴリ単位の出題や記号・数字・ランダム英数字にも対応
 - **苦手ワード自動検出** — 練習中にミス率が高かった単語を自動検出し、苦手ワードリストへ追加
 - **苦手ワード集中練習モード** — 苦手リストの単語を繰り返し練習して克服
 - **Bigram（運指ペア）分析** — "w→a" のような連続2打鍵ペアごとにミス率を集計し、苦手な指の動きを特定
 - **リアルタイム入力履歴** — 練習中、格闘ゲームのコマンド履歴のように打鍵履歴をリアルタイム表示
-- **攻略メモ** — 文章・苦手ワードごとに運指のコツなどを自由記述で保存
-- **CSV インポート** — 練習したい文章をCSVで一括登録
+- **攻略メモ / カテゴリ** — 文章・苦手ワードごとに運指のコツなどを自由記述で保存し、文章には複数カテゴリも付与可能
+- **CSV インポート** — 練習したい文章をCSVで一括登録。ファイル名カテゴリも自動付与
 - **Google アカウント認証** — ログインにより統計・練習データをユーザーごとに保存（未ログイン時は保存不可）
 
 ---
@@ -136,14 +136,17 @@ weaknessScore = misses / attempts
 ## CSV インポート仕様
 
 ```csv
-text,note
-"the quick brown fox jumps","the/fox は速打ち注意"
-"algorithm","al-go-: 左手薬指から始める"
+text,note,categories
+"Please double-check whether the earlier version already includes the smaller change we discussed yesterday.","repeated ch ck and th transitions","typing-game,long-sentence"
+"The coach said the loose cable would make us lose time if we ignored it again.","lose loose pair","typing-game,lookalike"
 ```
 
 - `text`（必須）: 練習したいテキスト
 - `note`（任意）: 攻略メモ
+- `category` / `categories`（任意）: カンマ区切りのカテゴリ
+- CSVファイル名（拡張子除く）は自動でカテゴリとして付与
 - 同一ユーザー・同一テキストの重複は無視されます
+- `word-csv/` にはスターター用CSVを同梱しており、`tricky-long-sentences.csv` と `lookalike-confusion.csv` はタイピングゲーム向けの誤打しやすい文章セットです
 
 ---
 
