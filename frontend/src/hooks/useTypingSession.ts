@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useTypingEngine } from './useTypingEngine'
+import { DEFAULT_MISS_LOCK_MS, useTypingEngine } from './useTypingEngine'
 import { analyzeProblems, type ProblemRecord, type SessionResult } from '../lib/typingAnalysis'
+import type { PenaltyResume } from '../lib/settings'
 
 export type {
   BigramStat,
@@ -16,7 +17,11 @@ export type SessionPhase = 'typing' | 'results'
 
 // ---- セッションフック ----
 
-export function useTypingSession(texts: string[]) {
+export function useTypingSession(
+  texts: string[],
+  missLockMs = DEFAULT_MISS_LOCK_MS,
+  penaltyResume: PenaltyResume = 'current',
+) {
   const [phase, setPhase] = useState<SessionPhase>('typing')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [result, setResult] = useState<SessionResult | null>(null)
@@ -24,7 +29,11 @@ export function useTypingSession(texts: string[]) {
   const recordsRef = useRef<ProblemRecord[]>([])
   const handledRef = useRef(false)
 
-  const { state: engineState, handleKey, reset } = useTypingEngine(texts[0] ?? '')
+  const { state: engineState, handleKey, reset } = useTypingEngine(
+    texts[0] ?? '',
+    missLockMs,
+    penaltyResume,
+  )
 
   // 問題完了を検知して次へ進む
   useEffect(() => {
@@ -49,13 +58,13 @@ export function useTypingSession(texts: string[]) {
 
     // 即時遷移（遅延なし）
     if (nextIndex >= texts.length) {
-      setResult(analyzeProblems(recordsRef.current))
+      setResult(analyzeProblems(recordsRef.current, missLockMs))
       setPhase('results')
     } else {
       setCurrentIndex(nextIndex)
       reset(texts[nextIndex])
     }
-  }, [engineState.isComplete]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentIndex, engineState, missLockMs, reset, texts])
 
   const restartSession = useCallback(
     (newTexts: string[]) => {

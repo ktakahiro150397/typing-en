@@ -13,6 +13,7 @@ import { PracticeScreen } from './components/PracticeScreen/PracticeScreen'
 import { HomeScreen } from './components/HomeScreen/HomeScreen'
 import { AnalysisScreen } from './components/AnalysisScreen/AnalysisScreen'
 import { StatsScreen } from './components/StatsScreen/StatsScreen'
+import { SettingsScreen } from './components/SettingsScreen/SettingsScreen'
 import type { SessionResult } from './hooks/useTypingSession'
 import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
@@ -22,6 +23,7 @@ import { saveSession } from './lib/sessions'
 import type { Sentence } from './lib/sentences'
 import { listWeakWords } from './lib/weakWords'
 import { listWeakBigrams, fetchWordsForBigrams } from './lib/bigramStats'
+import { pickSessionSentences } from './lib/sentenceCategories'
 
 type SessionMode = 'sentence' | 'random' | 'weak_word' | 'word_drill'
 
@@ -35,6 +37,9 @@ interface SessionConfig {
   items: SessionText[]
   returnPath: string
   isFingering?: boolean
+  sourceSentences?: Sentence[]
+  sessionCount?: number
+  sessionCategories?: string[]
 }
 
 interface ResultsState {
@@ -188,11 +193,19 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     navigate('/practice')
   }, [navigate])
 
-  const handleStartSentenceSession = useCallback((sentences: Sentence[]) => {
+  const handleStartSentenceSession = useCallback((
+    selectedSentences: Sentence[],
+    sourceSentences: Sentence[],
+    count: number,
+    categories: string[],
+  ) => {
     beginSession({
       mode: 'sentence',
-      items: mapSentencesToSessionItems(sentences),
+      items: mapSentencesToSessionItems(selectedSentences),
       returnPath: '/library',
+      sourceSentences,
+      sessionCount: count,
+      sessionCategories: categories,
     })
   }, [beginSession])
 
@@ -343,6 +356,23 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
       return
     }
 
+    if (lastSessionConfig.mode === 'sentence' && lastSessionConfig.sourceSentences) {
+      const { selectedSentences } = pickSessionSentences(
+        lastSessionConfig.sourceSentences,
+        lastSessionConfig.sessionCount ?? lastSessionConfig.items.length,
+        lastSessionConfig.sessionCategories ?? [],
+      )
+      const nextConfig = {
+        ...lastSessionConfig,
+        items: mapSentencesToSessionItems(selectedSentences),
+      }
+      setActiveSession(nextConfig)
+      setLastSessionConfig(nextConfig)
+      setResultsState(null)
+      navigate('/practice')
+      return
+    }
+
     const nextConfig = lastSessionConfig.mode === 'random'
       ? {
           ...lastSessionConfig,
@@ -421,6 +451,15 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         path="/stats"
         element={(
           <StatsScreen
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route
+        path="/settings"
+        element={(
+          <SettingsScreen
             onLogout={handleLogout}
             userName={user.name}
           />

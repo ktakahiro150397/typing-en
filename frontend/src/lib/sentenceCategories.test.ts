@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  filterSentencesByCategories,
   formatCategoryInput,
   listSentenceCategories,
   parseCategoryInput,
@@ -46,6 +47,16 @@ describe('sentenceCategories', () => {
 
   it('lists available categories in sorted order', () => {
     expect(listSentenceCategories(sentences)).toEqual(['daily-conversation', 'internet'])
+  })
+
+  it('filters sentences with OR semantics across selected categories', () => {
+    expect(filterSentencesByCategories(sentences, ['internet', 'missing']).map((sentence) => sentence.id)).toEqual([
+      '2',
+    ])
+    expect(filterSentencesByCategories(sentences, ['daily-conversation']).map((sentence) => sentence.id)).toEqual([
+      '1',
+      '2',
+    ])
   })
 
   it('filters by explicitly selected categories', () => {

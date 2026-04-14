@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import type { PenaltyResume } from '../lib/settings'
 
 export interface KeyEvent {
   key: string
@@ -28,9 +29,22 @@ export interface TypingEngine {
   reset: (text: string) => void
 }
 
-export const MISS_LOCK_MS = 1000
+export const DEFAULT_MISS_LOCK_MS = 1000
+export const MISS_LOCK_MS = DEFAULT_MISS_LOCK_MS
 
-export function useTypingEngine(initialText: string): TypingEngine {
+export function rewindToWordStart(text: string, cursor: number): number {
+  let wordStart = cursor
+  while (wordStart > 0 && text[wordStart - 1] !== ' ') {
+    wordStart -= 1
+  }
+  return wordStart
+}
+
+export function useTypingEngine(
+  initialText: string,
+  missLockMs = DEFAULT_MISS_LOCK_MS,
+  penaltyResume: PenaltyResume = 'current',
+): TypingEngine {
   const [state, setState] = useState<TypingState>(() => makeInitialState(initialText))
   // ロック判定を setState の外で行うためのref
   const lockedUntilRef = useRef<number>(0)
@@ -65,8 +79,23 @@ export function useTypingEngine(initialText: string): TypingEngine {
       const newHistory = [...prev.keyHistory, event]
 
       if (!correct) {
-        const lockEnd = Date.now() + MISS_LOCK_MS
-        lockedUntilRef.current = lockEnd
+        const lockEnd = missLockMs > 0 ? Date.now() + missLockMs : null
+        lockedUntilRef.current = lockEnd ?? 0
+
+        if (penaltyResume === 'word') {
+          const cursor = rewindToWordStart(prev.text, prev.cursor)
+          return {
+            ...prev,
+            typed: prev.text.slice(0, cursor),
+            cursor,
+            misses: prev.misses + 1,
+            currentMiss: true,
+            lockedUntil: lockEnd,
+            keyHistory: newHistory,
+            startedAt,
+          }
+        }
+
         return {
           ...prev,
           misses: prev.misses + 1,
@@ -94,7 +123,7 @@ export function useTypingEngine(initialText: string): TypingEngine {
         startedAt,
       }
     })
-  }, [])
+  }, [missLockMs, penaltyResume])
 
   const reset = useCallback((text: string) => {
     lockedUntilRef.current = 0

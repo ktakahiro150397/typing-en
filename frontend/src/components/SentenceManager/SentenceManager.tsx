@@ -6,9 +6,18 @@ import { CsvImport } from './CsvImport'
 import { StartSessionModal } from './StartSessionModal'
 import type { Sentence } from '../../lib/sentences'
 import { DashboardLayout } from '../Layout/DashboardLayout'
+import {
+  filterSentencesByCategories,
+  listSentenceCategories,
+} from '../../lib/sentenceCategories'
 
 interface Props {
-  onStartSession: (sentences: Sentence[]) => void
+  onStartSession: (
+    selectedSentences: Sentence[],
+    sourceSentences: Sentence[],
+    count: number,
+    categories: string[],
+  ) => void
   onLogout: () => void
   userName: string
 }
@@ -22,6 +31,21 @@ export function SentenceManager({
   const [showForm, setShowForm] = useState(false)
   const [showCsv, setShowCsv] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [filterCategories, setFilterCategories] = useState<string[]>([])
+  const availableCategories = listSentenceCategories(sentences)
+  const filteredSentences = filterSentencesByCategories(sentences, filterCategories)
+
+  const toggleFilterCategory = (category: string) => {
+    setFilterCategories((current) => (
+      current.includes(category)
+        ? current.filter((item) => item !== category)
+        : [...current, category]
+    ))
+  }
+
+  const subtitle = filterCategories.length > 0
+    ? `${filteredSentences.length} / ${sentences.length}件を表示`
+    : `${total}件の登録文章を管理`
 
   useEffect(() => {
     void fetchSentences()
@@ -30,7 +54,7 @@ export function SentenceManager({
   return (
     <DashboardLayout
       title="ライブラリ"
-      subtitle={`${total}件の登録文章を管理`}
+      subtitle={subtitle}
       userName={userName}
       onLogout={onLogout}
       actions={(
@@ -106,14 +130,59 @@ export function SentenceManager({
               ※ 最新200件のみ表示されています（全{total}件）
             </p>
           )}
-          <SentenceList sentences={sentences} />
+          {availableCategories.length > 0 && (
+            <div className="app-card-soft space-y-3 px-5 py-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">カテゴリで絞り込む</p>
+                  <p className="text-xs text-slate-500">複数選択時は OR 条件で表示します。</p>
+                </div>
+                {filterCategories.length > 0 && (
+                  <button
+                    onClick={() => setFilterCategories([])}
+                    className="app-button app-button-subtle min-h-0 self-start px-3 py-1.5 text-xs"
+                  >
+                    クリア
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {availableCategories.map((category) => {
+                  const checked = filterCategories.includes(category)
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => toggleFilterCategory(category)}
+                      className={`app-chip transition-colors ${
+                        checked ? 'app-chip-info' : 'app-card border border-[#d6e3ed] text-slate-500'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {filteredSentences.length === 0 ? (
+            <div className="app-card-soft px-5 py-8 text-center text-sm text-slate-500">
+              選択したカテゴリに一致する文章がありません
+            </div>
+          ) : (
+            <SentenceList sentences={filteredSentences} />
+          )}
         </>
       )}
 
       {showModal && (
         <StartSessionModal
           sentences={sentences}
-          onStart={(selectedSentences) => { setShowModal(false); onStartSession(selectedSentences) }}
+          onStart={(selectedSentences, sourceSentences, count, categories) => {
+            setShowModal(false)
+            onStartSession(selectedSentences, sourceSentences, count, categories)
+          }}
           onClose={() => setShowModal(false)}
         />
       )}

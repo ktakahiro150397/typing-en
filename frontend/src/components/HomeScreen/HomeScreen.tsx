@@ -9,7 +9,12 @@ import type { Sentence } from '../../lib/sentences'
 
 interface Props {
   onStartRandomSession: () => void
-  onStartSentenceSession: (sentences: Sentence[]) => void
+  onStartSentenceSession: (
+    selectedSentences: Sentence[],
+    sourceSentences: Sentence[],
+    count: number,
+    categories: string[],
+  ) => void
   onStartWeakWordSession: () => Promise<void>
   onStartFingeringSession: () => Promise<void>
   isMockMode: boolean
@@ -207,7 +212,10 @@ export function HomeScreen({
       {showSentenceModal && (
         <StartSessionModal
           sentences={sentences}
-          onStart={(selected) => { setShowSentenceModal(false); onStartSentenceSession(selected) }}
+          onStart={(selectedSentences, sourceSentences, count, categories) => {
+            setShowSentenceModal(false)
+            onStartSentenceSession(selectedSentences, sourceSentences, count, categories)
+          }}
           onClose={() => setShowSentenceModal(false)}
         />
       )}
