@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 interface Props {
@@ -13,19 +15,19 @@ export function LoginScreen({ error }: Props) {
             <div className="space-y-2">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#3ea8ff]">typing-en</p>
               <h1 className="text-3xl font-bold leading-[1.5] text-slate-900 sm:text-4xl">
-                ミスを減らすための
+                登録なしでも始められる
                 <br />
                 英文タイピング練習
               </h1>
               <p className="max-w-2xl text-base text-slate-500">
-                練習結果から苦手ワードと運指パターンを抽出し、次に打つべき課題へ自然につなげる練習環境です。
+                まずは共有の練習問題でそのまま打てます。ログインすると、苦手ワードや運指分析、設定保存まで使えるようになります。
               </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="app-card-soft px-4 py-4">
-                <p className="text-sm font-semibold text-slate-900">文章と単語を横断</p>
-                <p className="mt-1 text-sm text-slate-500">登録文、苦手ワード、ランダムワードを目的別に練習。</p>
+                <p className="text-sm font-semibold text-slate-900">通常練習 5 問</p>
+                <p className="mt-1 text-sm text-slate-500">共有の練習問題から、すぐに通常セッションを始められます。</p>
               </div>
               <div className="app-card-soft px-4 py-4">
                 <p className="text-sm font-semibold text-slate-900">苦手を自動分析</p>
@@ -33,15 +35,15 @@ export function LoginScreen({ error }: Props) {
               </div>
               <div className="app-card-soft px-4 py-4">
                 <p className="text-sm font-semibold text-slate-900">次の練習へ直結</p>
-                <p className="mt-1 text-sm text-slate-500">結果画面からそのまま苦手ワード練習やドリルへ。</p>
+                <p className="mt-1 text-sm text-slate-500">結果画面からそのまま次の練習へつなげられます。</p>
               </div>
             </div>
           </div>
 
           <div className="app-card-soft flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-slate-900">Google アカウントでログイン</p>
-              <p className="text-sm text-slate-500">練習履歴と分析結果を保存して、ページをまたいで続けられます。</p>
+              <p className="text-sm font-semibold text-slate-900">ゲスト利用も、Google ログインも</p>
+              <p className="text-sm text-slate-500">まずは試して、続けるならログインして記録を残せます。</p>
             </div>
             <div className="app-chip app-chip-info">Accurate first</div>
           </div>
@@ -52,7 +54,7 @@ export function LoginScreen({ error }: Props) {
             <div className="app-chip app-chip-info">Sign in</div>
             <h2 className="text-2xl font-bold text-slate-900">練習をはじめる</h2>
             <p className="text-sm text-slate-500">
-              認証すると、文章管理・苦手ワード管理・結果の保存が利用できます。
+              ログインすると、苦手分析・統計・設定保存と、管理者向けの問題管理が利用できます。
             </p>
           </div>
 
@@ -78,11 +80,18 @@ export function LoginScreen({ error }: Props) {
           <div className="app-card-soft px-4 py-4">
             <p className="text-sm font-semibold text-slate-900">ログイン後にできること</p>
             <ul className="mt-2 space-y-1 text-sm text-slate-500">
-              <li>文章と攻略メモを管理</li>
               <li>苦手ワードと攻略済み状態を記録</li>
               <li>セッション結果から弱点を継続分析</li>
+              <li>管理者は共有問題を追加・編集</li>
             </ul>
           </div>
+
+          <Link
+            to="/"
+            className="app-button app-button-subtle w-full justify-center"
+          >
+            ログインせずに試す
+          </Link>
         </section>
       </div>
     </div>

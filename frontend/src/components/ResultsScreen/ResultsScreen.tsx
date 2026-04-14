@@ -10,6 +10,7 @@ interface Props {
   onRestart: () => void
   onGoBack: () => void
   onStartWeakWordSession: () => Promise<void>
+  canStartWeakWordSession: boolean
   isMockMode: boolean
   returnLabel: string
 }
@@ -21,6 +22,7 @@ export function ResultsScreen({
   onRestart,
   onGoBack,
   onStartWeakWordSession,
+  canStartWeakWordSession,
   isMockMode,
   returnLabel,
 }: Props) {
@@ -50,6 +52,10 @@ export function ResultsScreen({
   }, [onRestart])
 
   const handleWeakWordClick = async () => {
+    if (!canStartWeakWordSession) {
+      return
+    }
+
     setStartingWeakWordSession(true)
     setWeakWordError(null)
     try {
@@ -98,13 +104,13 @@ export function ResultsScreen({
             </button>
             <button
               onClick={() => void handleWeakWordClick()}
-              disabled={isMockMode || startingWeakWordSession}
+              disabled={!canStartWeakWordSession || isMockMode || startingWeakWordSession}
               className="app-button app-button-secondary flex-1"
             >
               {startingWeakWordSession && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#3ea8ff]/40 border-t-[#3ea8ff]" />
               )}
-              苦手ワード練習
+              {canStartWeakWordSession ? '苦手ワード練習' : 'ログインで苦手ワード練習'}
             </button>
             <button
               onClick={onGoBack}

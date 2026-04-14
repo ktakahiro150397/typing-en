@@ -31,7 +31,7 @@ export default async function bigramStatRoutes(app: FastifyInstance) {
   })
 
   // GET /api/bigram-stats/words?bigrams=wa,t%20,%20r
-  // 指定バイグラムを含む単語をユーザーの文章コーパスから抽出して返す。
+  // 指定バイグラムを含む単語を共有の文章コーパスから抽出して返す。
   //
   // バイグラムのマッチング規則:
   //   □→X (" X"): X で始まる単語  例: " r" → "run", "red"
@@ -40,7 +40,6 @@ export default async function bigramStatRoutes(app: FastifyInstance) {
   //
   // スペースを含むバイグラムは単語境界の遷移を表すため、trim() せずに保持する。
   app.get('/bigram-stats/words', { preHandler: [authenticateJWT] }, async (req, reply) => {
-    const userId = req.user!.id
     const query = (req.query as { bigrams?: string }).bigrams ?? ''
     // trim() しない — スペースを含むバイグラム ("t ", " r") を保持する
     const bigrams = query
@@ -53,7 +52,6 @@ export default async function bigramStatRoutes(app: FastifyInstance) {
     }
 
     const sentences = await prisma.sentence.findMany({
-      where: { userId },
       select: { text: true },
     })
 

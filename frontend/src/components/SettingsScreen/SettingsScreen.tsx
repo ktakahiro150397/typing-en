@@ -177,7 +177,7 @@ export function SettingsScreen({ onLogout, userName }: Props) {
                 />
                 <div>
                   <p className="text-sm font-semibold text-slate-900">ミス文字から再開</p>
-                  <p className="text-sm text-slate-500">従来どおり、ミスした位置から打ち直します。</p>
+                  <p className="text-sm text-slate-500">ミスした文字の位置に戻って、その場から打ち直します。</p>
                 </div>
               </label>
               <label className="app-card-soft flex cursor-pointer items-start gap-3 px-4 py-4">
