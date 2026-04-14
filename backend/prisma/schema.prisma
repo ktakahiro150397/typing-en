@@ -26,9 +26,20 @@ model Sentence {
   note         String?          @db.Text
   createdAt    DateTime         @default(now())
   user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categories   SentenceCategory[]
   sessionLinks SessionSentence[]
 
   @@unique([userId, text(length: 500)])
+}
+
+model SentenceCategory {
+  id         String   @id @default(cuid())
+  sentenceId String
+  category   String   @db.VarChar(191)
+  sentence   Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+
+  @@unique([sentenceId, category])
+  @@index([category])
 }
 
 model WeakWord {

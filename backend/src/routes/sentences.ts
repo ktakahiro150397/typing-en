@@ -1,10 +1,71 @@
 import type { FastifyInstance } from 'fastify'
 import fastifyMultipart from '@fastify/multipart'
 import { parse } from 'csv-parse'
+import { basename, extname } from 'node:path'
 import { prisma } from '../db.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
 
 const MAX_TEXT_LENGTH = 5000
+const MAX_CATEGORY_COUNT = 20
+const MAX_CATEGORY_LENGTH = 100
+
+const sentenceSelect = {
+  id: true,
+  text: true,
+  note: true,
+  createdAt: true,
+  categories: {
+    select: { category: true },
+    orderBy: { category: 'asc' as const },
+  },
+}
+
+function normalizeCategories(values: string[]): string[] {
+  const seen = new Set<string>()
+  const categories: string[] = []
+
+  for (const value of values) {
+    const category = value.trim()
+    if (!category || category.length > MAX_CATEGORY_LENGTH || seen.has(category)) {
+      continue
+    }
+    seen.add(category)
+    categories.push(category)
+    if (categories.length >= MAX_CATEGORY_COUNT) {
+      break
+    }
+  }
+
+  return categories
+}
+
+function parseCategoryText(value: string | undefined): string[] {
+  return value
+    ? value.split(/[\n,、]+/).map((item) => item.trim()).filter(Boolean)
+    : []
+}
+
+function getFileNameCategory(filename: string | undefined): string[] {
+  if (!filename) return []
+  const category = basename(filename, extname(filename)).trim()
+  return category ? [category] : []
+}
+
+function mapSentence(sentence: {
+  id: string
+  text: string
+  note: string | null
+  createdAt: Date
+  categories: Array<{ category: string }>
+}) {
+  return {
+    id: sentence.id,
+    text: sentence.text,
+    note: sentence.note,
+    createdAt: sentence.createdAt,
+    categories: sentence.categories.map(({ category }) => category),
+  }
+}
 
 export default async function sentenceRoutes(app: FastifyInstance) {
   await app.register(fastifyMultipart)
@@ -20,11 +81,11 @@ export default async function sentenceRoutes(app: FastifyInstance) {
           where: { userId },
           orderBy: { createdAt: 'desc' },
           take: 200,
-          select: { id: true, text: true, note: true, createdAt: true },
+          select: sentenceSelect,
         }),
         prisma.sentence.count({ where: { userId } }),
       ])
-      return { sentences, total }
+      return { sentences: sentences.map(mapSentence), total }
     },
   )
 
@@ -38,6 +99,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       if (!data) {
         return reply.status(400).send({ message: 'No file uploaded' })
       }
+      const fileCategories = getFileNameCategory(data.filename)
 
       let created = 0
       let skipped = 0
@@ -49,6 +111,11 @@ export default async function sentenceRoutes(app: FastifyInstance) {
 
       for await (const row of parser as AsyncIterable<Record<string, string>>) {
         const text = (row['text'] ?? '').trim()
+        const categories = normalizeCategories([
+          ...fileCategories,
+          ...parseCategoryText(row['categories']),
+          ...parseCategoryText(row['category']),
+        ])
         if (!text) continue
         if (text.length > MAX_TEXT_LENGTH) {
           errors.push(`Too long (${text.length} chars): "${text.slice(0, 40)}..."`)
@@ -56,7 +123,18 @@ export default async function sentenceRoutes(app: FastifyInstance) {
         }
         try {
           await prisma.sentence.create({
-            data: { userId, text, note: row['note'] || null },
+            data: {
+              userId,
+              text,
+              note: row['note'] || null,
+              ...(categories.length > 0
+                ? {
+                    categories: {
+                      create: categories.map((category) => ({ category })),
+                    },
+                  }
+                : {}),
+            },
           })
           created++
         } catch (e: unknown) {
@@ -79,7 +157,11 @@ export default async function sentenceRoutes(app: FastifyInstance) {
     { preHandler: [authenticateJWT] },
     async (req, reply) => {
       const userId = req.user!.id
-      const { text, note } = req.body as { text?: string; note?: string }
+      const { text, note, categories } = req.body as {
+        text?: string
+        note?: string
+        categories?: unknown
+      }
 
       const trimmed = (text ?? '').trim()
       if (!trimmed) {
@@ -88,13 +170,32 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       if (trimmed.length > MAX_TEXT_LENGTH) {
         return reply.status(400).send({ message: `text must be ${MAX_TEXT_LENGTH} chars or less` })
       }
+      if (categories !== undefined && !Array.isArray(categories)) {
+        return reply.status(400).send({ message: 'categories must be an array' })
+      }
+      const normalizedCategories = normalizeCategories(
+        Array.isArray(categories)
+          ? categories.filter((value): value is string => typeof value === 'string')
+          : [],
+      )
 
       try {
         const sentence = await prisma.sentence.create({
-          data: { userId, text: trimmed, note: note?.trim() || null },
-          select: { id: true, text: true, note: true, createdAt: true },
+          data: {
+            userId,
+            text: trimmed,
+            note: note?.trim() || null,
+            ...(normalizedCategories.length > 0
+              ? {
+                  categories: {
+                    create: normalizedCategories.map((category) => ({ category })),
+                  },
+                }
+              : {}),
+          },
+          select: sentenceSelect,
         })
-        return reply.status(201).send(sentence)
+        return reply.status(201).send(mapSentence(sentence))
       } catch (e: unknown) {
         const err = e as { code?: string }
         if (err.code === 'P2002') {
@@ -112,7 +213,11 @@ export default async function sentenceRoutes(app: FastifyInstance) {
     async (req, reply) => {
       const userId = req.user!.id
       const { id } = req.params as { id: string }
-      const { text, note } = req.body as { text?: string; note?: string }
+      const { text, note, categories } = req.body as {
+        text?: string
+        note?: string
+        categories?: unknown
+      }
 
       const existing = await prisma.sentence.findUnique({
         where: { id },
@@ -121,8 +226,18 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       if (!existing || existing.userId !== userId) {
         return reply.status(404).send({ message: 'Not found' })
       }
+      if (categories !== undefined && !Array.isArray(categories)) {
+        return reply.status(400).send({ message: 'categories must be an array' })
+      }
 
-      const patch: { text?: string; note?: string | null } = {}
+      const patch: {
+        text?: string
+        note?: string | null
+        categories?: {
+          deleteMany: Record<string, never>
+          create?: Array<{ category: string }>
+        }
+      } = {}
       if (text !== undefined) {
         const trimmed = text.trim()
         if (!trimmed) return reply.status(400).send({ message: 'text cannot be empty' })
@@ -132,14 +247,27 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       if (note !== undefined) {
         patch.note = note.trim() || null
       }
+      if (categories !== undefined) {
+        const normalizedCategories = normalizeCategories(
+          categories.filter((value): value is string => typeof value === 'string'),
+        )
+        patch.categories = {
+          deleteMany: {},
+          ...(normalizedCategories.length > 0
+            ? {
+                create: normalizedCategories.map((category) => ({ category })),
+              }
+            : {}),
+        }
+      }
 
       try {
         const updated = await prisma.sentence.update({
           where: { id },
           data: patch,
-          select: { id: true, text: true, note: true, createdAt: true },
+          select: sentenceSelect,
         })
-        return updated
+        return mapSentence(updated)
       } catch (e: unknown) {
         const err = e as { code?: string }
         if (err.code === 'P2002') {

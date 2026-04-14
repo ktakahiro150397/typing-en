@@ -4,15 +4,14 @@ import {
   Navigate,
   Route,
   Routes,
-  useLocation,
   useNavigate,
 } from 'react-router-dom'
 import { ResultsScreen } from './components/ResultsScreen/ResultsScreen'
 import { LoginScreen } from './components/LoginScreen/LoginScreen'
 import { SentenceManager } from './components/SentenceManager/SentenceManager'
 import { PracticeScreen } from './components/PracticeScreen/PracticeScreen'
-import { WeakWordManager } from './components/SentenceManager/WeakWordManager'
-import { FingeringManager } from './components/FingeringManager/FingeringManager'
+import { HomeScreen } from './components/HomeScreen/HomeScreen'
+import { AnalysisScreen } from './components/AnalysisScreen/AnalysisScreen'
 import type { SessionResult } from './hooks/useTypingSession'
 import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
@@ -34,6 +33,7 @@ interface SessionConfig {
   mode: SessionMode
   items: SessionText[]
   returnPath: string
+  isFingering?: boolean
 }
 
 interface ResultsState {
@@ -175,7 +175,6 @@ interface AppRouterProps {
 
 function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterProps) {
   const navigate = useNavigate()
-  const location = useLocation()
   const [activeSession, setActiveSession] = useState<SessionConfig | null>(null)
   const [lastSessionConfig, setLastSessionConfig] = useState<SessionConfig | null>(null)
   const [resultsState, setResultsState] = useState<ResultsState | null>(null)
@@ -192,7 +191,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     beginSession({
       mode: 'sentence',
       items: mapSentencesToSessionItems(sentences),
-      returnPath: '/sentences',
+      returnPath: '/library',
     })
   }, [beginSession])
 
@@ -221,7 +220,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     beginSession({
       mode: 'weak_word',
       items: nextTexts.map((text) => ({ text, sentenceId: null })),
-      returnPath: '/weak-words',
+      returnPath: '/analysis',
     })
   }, [beginSession, isMockMode, token])
 
@@ -256,28 +255,24 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     beginSession({
       mode: 'weak_word',
       items: texts.map((text) => ({ text, sentenceId: null })),
-      returnPath: '/fingering',
+      returnPath: '/analysis',
+      isFingering: true,
     })
   }, [beginSession, isMockMode, token])
 
   const handleStartRandomSession = useCallback(() => {
-    const returnPath = location.pathname === '/weak-words'
-      ? '/weak-words'
-      : location.pathname === '/fingering'
-        ? '/fingering'
-        : '/sentences'
     beginSession({
       mode: 'random',
       items: generateRandomSessionItems(),
-      returnPath,
+      returnPath: '/',
     })
-  }, [beginSession, location.pathname])
+  }, [beginSession])
 
   const handleStartWordDrill = useCallback((word: string, count: number) => {
     beginSession({
       mode: 'word_drill',
       items: createWordDrillItems(word, count),
-      returnPath: '/weak-words',
+      returnPath: '/analysis',
     })
   }, [beginSession])
 
@@ -330,7 +325,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
   }, [activeSession, isMockMode, navigate, token])
 
   const handleAbortSession = useCallback(() => {
-    const returnPath = activeSession?.returnPath ?? '/sentences'
+    const returnPath = activeSession?.returnPath ?? '/'
     setActiveSession(null)
     navigate(returnPath)
   }, [activeSession, navigate])
@@ -339,7 +334,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     if (!lastSessionConfig) return
 
     if (lastSessionConfig.mode === 'weak_word') {
-      if (lastSessionConfig.returnPath === '/fingering') {
+      if (lastSessionConfig.isFingering) {
         void handleStartFingeringSession()
       } else {
         void handleStartWeakWordSession()
@@ -362,7 +357,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
 
   const handleGoBackFromResults = useCallback(() => {
     setActiveSession(null)
-    navigate(resultsState?.returnPath ?? '/sentences')
+    navigate(resultsState?.returnPath ?? '/')
   }, [navigate, resultsState?.returnPath])
 
   const handleLogout = useCallback(() => {
@@ -383,44 +378,48 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/sentences" replace />} />
-      <Route path="/login" element={<Navigate to="/sentences" replace />} />
       <Route
-        path="/sentences"
+        path="/"
+        element={(
+          <HomeScreen
+            onStartRandomSession={handleStartRandomSession}
+            onStartSentenceSession={handleStartSentenceSession}
+            onStartWeakWordSession={handleStartWeakWordSession}
+            onStartFingeringSession={handleStartFingeringSession}
+            isMockMode={isMockMode}
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route
+        path="/library"
         element={(
           <SentenceManager
             onStartSession={handleStartSentenceSession}
-            onStartRandomSession={handleStartRandomSession}
             onLogout={handleLogout}
             userName={user.name}
           />
         )}
       />
       <Route
-        path="/weak-words"
+        path="/analysis"
         element={(
-          <WeakWordManager
+          <AnalysisScreen
             onStartWeakWordSession={handleStartWeakWordSession}
             onStartWordDrill={handleStartWordDrill}
-            onStartRandomSession={handleStartRandomSession}
-            isMockMode={isMockMode}
-            onLogout={handleLogout}
-            userName={user.name}
-          />
-        )}
-      />
-      <Route
-        path="/fingering"
-        element={(
-          <FingeringManager
             onStartFingeringSession={handleStartFingeringSession}
-            onStartRandomSession={handleStartRandomSession}
             isMockMode={isMockMode}
             onLogout={handleLogout}
             userName={user.name}
           />
         )}
       />
+      {/* 旧URLの後方互換リダイレクト */}
+      <Route path="/sentences" element={<Navigate to="/library" replace />} />
+      <Route path="/weak-words" element={<Navigate to="/analysis" replace />} />
+      <Route path="/fingering" element={<Navigate to="/analysis" replace />} />
       <Route
         path="/practice"
         element={activeSession ? (
@@ -435,7 +434,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         ) : resultsState ? (
           <Navigate to="/results" replace />
         ) : (
-          <Navigate to="/sentences" replace />
+          <Navigate to="/" replace />
         )}
       />
       <Route
@@ -450,20 +449,20 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             isMockMode={isMockMode}
             onGoBack={handleGoBackFromResults}
             returnLabel={
-              resultsState.returnPath === '/weak-words'
-                ? '苦手ワードへ戻る'
-                : resultsState.returnPath === '/fingering'
-                  ? '苦手運指へ戻る'
-                  : '文章管理へ戻る'
+              resultsState.returnPath === '/analysis'
+                ? '分析へ戻る'
+                : resultsState.returnPath === '/library'
+                  ? 'ライブラリへ戻る'
+                  : 'ホームへ戻る'
             }
           />
         ) : activeSession ? (
           <Navigate to="/practice" replace />
         ) : (
-          <Navigate to="/sentences" replace />
+          <Navigate to="/" replace />
         )}
       />
-      <Route path="*" element={<Navigate to="/sentences" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

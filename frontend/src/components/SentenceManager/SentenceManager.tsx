@@ -9,14 +9,12 @@ import { DashboardLayout } from '../Layout/DashboardLayout'
 
 interface Props {
   onStartSession: (sentences: Sentence[]) => void
-  onStartRandomSession: () => void
   onLogout: () => void
   userName: string
 }
 
 export function SentenceManager({
   onStartSession,
-  onStartRandomSession,
   onLogout,
   userName,
 }: Props) {
@@ -31,11 +29,10 @@ export function SentenceManager({
 
   return (
     <DashboardLayout
-      title="文章管理"
+      title="ライブラリ"
       subtitle={`${total}件の登録文章を管理`}
       userName={userName}
       onLogout={onLogout}
-      onStartRandomSession={onStartRandomSession}
       actions={(
         <>
           <button
@@ -64,13 +61,13 @@ export function SentenceManager({
         <div className="app-card-soft px-5 py-5">
           <p className="text-sm font-semibold text-slate-900">文章ライブラリを整える</p>
           <p className="mt-2 text-sm text-slate-500">
-            練習で使う文章と攻略メモをここで管理します。追加した文章はセッション開始時にランダム選択されます。
+            練習で使う文章・攻略メモ・カテゴリをここで管理します。追加した文章はカテゴリ単位でも出題できます。
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl bg-white px-4 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">登録数</p>
               <p className="mt-2 text-3xl font-bold text-slate-900">{total}</p>
-              <p className="text-sm text-slate-500">文章ごとにメモを残して反復できます。</p>
+              <p className="text-sm text-slate-500">文章ごとにメモやカテゴリを付けて反復できます。</p>
             </div>
             <div className="rounded-2xl bg-white px-4 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">おすすめの流れ</p>

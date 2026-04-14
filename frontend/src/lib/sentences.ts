@@ -7,6 +7,7 @@ export interface Sentence {
   text: string
   note: string | null
   createdAt: string
+  categories: string[]
 }
 
 export interface SentenceList {
@@ -24,10 +25,10 @@ export function listSentences(): Promise<SentenceList> {
   return apiFetch<SentenceList>('/api/sentences')
 }
 
-export function createSentence(text: string, note?: string): Promise<Sentence> {
+export function createSentence(text: string, note?: string, categories: string[] = []): Promise<Sentence> {
   return apiFetch<Sentence>('/api/sentences', {
     method: 'POST',
-    body: JSON.stringify({ text, note }),
+    body: JSON.stringify({ text, note, categories }),
   })
 }
 
@@ -49,7 +50,7 @@ export async function importSentencesCsv(file: File): Promise<ImportResult> {
 
 export function updateSentence(
   id: string,
-  patch: { text?: string; note?: string },
+  patch: { text?: string; note?: string; categories?: string[] },
 ): Promise<Sentence> {
   return apiFetch<Sentence>(`/api/sentences/${id}`, {
     method: 'PATCH',

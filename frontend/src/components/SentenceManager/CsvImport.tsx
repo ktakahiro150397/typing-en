@@ -37,7 +37,10 @@ export function CsvImport({ onClose }: { onClose: () => void }) {
         <h3 className="text-lg font-bold text-slate-900">CSV インポート</h3>
         <p className="text-sm text-slate-500">
           ヘッダー行ありの CSV をまとめて読み込みます。<code className="font-mono text-[#1d4ed8]">text</code> 列は必須、
-          <code className="font-mono text-[#1d4ed8]">note</code> 列は任意です。
+          <code className="font-mono text-[#1d4ed8]">note</code> 列は任意です。ファイル名は自動でカテゴリになります。
+        </p>
+        <p className="text-xs text-slate-500">
+          任意で <code className="font-mono text-[#1d4ed8]">category</code> / <code className="font-mono text-[#1d4ed8]">categories</code> 列も使えます。
         </p>
       </div>
 

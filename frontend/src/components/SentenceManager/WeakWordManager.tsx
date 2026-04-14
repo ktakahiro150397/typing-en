@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ReactNode } from 'react'
 import { DashboardLayout } from '../Layout/DashboardLayout'
 import { WeakWordList } from './WeakWordList'
 import { WordDrillModal } from './WordDrillModal'
@@ -13,19 +14,19 @@ import {
 interface Props {
   onStartWeakWordSession: () => Promise<void>
   onStartWordDrill: (word: string, count: number) => void
-  onStartRandomSession: () => void
   isMockMode: boolean
   onLogout: () => void
   userName: string
+  tabSwitcher?: ReactNode
 }
 
 export function WeakWordManager({
   onStartWeakWordSession,
   onStartWordDrill,
-  onStartRandomSession,
   isMockMode,
   onLogout,
   userName,
+  tabSwitcher,
 }: Props) {
   const [weakWords, setWeakWords] = useState<WeakWord[]>([])
   const [loadingWeakWords, setLoadingWeakWords] = useState(false)
@@ -140,9 +141,9 @@ export function WeakWordManager({
       subtitle={!isMockMode ? `未攻略 ${activeCount}件 / 全${weakWords.length}件` : 'モック認証では利用できません'}
       userName={userName}
       onLogout={onLogout}
-      onStartRandomSession={onStartRandomSession}
       actions={!isMockMode ? (
         <>
+          {tabSwitcher}
           <label className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#d6e3ed] bg-white px-4 py-2 text-sm text-slate-600">
             <input
               type="checkbox"

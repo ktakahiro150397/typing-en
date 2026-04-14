@@ -23,7 +23,8 @@
       "Bash(npx tsc:*)",
       "Bash(npm run:*)",
       "Bash(curl:*)",
-      "Bash(netstat -tlnp)"
+      "Bash(netstat -tlnp)",
+      "Bash(find:*)"
     ]
   }
 }
