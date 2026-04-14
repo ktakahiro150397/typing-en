@@ -272,7 +272,7 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
   const accuracy = totalKeys > 0 ? Math.round(((totalKeys - totalMisses) / totalKeys) * 100) : 100
   const totalCorrectChars = records.reduce((sum, record) => sum + record.text.replace(/ $/, '').length, 0)
   const minutes = durationMs / 60000
-  const wpm = minutes > 0 ? Math.round(totalCorrectChars / 5 / minutes) : 0
+  const wpm = minutes > 0 ? totalCorrectChars / 5 / minutes : 0
 
   const allWordStats = [...wordMap.values()]
     .map(finalizeWordStat)

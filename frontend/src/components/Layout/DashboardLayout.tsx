@@ -47,6 +47,9 @@ export function DashboardLayout({
                 <NavLink to="/library" className={navLinkClassName}>
                   ライブラリ
                 </NavLink>
+                <NavLink to="/stats" className={navLinkClassName}>
+                  統計
+                </NavLink>
               </nav>
             </div>
 
