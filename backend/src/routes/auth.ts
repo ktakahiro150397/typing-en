@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../db.js'
+import { isAdminEmail } from '../lib/admin.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
 import { passport } from '../passport.js'
 
@@ -78,7 +79,7 @@ export default async function authRoutes(app: FastifyInstance) {
     { preHandler: [authenticateJWT] },
     async (req) => {
       const { id, email, name, createdAt } = req.user!
-      return { id, email, name, createdAt }
+      return { id, email, name, createdAt, isAdmin: isAdminEmail(email) }
     },
   )
 

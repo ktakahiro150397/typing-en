@@ -15,7 +15,6 @@ import { AnalysisScreen } from './components/AnalysisScreen/AnalysisScreen'
 import { StatsScreen } from './components/StatsScreen/StatsScreen'
 import { SettingsScreen } from './components/SettingsScreen/SettingsScreen'
 import type { SessionResult } from './hooks/useTypingSession'
-import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
 import { apiFetch } from './lib/api'
 import { normalizeSessionText, buildWeakWordPracticeTexts } from './lib/sessionText'
@@ -23,6 +22,7 @@ import { saveSession } from './lib/sessions'
 import type { Sentence } from './lib/sentences'
 import { listWeakWords } from './lib/weakWords'
 import { listWeakBigrams, fetchWordsForBigrams } from './lib/bigramStats'
+import { fetchPublicPracticeSentences } from './lib/publicSentences'
 import { pickSessionSentences } from './lib/sentenceCategories'
 
 type SessionMode = 'sentence' | 'random' | 'weak_word' | 'word_drill'
@@ -53,7 +53,7 @@ function normalizeText(text: string): string {
   return normalizeSessionText(text)
 }
 
-const RANDOM_TEXT_LENGTH = 30
+const DEFAULT_PUBLIC_SESSION_COUNT = 5
 const MAX_WEAK_WORD_QUESTIONS = 10
 
 function createWordDrillItems(word: string, count: number): SessionText[] {
@@ -64,16 +64,9 @@ function createWordDrillItems(word: string, count: number): SessionText[] {
   }))
 }
 
-function generateRandomSessionItems(): SessionText[] {
-  return [{
-    text: generateRandomText(RANDOM_TEXT_LENGTH, 'full'),
-    sentenceId: null,
-  }]
-}
-
 function shuffleArray<T>(arr: T[]): T[] {
   const result = [...arr]
-  for (let i = result.length - 1; i > 0; i--) {
+  for (let i = result.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[result[i], result[j]] = [result[j], result[i]]
   }
@@ -92,6 +85,7 @@ interface AuthMe {
   name: string
   email: string
   createdAt: string
+  isAdmin: boolean
 }
 
 export default function App() {
@@ -102,7 +96,7 @@ export default function App() {
 
   useEffect(() => {
     if (isMockMode) {
-      setAuth({ id: 'mock-user', name: 'Mock User', email: 'mock@example.com' }, 'mock-token')
+      setAuth({ id: 'mock-user', name: 'Mock User', email: 'mock@example.com', isAdmin: true }, 'mock-token')
       setAuthLoaded(true)
       return
     }
@@ -125,7 +119,6 @@ export default function App() {
       return
     }
 
-    // Store the callback token before fetching /auth/me
     if (callbackToken) {
       localStorage.setItem('token', callbackToken)
     }
@@ -133,7 +126,7 @@ export default function App() {
     apiFetch<AuthMe>('/auth/me')
       .then((me) => {
         setAuthError(false)
-        setAuth({ id: me.id, name: me.name, email: me.email }, activeToken)
+        setAuth({ id: me.id, name: me.name, email: me.email, isAdmin: me.isAdmin }, activeToken)
         if (callbackToken) {
           window.history.replaceState(null, '', window.location.pathname)
         }
@@ -172,7 +165,7 @@ export default function App() {
 }
 
 interface AppRouterProps {
-  user: { id: string; name: string; email: string } | null
+  user: { id: string; name: string; email: string; isAdmin: boolean } | null
   token: string | null
   authError: boolean
   isMockMode: boolean
@@ -209,6 +202,24 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     })
   }, [beginSession])
 
+  const handleStartPublicPracticeSession = useCallback(async () => {
+    await pendingSaveRef.current
+
+    const { sentences } = await fetchPublicPracticeSentences(DEFAULT_PUBLIC_SESSION_COUNT)
+    if (sentences.length === 0) {
+      throw new Error('公開練習に使える文章がまだありません')
+    }
+
+    beginSession({
+      mode: 'sentence',
+      items: mapSentencesToSessionItems(sentences),
+      returnPath: '/',
+      sourceSentences: sentences,
+      sessionCount: sentences.length,
+      sessionCategories: [],
+    })
+  }, [beginSession])
+
   const handleStartWeakWordSession = useCallback(async () => {
     await pendingSaveRef.current
 
@@ -238,9 +249,6 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     })
   }, [beginSession, isMockMode, token])
 
-  // 苦手運指練習セッションを開始する。
-  // ミス率上位 10 バイグラムを取得し、それらを含む単語を文章コーパスから抽出して練習テキストを構築する。
-  // セッション保存は weak_word モードと同じ経路を通るため、ミスした単語は苦手ワードにも自動登録される。
   const handleStartFingeringSession = useCallback(async () => {
     await pendingSaveRef.current
 
@@ -257,12 +265,11 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
       throw new Error('まだ十分な運指データがありません。通常練習を行うとデータが蓄積されます。')
     }
 
-    const { words } = await fetchWordsForBigrams(topBigrams.map((b) => b.bigram))
+    const { words } = await fetchWordsForBigrams(topBigrams.map((bigram) => bigram.bigram))
     if (words.length < 3) {
-      throw new Error(`対象の運指パターンを含む単語が少なすぎます（${words.length}件）。文章管理でより多くの文章を追加してください。`)
+      throw new Error(`対象の運指パターンを含む単語が少なすぎます（${words.length}件）。共有問題を増やしてからお試しください。`)
     }
 
-    // シャッフルして最大 MAX_WEAK_WORD_QUESTIONS チャンク分の単語を使用する
     const shuffled = shuffleArray(words).slice(0, MAX_WEAK_WORD_QUESTIONS * 5)
     const texts = buildWeakWordPracticeTexts(shuffled).slice(0, MAX_WEAK_WORD_QUESTIONS)
 
@@ -273,14 +280,6 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
       isFingering: true,
     })
   }, [beginSession, isMockMode, token])
-
-  const handleStartRandomSession = useCallback(() => {
-    beginSession({
-      mode: 'random',
-      items: generateRandomSessionItems(),
-      returnPath: '/',
-    })
-  }, [beginSession])
 
   const handleStartWordDrill = useCallback((word: string, count: number) => {
     beginSession({
@@ -373,15 +372,8 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
       return
     }
 
-    const nextConfig = lastSessionConfig.mode === 'random'
-      ? {
-          ...lastSessionConfig,
-          items: generateRandomSessionItems(),
-        }
-      : lastSessionConfig
-
-    setActiveSession(nextConfig)
-    setLastSessionConfig(nextConfig)
+    setActiveSession(lastSessionConfig)
+    setLastSessionConfig(lastSessionConfig)
     setResultsState(null)
     navigate('/practice')
   }, [handleStartFingeringSession, handleStartWeakWordSession, lastSessionConfig, navigate])
@@ -398,45 +390,42 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     navigate('/login', { replace: true })
   }, [navigate, onLogout])
 
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginScreen error={authError} />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    )
-  }
-
   return (
     <Routes>
       <Route
         path="/"
         element={(
           <HomeScreen
-            onStartRandomSession={handleStartRandomSession}
-            onStartSentenceSession={handleStartSentenceSession}
+            onStartPracticeSession={handleStartPublicPracticeSession}
             onStartWeakWordSession={handleStartWeakWordSession}
             onStartFingeringSession={handleStartFingeringSession}
             isMockMode={isMockMode}
-            onLogout={handleLogout}
-            userName={user.name}
+            isAuthenticated={Boolean(user)}
+            isAdmin={Boolean(user?.isAdmin)}
+            onLogout={user ? handleLogout : undefined}
+            userName={user?.name}
           />
         )}
       />
-      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <LoginScreen error={authError} />}
+      />
       <Route
         path="/library"
-        element={(
+        element={user?.isAdmin ? (
           <SentenceManager
             onStartSession={handleStartSentenceSession}
             onLogout={handleLogout}
             userName={user.name}
           />
+        ) : (
+          <Navigate to={user ? '/' : '/login'} replace />
         )}
       />
       <Route
         path="/analysis"
-        element={(
+        element={user ? (
           <AnalysisScreen
             onStartWeakWordSession={handleStartWeakWordSession}
             onStartWordDrill={handleStartWordDrill}
@@ -445,27 +434,32 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             onLogout={handleLogout}
             userName={user.name}
           />
+        ) : (
+          <Navigate to="/login" replace />
         )}
       />
       <Route
         path="/stats"
-        element={(
+        element={user ? (
           <StatsScreen
             onLogout={handleLogout}
             userName={user.name}
           />
+        ) : (
+          <Navigate to="/login" replace />
         )}
       />
       <Route
         path="/settings"
-        element={(
+        element={user ? (
           <SettingsScreen
             onLogout={handleLogout}
             userName={user.name}
           />
+        ) : (
+          <Navigate to="/login" replace />
         )}
       />
-      {/* 旧URLの後方互換リダイレクト */}
       <Route path="/sentences" element={<Navigate to="/library" replace />} />
       <Route path="/weak-words" element={<Navigate to="/analysis" replace />} />
       <Route path="/fingering" element={<Navigate to="/analysis" replace />} />
@@ -477,7 +471,8 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             sessionItems={activeSession.items}
             onComplete={handleSessionComplete}
             onAbort={handleAbortSession}
-            onLogout={handleLogout}
+            onLogout={user ? handleLogout : undefined}
+            canUseSavedSettings={Boolean(user && token)}
             returnPath={activeSession.returnPath}
           />
         ) : resultsState ? (
@@ -495,6 +490,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             totalCount={resultsState.totalCount}
             onRestart={handleRestartSession}
             onStartWeakWordSession={handleStartWeakWordSession}
+            canStartWeakWordSession={Boolean(user)}
             isMockMode={isMockMode}
             onGoBack={handleGoBackFromResults}
             returnLabel={

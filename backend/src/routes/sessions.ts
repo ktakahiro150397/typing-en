@@ -157,15 +157,12 @@ export default async function sessionRoutes(app: FastifyInstance) {
     const uniqueSentenceIds = [...new Set(sentenceIds)]
     if (uniqueSentenceIds.length > 0) {
       const sentences = await prisma.sentence.findMany({
-        where: {
-          userId,
-          id: { in: uniqueSentenceIds },
-        },
+        where: { id: { in: uniqueSentenceIds } },
         select: { id: true },
       })
 
       if (sentences.length !== uniqueSentenceIds.length) {
-        return sendBadRequest(reply, 'sentenceIds contain unknown or unauthorized sentences')
+        return sendBadRequest(reply, 'sentenceIds contain unknown sentences')
       }
     }
 

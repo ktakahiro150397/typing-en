@@ -4,6 +4,7 @@ import { parse } from 'csv-parse'
 import { basename, extname } from 'node:path'
 import { prisma } from '../db.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
+import { requireAdmin } from '../middleware/requireAdmin.js'
 
 const MAX_TEXT_LENGTH = 5000
 const MAX_CATEGORY_COUNT = 20
@@ -73,17 +74,15 @@ export default async function sentenceRoutes(app: FastifyInstance) {
   // GET /api/sentences — list user's sentences
   app.get(
     '/sentences',
-    { preHandler: [authenticateJWT] },
-    async (req) => {
-      const userId = req.user!.id
+    { preHandler: [authenticateJWT, requireAdmin] },
+    async () => {
       const [sentences, total] = await Promise.all([
         prisma.sentence.findMany({
-          where: { userId },
           orderBy: { createdAt: 'desc' },
           take: 200,
           select: sentenceSelect,
         }),
-        prisma.sentence.count({ where: { userId } }),
+        prisma.sentence.count(),
       ])
       return { sentences: sentences.map(mapSentence), total }
     },
@@ -92,9 +91,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
   // POST /api/sentences/import — CSV bulk import (must be before /:id)
   app.post(
     '/sentences/import',
-    { preHandler: [authenticateJWT] },
+    { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
-      const userId = req.user!.id
+      const createdByUserId = req.user!.id
       const data = await req.file()
       if (!data) {
         return reply.status(400).send({ message: 'No file uploaded' })
@@ -124,7 +123,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
         try {
           await prisma.sentence.create({
             data: {
-              userId,
+              createdByUserId,
               text,
               note: row['note'] || null,
               ...(categories.length > 0
@@ -154,9 +153,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
   // POST /api/sentences — create single sentence
   app.post(
     '/sentences',
-    { preHandler: [authenticateJWT] },
+    { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
-      const userId = req.user!.id
+      const createdByUserId = req.user!.id
       const { text, note, categories } = req.body as {
         text?: string
         note?: string
@@ -182,7 +181,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       try {
         const sentence = await prisma.sentence.create({
           data: {
-            userId,
+            createdByUserId,
             text: trimmed,
             note: note?.trim() || null,
             ...(normalizedCategories.length > 0
@@ -209,9 +208,8 @@ export default async function sentenceRoutes(app: FastifyInstance) {
   // PATCH /api/sentences/:id — update text or note
   app.patch(
     '/sentences/:id',
-    { preHandler: [authenticateJWT] },
+    { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
-      const userId = req.user!.id
       const { id } = req.params as { id: string }
       const { text, note, categories } = req.body as {
         text?: string
@@ -221,9 +219,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
 
       const existing = await prisma.sentence.findUnique({
         where: { id },
-        select: { userId: true },
+        select: { id: true },
       })
-      if (!existing || existing.userId !== userId) {
+      if (!existing) {
         return reply.status(404).send({ message: 'Not found' })
       }
       if (categories !== undefined && !Array.isArray(categories)) {
@@ -281,16 +279,15 @@ export default async function sentenceRoutes(app: FastifyInstance) {
   // DELETE /api/sentences/:id
   app.delete(
     '/sentences/:id',
-    { preHandler: [authenticateJWT] },
+    { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
-      const userId = req.user!.id
       const { id } = req.params as { id: string }
 
       const existing = await prisma.sentence.findUnique({
         where: { id },
-        select: { userId: true },
+        select: { id: true },
       })
-      if (!existing || existing.userId !== userId) {
+      if (!existing) {
         return reply.status(404).send({ message: 'Not found' })
       }
 

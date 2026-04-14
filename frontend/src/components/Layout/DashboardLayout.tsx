@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 interface Props {
   title: string
   subtitle?: string
-  userName: string
-  onLogout: () => void
+  userName?: string
+  isAuthenticated?: boolean
+  isAdmin?: boolean
+  onLogout?: () => void
   actions?: ReactNode
   children: ReactNode
 }
@@ -23,10 +25,14 @@ export function DashboardLayout({
   title,
   subtitle,
   userName,
+  isAuthenticated,
+  isAdmin = false,
   onLogout,
   actions,
   children,
 }: Props) {
+  const signedIn = isAuthenticated ?? Boolean(userName)
+
   return (
     <div className="app-page flex flex-col">
       <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
@@ -41,31 +47,52 @@ export function DashboardLayout({
                 <NavLink to="/" end className={navLinkClassName}>
                   練習する
                 </NavLink>
-                <NavLink to="/analysis" className={navLinkClassName}>
-                  分析
-                </NavLink>
-                <NavLink to="/library" className={navLinkClassName}>
-                  ライブラリ
-                </NavLink>
-                <NavLink to="/stats" className={navLinkClassName}>
-                  統計
-                </NavLink>
-                <NavLink to="/settings" className={navLinkClassName}>
-                  設定
-                </NavLink>
+                {signedIn && (
+                  <>
+                    <NavLink to="/analysis" className={navLinkClassName}>
+                      分析
+                    </NavLink>
+                    <NavLink to="/stats" className={navLinkClassName}>
+                      統計
+                    </NavLink>
+                    <NavLink to="/settings" className={navLinkClassName}>
+                      設定
+                    </NavLink>
+                  </>
+                )}
+                {signedIn && isAdmin && (
+                  <NavLink to="/library" className={navLinkClassName}>
+                    ライブラリ
+                  </NavLink>
+                )}
               </nav>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="rounded-full border border-[#d6e3ed] bg-[#f8fbff] px-3 py-2 text-sm text-slate-600">
-                {userName}
-              </div>
-              <button
-                onClick={onLogout}
-                className="app-button app-button-subtle"
-              >
-                ログアウト
-              </button>
+              {signedIn && userName ? (
+                <>
+                  <div className="rounded-full border border-[#d6e3ed] bg-[#f8fbff] px-3 py-2 text-sm text-slate-600">
+                    {userName}
+                  </div>
+                  {onLogout && (
+                    <button
+                      onClick={onLogout}
+                      className="app-button app-button-subtle"
+                    >
+                      ログアウト
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="rounded-full border border-[#d6e3ed] bg-[#f8fbff] px-3 py-2 text-sm text-slate-600">
+                    ゲスト利用中
+                  </div>
+                  <Link to="/login" className="app-button app-button-primary">
+                    ログイン
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

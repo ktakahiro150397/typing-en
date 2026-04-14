@@ -17,7 +17,8 @@ interface Props {
   sessionItems: SessionText[]
   onComplete: (result: SessionResult) => void
   onAbort: () => void
-  onLogout: () => void
+  onLogout?: () => void
+  canUseSavedSettings: boolean
   returnPath: string
 }
 
@@ -40,6 +41,7 @@ export function PracticeScreen({
   onComplete,
   onAbort,
   onLogout,
+  canUseSavedSettings,
   returnPath,
 }: Props) {
   const texts = sessionItems.map((item) => item.text)
@@ -47,7 +49,7 @@ export function PracticeScreen({
   const settingsLoading = useSettingsStore((state) => state.loading)
   const fetchSettings = useSettingsStore((state) => state.fetchSettings)
   const [settingsError, setSettingsError] = useState<string | null>(null)
-  const activeSettings = settings ?? DEFAULT_USER_SETTINGS
+  const activeSettings = canUseSavedSettings ? (settings ?? DEFAULT_USER_SETTINGS) : DEFAULT_USER_SETTINGS
   const { engineState, handleKey, phase, currentIndex, totalCount, result, sessionMisses } = useTypingSession(
     texts,
     activeSettings.missLockMs ?? DEFAULT_MISS_LOCK_MS,
@@ -69,6 +71,11 @@ export function PracticeScreen({
   )
 
   useEffect(() => {
+    if (!canUseSavedSettings) {
+      setSettingsError(null)
+      return () => undefined
+    }
+
     let cancelled = false
     setSettingsError(null)
 
@@ -81,7 +88,7 @@ export function PracticeScreen({
     return () => {
       cancelled = true
     }
-  }, [fetchSettings])
+  }, [canUseSavedSettings, fetchSettings])
 
   useEffect(() => {
     if (!engineState.lockedUntil) {
@@ -89,7 +96,8 @@ export function PracticeScreen({
       return
     }
 
-    const tick = () => setLockRemaining(Math.max(0, engineState.lockedUntil! - Date.now()))
+    const lockedUntil = engineState.lockedUntil
+    const tick = () => setLockRemaining(Math.max(0, lockedUntil - Date.now()))
     tick()
     const id = setInterval(tick, 50)
     return () => clearInterval(id)
@@ -115,9 +123,9 @@ export function PracticeScreen({
   const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
   const nextText = currentIndex < texts.length - 1 ? texts[currentIndex + 1] : null
   const isLast = currentIndex === totalCount - 1
-  const settingsReady = settings !== null
+  const settingsReady = !canUseSavedSettings || settings !== null
 
-  if (!settingsReady && settingsLoading) {
+  if (canUseSavedSettings && !settingsReady && settingsLoading) {
     return (
       <div className="app-page flex flex-col">
         <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
@@ -133,12 +141,14 @@ export function PracticeScreen({
               >
                 {getReturnLabel(returnPath)}
               </button>
-              <button
-                onClick={onLogout}
-                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
-              >
-                ログアウト
-              </button>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+                >
+                  ログアウト
+                </button>
+              )}
             </div>
           </div>
         </header>
@@ -156,7 +166,7 @@ export function PracticeScreen({
     )
   }
 
-  if (!settingsReady && settingsError) {
+  if (canUseSavedSettings && !settingsReady && settingsError) {
     return (
       <div className="app-page flex flex-col">
         <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
@@ -172,12 +182,14 @@ export function PracticeScreen({
               >
                 {getReturnLabel(returnPath)}
               </button>
-              <button
-                onClick={onLogout}
-                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
-              >
-                ログアウト
-              </button>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+                >
+                  ログアウト
+                </button>
+              )}
             </div>
           </div>
         </header>
@@ -231,12 +243,14 @@ export function PracticeScreen({
               penalty {activeSettings.missLockMs}ms / {activeSettings.penaltyResume === 'word' ? 'word' : 'current'}
             </div>
             <div className="app-chip app-chip-warning">Esc で中断</div>
-            <button
-              onClick={onLogout}
-              className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
-            >
-              ログアウト
-            </button>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+              >
+                ログアウト
+              </button>
+            )}
           </div>
         </div>
       </header>
