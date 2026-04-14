@@ -54,8 +54,9 @@ export interface LiveTypingFeedback {
 }
 
 interface WordRange {
-  word: string
+  aggregateWord: string
   start: number
+  aggregateEnd: number
   end: number
 }
 
@@ -86,7 +87,14 @@ function splitIntoWords(text: string): WordRange[] {
   for (let i = 0; i <= text.length; i++) {
     if (i === text.length || text[i] === ' ') {
       if (i > start) {
-        result.push({ word: text.slice(start, i), start, end: i })
+        // Aggregate stats by lexical word only, excluding sentence-ending periods.
+        const aggregateWord = text.slice(start, i).replace(/\.+$/, '')
+        result.push({
+          aggregateWord,
+          start,
+          aggregateEnd: start + aggregateWord.length,
+          end: i,
+        })
       }
       start = i + 1
     }
@@ -98,7 +106,12 @@ function buildWordPositionMap(text: string, words: WordRange[]): Array<number | 
   const positionMap = Array<number | null>(text.length).fill(null)
 
   words.forEach((word, index) => {
-    for (let position = word.start; position < word.end; position += 1) {
+    if (!word.aggregateWord) {
+      return
+    }
+
+    // Map only the lexical word and its required trailing space; punctuation stays uncounted.
+    for (let position = word.start; position < word.aggregateEnd; position += 1) {
       positionMap[position] = index
     }
 
@@ -112,8 +125,8 @@ function buildWordPositionMap(text: string, words: WordRange[]): Array<number | 
 
 function createWordAggregate(word: WordRange): WordAggregate {
   return {
-    word: word.word,
-    totalChars: word.word.length,
+    word: word.aggregateWord,
+    totalChars: word.aggregateWord.length,
     misses: 0,
     activeDurationMs: 0,
     stallCount: 0,
@@ -232,11 +245,15 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
     const wordPositionMap = buildWordPositionMap(record.text, words)
 
     for (const word of words) {
-      const existing = wordMap.get(word.word)
+      if (!word.aggregateWord) {
+        continue
+      }
+
+      const existing = wordMap.get(word.aggregateWord)
       if (existing) {
-        existing.totalChars += word.word.length
+        existing.totalChars += word.aggregateWord.length
       } else {
-        wordMap.set(word.word, createWordAggregate(word))
+        wordMap.set(word.aggregateWord, createWordAggregate(word))
       }
     }
 
@@ -257,7 +274,7 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
       const wordIndex = getWordIndexAtPosition(wordPositionMap, event.position)
       if (wordIndex !== null && wordIndex !== undefined) {
         const word = words[wordIndex]
-        const aggregate = wordMap.get(word.word)
+        const aggregate = wordMap.get(word.aggregateWord)
         if (!aggregate) {
           continue
         }
@@ -272,7 +289,7 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
   const accuracy = totalKeys > 0 ? Math.round(((totalKeys - totalMisses) / totalKeys) * 100) : 100
   const totalCorrectChars = records.reduce((sum, record) => sum + record.text.replace(/ $/, '').length, 0)
   const minutes = durationMs / 60000
-  const wpm = minutes > 0 ? Math.round(totalCorrectChars / 5 / minutes) : 0
+  const wpm = minutes > 0 ? totalCorrectChars / 5 / minutes : 0
 
   const allWordStats = [...wordMap.values()]
     .map(finalizeWordStat)
@@ -332,6 +349,9 @@ export function getLiveTypingFeedback(params: {
   }
 
   const currentWord = words[currentWordIndex]
+  if (!currentWord.aggregateWord) {
+    return null
+  }
   const aggregate = createWordAggregate(currentWord)
   let previousTimestamp = startedAt
   let previousWasMiss = false

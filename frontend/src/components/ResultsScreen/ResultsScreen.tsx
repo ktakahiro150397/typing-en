@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { SessionResult } from '../../hooks/useTypingSession'
 import { formatWeaknessReason } from '../../lib/typingAnalysis'
+import { WpmDisplay } from '../ui/WpmDisplay'
 
 interface Props {
   mode: 'sentence' | 'random' | 'weak_word' | 'word_drill'
@@ -71,7 +72,12 @@ export function ResultsScreen({
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <Metric label="精度" value={`${accuracy}%`} color="text-emerald-600" />
-              <Metric label="WPM" value={String(wpm)} color="text-[#1d4ed8]" />
+              <div className="app-card-soft min-w-[120px] p-4 text-center">
+                <div className="text-3xl font-bold">
+                  <WpmDisplay wpm={wpm} />
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">WPM</div>
+              </div>
               <Metric label="タイム" value={`${seconds}s`} color="text-amber-600" />
               <Metric
                 label="ミス / 打鍵"

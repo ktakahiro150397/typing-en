@@ -12,6 +12,7 @@ import { SentenceManager } from './components/SentenceManager/SentenceManager'
 import { PracticeScreen } from './components/PracticeScreen/PracticeScreen'
 import { HomeScreen } from './components/HomeScreen/HomeScreen'
 import { AnalysisScreen } from './components/AnalysisScreen/AnalysisScreen'
+import { StatsScreen } from './components/StatsScreen/StatsScreen'
 import type { SessionResult } from './hooks/useTypingSession'
 import { generateRandomText } from './utils/textGenerator'
 import { useAuthStore } from './stores/authStore'
@@ -411,6 +412,15 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
             onStartWordDrill={handleStartWordDrill}
             onStartFingeringSession={handleStartFingeringSession}
             isMockMode={isMockMode}
+            onLogout={handleLogout}
+            userName={user.name}
+          />
+        )}
+      />
+      <Route
+        path="/stats"
+        element={(
+          <StatsScreen
             onLogout={handleLogout}
             userName={user.name}
           />

@@ -114,6 +114,60 @@ describe('analyzeProblems', () => {
     })
     expect(result.wordStats[0].weaknessReasons).toEqual(['mistype'])
   })
+
+  it('excludes trailing periods from word aggregation', () => {
+    const result = analyzeProblems([
+      {
+        text: 'cat. ',
+        startedAt: 0,
+        endedAt: 350,
+        keyHistory: [
+          { key: 'c', correct: true, timestamp: 0, position: 0 },
+          { key: 'x', correct: false, timestamp: 100, position: 1 },
+          { key: 'a', correct: true, timestamp: 200, position: 1 },
+          { key: 't', correct: true, timestamp: 300, position: 2 },
+          { key: '.', correct: true, timestamp: 325, position: 3 },
+          { key: ' ', correct: true, timestamp: 350, position: 4 },
+        ],
+      },
+    ])
+
+    expect(result.wordStats).toHaveLength(1)
+    expect(result.wordStats[0]).toMatchObject({
+      word: 'cat',
+      totalChars: 3,
+      misses: 1,
+    })
+  })
+
+  it('does not count period-only misses as word misses', () => {
+    const result = analyzeProblems([
+      {
+        text: 'cat. ',
+        startedAt: 0,
+        endedAt: 250,
+        keyHistory: [
+          { key: 'c', correct: true, timestamp: 0, position: 0 },
+          { key: 'a', correct: true, timestamp: 50, position: 1 },
+          { key: 't', correct: true, timestamp: 100, position: 2 },
+          { key: ',', correct: false, timestamp: 150, position: 3 },
+          { key: '.', correct: true, timestamp: 200, position: 3 },
+          { key: ' ', correct: true, timestamp: 250, position: 4 },
+        ],
+      },
+    ])
+
+    expect(result.totalMisses).toBe(1)
+    expect(result.wordStats).toHaveLength(0)
+    expect(result.allWordMisses).toHaveLength(0)
+    expect(result.allWordStats).toEqual([
+      expect.objectContaining({
+        word: 'cat',
+        misses: 0,
+        totalChars: 3,
+      }),
+    ])
+  })
 })
 
 describe('getLiveTypingFeedback', () => {

@@ -1,7 +1,8 @@
 export function normalizeSessionText(text: string): string {
   const trimmed = text.trim()
   if (!trimmed) return ''
-  return trimmed.endsWith('.') ? trimmed : `${trimmed} `
+  // Sessions always advance on a trailing separator, even after punctuation.
+  return `${trimmed} `
 }
 
 export function buildWeakWordPracticeTexts(words: string[], chunkSize = 5): string[] {
