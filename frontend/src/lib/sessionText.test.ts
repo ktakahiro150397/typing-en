@@ -6,8 +6,8 @@ describe('normalizeSessionText', () => {
     expect(normalizeSessionText('alpha beta')).toBe('alpha beta ')
   })
 
-  it('preserves trailing periods for sentence-mode completion', () => {
-    expect(normalizeSessionText('alpha beta.')).toBe('alpha beta.')
+  it('still requires a trailing space after a period-final word', () => {
+    expect(normalizeSessionText('alpha beta.')).toBe('alpha beta. ')
   })
 })
 
