@@ -2,6 +2,15 @@ import type { FastifyInstance } from 'fastify'
 import { prisma } from '../db.js'
 import { authenticateJWT } from '../middleware/authenticate.js'
 
+function calculateSessionWpm(totalKeys: number, missKeys: number, durationMs: number): number {
+  const minutes = durationMs / 60000
+  if (minutes <= 0) {
+    return 0
+  }
+
+  return Math.round((((totalKeys - missKeys) / 5 / minutes) * 100)) / 100
+}
+
 export default async function statsRoutes(app: FastifyInstance) {
   // GET /api/stats/lifetime
   // ユーザーの生涯成績を集計して返す。
@@ -39,8 +48,7 @@ export default async function statsRoutes(app: FastifyInstance) {
       : 0
 
     const bestWpm = allSessions.reduce((max, s) => {
-      const mins = s.durationMs / 60000
-      const wpm = mins > 0 ? (s.totalKeys - s.missKeys) / 5 / mins : 0
+      const wpm = calculateSessionWpm(s.totalKeys, s.missKeys, s.durationMs)
       return Math.max(max, wpm)
     }, 0)
 
@@ -54,6 +62,32 @@ export default async function statsRoutes(app: FastifyInstance) {
       uniqueWordCount: Number((uniqueWords[0] as { cnt: bigint }).cnt),
       weakWordTotal: weakWordAgg._count.id,
       weakWordSolved: solvedCount,
+    }
+  })
+
+  app.get('/stats/sessions', { preHandler: [authenticateJWT] }, async (req) => {
+    const userId = req.user!.id
+    const sessions = await prisma.session.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        totalKeys: true,
+        missKeys: true,
+        durationMs: true,
+        createdAt: true,
+        mode: true,
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 100,
+    })
+
+    return {
+      sessions: sessions.map((session, index) => ({
+        sessionNumber: index + 1,
+        date: session.createdAt.toISOString(),
+        wpm: calculateSessionWpm(session.totalKeys, session.missKeys, session.durationMs),
+        mode: session.mode,
+      })),
     }
   })
 }

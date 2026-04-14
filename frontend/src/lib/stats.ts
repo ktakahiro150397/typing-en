@@ -12,6 +12,21 @@ export interface LifetimeStats {
   weakWordSolved: number
 }
 
+export interface SessionPoint {
+  sessionNumber: number
+  date: string
+  wpm: number
+  mode: string
+}
+
+export interface SessionStatsResponse {
+  sessions: SessionPoint[]
+}
+
 export function fetchLifetimeStats(): Promise<LifetimeStats> {
   return apiFetch<LifetimeStats>('/api/stats/lifetime')
+}
+
+export function fetchSessionStats(): Promise<SessionStatsResponse> {
+  return apiFetch<SessionStatsResponse>('/api/stats/sessions')
 }

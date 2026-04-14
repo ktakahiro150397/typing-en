@@ -1,20 +1,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Sentence } from '../../lib/sentences'
-import { listSentenceCategories, pickSessionSentences } from '../../lib/sentenceCategories'
+import {
+  filterSentencesByCategories,
+  listSentenceCategories,
+  pickSessionSentences,
+} from '../../lib/sentenceCategories'
 
 export function StartSessionModal({ sentences, onStart, onClose }: Props) {
   const defaultCount = Math.min(10, sentences.length)
   const [count, setCount] = useState(defaultCount)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const availableCategories = useMemo(() => listSentenceCategories(sentences), [sentences])
-  const matchingCount = useMemo(
-    () => (
-      selectedCategories.length === 0
-        ? sentences.length
-        : sentences.filter((sentence) => sentence.categories.some((category) => selectedCategories.includes(category))).length
-    ),
+  const matchingSentences = useMemo(
+    () => filterSentencesByCategories(sentences, selectedCategories),
     [selectedCategories, sentences],
   )
+  const matchingCount = matchingSentences.length
   const countMax = selectedCategories.length > 0 ? Math.max(matchingCount, 1) : sentences.length
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export function StartSessionModal({ sentences, onStart, onClose }: Props) {
   const handleStart = () => {
     const { selectedSentences } = pickSessionSentences(sentences, count, selectedCategories)
     if (selectedSentences.length === 0) return
-    onStart(selectedSentences)
+    onStart(selectedSentences, sentences, count, selectedCategories)
   }
 
   return (
@@ -119,6 +120,11 @@ export function StartSessionModal({ sentences, onStart, onClose }: Props) {
 
 interface Props {
   sentences: Sentence[]
-  onStart: (sentences: Sentence[]) => void
+  onStart: (
+    selectedSentences: Sentence[],
+    sourceSentences: Sentence[],
+    count: number,
+    selectedCategories: string[],
+  ) => void
   onClose: () => void
 }

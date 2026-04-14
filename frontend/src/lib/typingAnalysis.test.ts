@@ -115,6 +115,31 @@ describe('analyzeProblems', () => {
     expect(result.wordStats[0].weaknessReasons).toEqual(['mistype'])
   })
 
+  it('uses the configured miss lock duration in analysis', () => {
+    const result = analyzeProblems([
+      {
+        text: 'cat ',
+        startedAt: 0,
+        endedAt: 800,
+        keyHistory: [
+          { key: 'c', correct: true, timestamp: 0, position: 0 },
+          { key: 'x', correct: false, timestamp: 100, position: 1 },
+          { key: 'a', correct: true, timestamp: 700, position: 1 },
+          { key: 't', correct: true, timestamp: 800, position: 2 },
+        ],
+      },
+    ], 500)
+
+    expect(result.wordStats).toHaveLength(1)
+    expect(result.wordStats[0]).toMatchObject({
+      word: 'cat',
+      misses: 1,
+      stallCount: 0,
+      stallDurationMs: 0,
+      activeDurationMs: 300,
+    })
+  })
+
   it('excludes trailing periods from word aggregation', () => {
     const result = analyzeProblems([
       {
@@ -203,5 +228,19 @@ describe('getLiveTypingFeedback', () => {
       word: 'beta',
       reason: 'stall',
     })
+  })
+
+  it('respects custom miss lock duration while evaluating live feedback', () => {
+    expect(getLiveTypingFeedback({
+      text: 'cat ',
+      startedAt: 0,
+      cursor: 2,
+      missLockMs: 500,
+      keyHistory: [
+        { key: 'c', correct: true, timestamp: 0, position: 0 },
+        { key: 'x', correct: false, timestamp: 100, position: 1 },
+        { key: 'a', correct: true, timestamp: 700, position: 1 },
+      ],
+    })).toBeNull()
   })
 })

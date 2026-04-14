@@ -2,7 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CommandHistory } from '../CommandHistory/CommandHistory'
 import { TypingArea } from '../TypingArea/TypingArea'
 import { useTypingSession, type SessionResult } from '../../hooks/useTypingSession'
+import { DEFAULT_MISS_LOCK_MS } from '../../hooks/useTypingEngine'
 import { getLiveTypingFeedback } from '../../lib/typingAnalysis'
+import { useSettingsStore } from '../../stores/settingsStore'
+import { DEFAULT_USER_SETTINGS } from '../../lib/settings'
 
 interface SessionText {
   text: string
@@ -40,7 +43,16 @@ export function PracticeScreen({
   returnPath,
 }: Props) {
   const texts = sessionItems.map((item) => item.text)
-  const { engineState, handleKey, phase, currentIndex, totalCount, result, sessionMisses } = useTypingSession(texts)
+  const settings = useSettingsStore((state) => state.settings)
+  const settingsLoading = useSettingsStore((state) => state.loading)
+  const fetchSettings = useSettingsStore((state) => state.fetchSettings)
+  const [settingsError, setSettingsError] = useState<string | null>(null)
+  const activeSettings = settings ?? DEFAULT_USER_SETTINGS
+  const { engineState, handleKey, phase, currentIndex, totalCount, result, sessionMisses } = useTypingSession(
+    texts,
+    activeSettings.missLockMs ?? DEFAULT_MISS_LOCK_MS,
+    activeSettings.penaltyResume,
+  )
   const [lockRemaining, setLockRemaining] = useState(0)
   const completedRef = useRef(false)
   const liveFeedback = useMemo(
@@ -51,9 +63,25 @@ export function PracticeScreen({
           keyHistory: engineState.keyHistory,
           startedAt: engineState.startedAt,
           cursor: engineState.cursor,
+          missLockMs: activeSettings.missLockMs,
         })),
-    [engineState.cursor, engineState.keyHistory, engineState.startedAt, engineState.text, mode],
+    [activeSettings.missLockMs, engineState.cursor, engineState.keyHistory, engineState.startedAt, engineState.text, mode],
   )
+
+  useEffect(() => {
+    let cancelled = false
+    setSettingsError(null)
+
+    fetchSettings().catch((error: unknown) => {
+      if (!cancelled) {
+        setSettingsError(error instanceof Error ? error.message : '設定の取得に失敗しました')
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [fetchSettings])
 
   useEffect(() => {
     if (!engineState.lockedUntil) {
@@ -87,6 +115,100 @@ export function PracticeScreen({
   const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
   const nextText = currentIndex < texts.length - 1 ? texts[currentIndex + 1] : null
   const isLast = currentIndex === totalCount - 1
+  const settingsReady = settings !== null
+
+  if (!settingsReady && settingsLoading) {
+    return (
+      <div className="app-page flex flex-col">
+        <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#3ea8ff]">typing-en</p>
+              <div className="app-chip app-chip-info">{getModeLabel(mode)}</div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <button
+                onClick={onAbort}
+                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+              >
+                {getReturnLabel(returnPath)}
+              </button>
+              <button
+                onClick={onLogout}
+                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+              >
+                ログアウト
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center gap-4 px-5 py-8 lg:px-8">
+          <div className="app-card flex items-center gap-4 px-6 py-5">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#d6e3ed] border-t-[#3ea8ff]" />
+            <div>
+              <p className="text-sm font-semibold text-slate-900">設定を読み込んでいます</p>
+              <p className="text-sm text-slate-500">セッション開始前に反映します。</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  if (!settingsReady && settingsError) {
+    return (
+      <div className="app-page flex flex-col">
+        <header className="border-b border-[#d6e3ed]/80 bg-white/88 backdrop-blur">
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#3ea8ff]">typing-en</p>
+              <div className="app-chip app-chip-info">{getModeLabel(mode)}</div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <button
+                onClick={onAbort}
+                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+              >
+                {getReturnLabel(returnPath)}
+              </button>
+              <button
+                onClick={onLogout}
+                className="app-button app-button-subtle min-h-0 px-3 py-1.5 text-xs"
+              >
+                ログアウト
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center gap-4 px-5 py-8 lg:px-8">
+          <div className="app-card space-y-4 px-6 py-6">
+            <div className="app-banner app-banner-danger">{settingsError}</div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => {
+                  setSettingsError(null)
+                  void fetchSettings().catch((error: unknown) => {
+                    setSettingsError(error instanceof Error ? error.message : '設定の取得に失敗しました')
+                  })
+                }}
+                className="app-button app-button-primary"
+              >
+                再試行
+              </button>
+              <button
+                onClick={onAbort}
+                className="app-button app-button-subtle"
+              >
+                {getReturnLabel(returnPath)}
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="app-page flex flex-col">
@@ -105,6 +227,9 @@ export function PracticeScreen({
           <div className="flex flex-wrap items-center gap-3 text-sm">
             <div className="app-chip app-chip-info">{currentIndex + 1} / {totalCount}</div>
             <div className="app-chip app-chip-danger">misses {sessionMisses}</div>
+            <div className="app-chip app-chip-info">
+              penalty {activeSettings.missLockMs}ms / {activeSettings.penaltyResume === 'word' ? 'word' : 'current'}
+            </div>
             <div className="app-chip app-chip-warning">Esc で中断</div>
             <button
               onClick={onLogout}

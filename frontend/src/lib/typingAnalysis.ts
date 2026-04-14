@@ -1,4 +1,4 @@
-import { MISS_LOCK_MS, type KeyEvent } from '../hooks/useTypingEngine'
+import { DEFAULT_MISS_LOCK_MS, type KeyEvent } from '../hooks/useTypingEngine'
 
 export const SLOW_WORD_MS_PER_CHAR_THRESHOLD = 450
 export const STALL_THRESHOLD_MS = 700
@@ -228,7 +228,10 @@ function compareWordStats(left: WordStat, right: WordStat): number {
     || left.word.localeCompare(right.word)
 }
 
-export function analyzeProblems(records: ProblemRecord[]): SessionResult {
+export function analyzeProblems(
+  records: ProblemRecord[],
+  missLockMs = DEFAULT_MISS_LOCK_MS,
+): SessionResult {
   let totalKeys = 0
   let totalMisses = 0
   let durationMs = 0
@@ -270,7 +273,7 @@ export function analyzeProblems(records: ProblemRecord[]): SessionResult {
       }
 
       const rawGap = Math.max(0, event.timestamp - previousTimestamp)
-      const adjustedGap = previousWasMiss ? Math.max(0, rawGap - MISS_LOCK_MS) : rawGap
+      const adjustedGap = previousWasMiss ? Math.max(0, rawGap - missLockMs) : rawGap
       const wordIndex = getWordIndexAtPosition(wordPositionMap, event.position)
       if (wordIndex !== null && wordIndex !== undefined) {
         const word = words[wordIndex]
@@ -331,8 +334,15 @@ export function getLiveTypingFeedback(params: {
   keyHistory: KeyEvent[]
   startedAt: number | null
   cursor: number
+  missLockMs?: number
 }): LiveTypingFeedback | null {
-  const { text, keyHistory, startedAt, cursor } = params
+  const {
+    text,
+    keyHistory,
+    startedAt,
+    cursor,
+    missLockMs = DEFAULT_MISS_LOCK_MS,
+  } = params
   if (startedAt === null || keyHistory.length === 0 || text.length === 0) {
     return null
   }
@@ -358,7 +368,7 @@ export function getLiveTypingFeedback(params: {
 
   for (const event of keyHistory) {
     const rawGap = Math.max(0, event.timestamp - previousTimestamp)
-    const adjustedGap = previousWasMiss ? Math.max(0, rawGap - MISS_LOCK_MS) : rawGap
+    const adjustedGap = previousWasMiss ? Math.max(0, rawGap - missLockMs) : rawGap
 
     if (getWordIndexAtPosition(wordPositionMap, event.position) === currentWordIndex) {
       applyEventToWordAggregate(aggregate, event, adjustedGap)

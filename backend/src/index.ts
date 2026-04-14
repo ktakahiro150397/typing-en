@@ -37,6 +37,7 @@ await app.register(import('./routes/weakWords.js'), { prefix: '/api' })
 await app.register(import('./routes/bigramStats.js'), { prefix: '/api' })
 await app.register(import('./routes/sessions.js'), { prefix: '/api' })
 await app.register(import('./routes/stats.js'), { prefix: '/api' })
+await app.register(import('./routes/settings.js'), { prefix: '/api' })
 
 const port = Number(process.env.PORT ?? 3000)
 await app.listen({ port, host: '0.0.0.0' })

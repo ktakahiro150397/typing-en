@@ -50,6 +50,9 @@ export function DashboardLayout({
                 <NavLink to="/stats" className={navLinkClassName}>
                   統計
                 </NavLink>
+                <NavLink to="/settings" className={navLinkClassName}>
+                  設定
+                </NavLink>
               </nav>
             </div>
 

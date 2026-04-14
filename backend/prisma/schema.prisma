@@ -17,6 +17,7 @@ model User {
   weakWords   WeakWord[]
   sessions    Session[]
   bigramStats BigramStat[]
+  settings    UserSettings?
 }
 
 model Sentence {
@@ -108,4 +109,12 @@ model BigramStat {
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, bigram])
+}
+
+model UserSettings {
+  id            String @id @default(cuid())
+  userId        String @unique
+  missLockMs    Int    @default(1000)
+  penaltyResume String @default("current")
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

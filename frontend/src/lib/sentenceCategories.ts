@@ -31,6 +31,19 @@ export function listSentenceCategories(sentences: Sentence[]): string[] {
     .sort((left, right) => left.localeCompare(right))
 }
 
+export function filterSentencesByCategories(
+  sentences: Sentence[],
+  selectedCategories: string[],
+): Sentence[] {
+  const normalizedCategories = normalizeSentenceCategories(selectedCategories)
+  if (normalizedCategories.length === 0) {
+    return sentences
+  }
+
+  const selectedSet = new Set(normalizedCategories)
+  return sentences.filter((sentence) => sentence.categories.some((category) => selectedSet.has(category)))
+}
+
 function shuffle<T>(items: T[]): T[] {
   const shuffled = [...items]
   for (let i = shuffled.length - 1; i > 0; i -= 1) {
@@ -49,8 +62,7 @@ export function pickSessionSentences(
   const normalizedCategories = normalizeSentenceCategories(selectedCategories)
 
   if (normalizedCategories.length > 0) {
-    const selectedSet = new Set(normalizedCategories)
-    const filtered = sentences.filter((sentence) => sentence.categories.some((category) => selectedSet.has(category)))
+    const filtered = filterSentencesByCategories(sentences, normalizedCategories)
     return {
       selectedSentences: shuffle(filtered).slice(0, Math.min(normalizedCount, filtered.length)),
       assignedCategory: null,

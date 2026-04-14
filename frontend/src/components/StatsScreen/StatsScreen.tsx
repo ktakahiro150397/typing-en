@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { DashboardLayout } from '../Layout/DashboardLayout'
 import { WpmDisplay } from '../ui/WpmDisplay'
-import { fetchLifetimeStats } from '../../lib/stats'
-import type { LifetimeStats } from '../../lib/stats'
+import { fetchLifetimeStats, fetchSessionStats } from '../../lib/stats'
+import type { LifetimeStats, SessionPoint } from '../../lib/stats'
+
+const SessionWpmChart = lazy(() => import('./SessionWpmChart'))
 
 interface Props {
   onLogout: () => void
@@ -42,12 +44,16 @@ function StatCard({ label, children, description }: StatCardProps) {
 
 export function StatsScreen({ onLogout, userName }: Props) {
   const [stats, setStats] = useState<LifetimeStats | null>(null)
+  const [sessionPoints, setSessionPoints] = useState<SessionPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchLifetimeStats()
-      .then(setStats)
+    Promise.all([fetchLifetimeStats(), fetchSessionStats()])
+      .then(([lifetimeStats, sessionStats]) => {
+        setStats(lifetimeStats)
+        setSessionPoints(sessionStats.sessions)
+      })
       .catch((err: unknown) =>
         setError(err instanceof Error ? err.message : '統計の取得に失敗しました'),
       )
@@ -83,49 +89,69 @@ export function StatsScreen({ onLogout, userName }: Props) {
       )}
 
       {!loading && !error && stats && stats.totalSessions > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* 上段: 主要指標 */}
-          <StatCard label="総打鍵数">
-            <p className="text-3xl font-bold text-slate-900">{formatNumber(stats.totalKeys)}</p>
-          </StatCard>
+        <div className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard label="総打鍵数">
+              <p className="text-3xl font-bold text-slate-900">{formatNumber(stats.totalKeys)}</p>
+            </StatCard>
 
-          <StatCard label="WPM 平均">
-            <WpmDisplay wpm={stats.averageWpm} intSize="text-3xl" decSize="text-xl" />
-          </StatCard>
+            <StatCard label="WPM 平均">
+              <WpmDisplay wpm={stats.averageWpm} intSize="text-3xl" decSize="text-xl" />
+            </StatCard>
 
-          <StatCard label="最高 WPM">
-            <WpmDisplay wpm={stats.bestWpm} intSize="text-3xl" decSize="text-xl" />
-          </StatCard>
+            <StatCard label="最高 WPM">
+              <WpmDisplay wpm={stats.bestWpm} intSize="text-3xl" decSize="text-xl" />
+            </StatCard>
 
-          <StatCard label="総正確率">
-            <p className="text-3xl font-bold text-emerald-600">{accuracy}%</p>
-          </StatCard>
+            <StatCard label="総正確率">
+              <p className="text-3xl font-bold text-emerald-600">{accuracy}%</p>
+            </StatCard>
 
-          {/* 下段: サブ指標 */}
-          <StatCard label="総セッション数">
-            <p className="text-3xl font-bold text-slate-900">
-              {formatNumber(stats.totalSessions)}
-              <span className="ml-1 text-lg font-semibold text-slate-400">回</span>
-            </p>
-          </StatCard>
+            <StatCard label="総セッション数">
+              <p className="text-3xl font-bold text-slate-900">
+                {formatNumber(stats.totalSessions)}
+                <span className="ml-1 text-lg font-semibold text-slate-400">回</span>
+              </p>
+            </StatCard>
 
-          <StatCard label="総練習時間">
-            <p className="text-3xl font-bold text-amber-600">{formatDuration(stats.totalDurationMs)}</p>
-          </StatCard>
+            <StatCard label="総練習時間">
+              <p className="text-3xl font-bold text-amber-600">{formatDuration(stats.totalDurationMs)}</p>
+            </StatCard>
 
-          <StatCard label="練習ユニーク単語数">
-            <p className="text-3xl font-bold text-slate-900">
-              {formatNumber(stats.uniqueWordCount)}
-              <span className="ml-1 text-lg font-semibold text-slate-400">語</span>
-            </p>
-          </StatCard>
+            <StatCard label="練習ユニーク単語数">
+              <p className="text-3xl font-bold text-slate-900">
+                {formatNumber(stats.uniqueWordCount)}
+                <span className="ml-1 text-lg font-semibold text-slate-400">語</span>
+              </p>
+            </StatCard>
 
-          <StatCard label="解決済み苦手ワード" description={`全 ${stats.weakWordTotal} 件中`}>
-            <p className="text-3xl font-bold text-rose-500">
-              {stats.weakWordSolved}
-              <span className="ml-1 text-lg font-semibold text-slate-400">/ {stats.weakWordTotal}</span>
-            </p>
-          </StatCard>
+            <StatCard label="解決済み苦手ワード" description={`全 ${stats.weakWordTotal} 件中`}>
+              <p className="text-3xl font-bold text-rose-500">
+                {stats.weakWordSolved}
+                <span className="ml-1 text-lg font-semibold text-slate-400">/ {stats.weakWordTotal}</span>
+              </p>
+            </StatCard>
+          </div>
+
+          {sessionPoints.length >= 2 && (
+            <section className="app-card-soft px-5 py-5">
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-slate-900">セッションごとの WPM 推移</h3>
+                <p className="text-sm text-slate-500">直近の練習ペースをセッション単位で確認できます。</p>
+              </div>
+              <div className="mt-4">
+                <Suspense
+                  fallback={(
+                    <div className="flex h-[260px] items-center justify-center text-sm text-slate-500">
+                      グラフを読み込んでいます...
+                    </div>
+                  )}
+                >
+                  <SessionWpmChart sessions={sessionPoints} />
+                </Suspense>
+              </div>
+            </section>
+          )}
         </div>
       )}
     </DashboardLayout>
