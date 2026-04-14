@@ -137,8 +137,8 @@ weaknessScore = misses / attempts
 
 ```csv
 text,note,categories
-"the quick brown fox jumps","the/fox は速打ち注意","daily-conversation,internet"
-"algorithm","al-go-: 左手薬指から始める","daily-conversation"
+"Please double-check whether the earlier version already includes the smaller change we discussed yesterday.","repeated ch ck and th transitions","typing-game,long-sentence"
+"The coach said the loose cable would make us lose time if we ignored it again.","lose loose pair","typing-game,lookalike"
 ```
 
 - `text`（必須）: 練習したいテキスト
@@ -146,6 +146,7 @@ text,note,categories
 - `category` / `categories`（任意）: カンマ区切りのカテゴリ
 - CSVファイル名（拡張子除く）は自動でカテゴリとして付与
 - 同一ユーザー・同一テキストの重複は無視されます
+- `word-csv/` にはスターター用CSVを同梱しており、`tricky-long-sentences.csv` と `lookalike-confusion.csv` はタイピングゲーム向けの誤打しやすい文章セットです
 
 ---
 
