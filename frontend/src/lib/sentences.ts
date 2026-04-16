@@ -22,6 +22,10 @@ export interface ImportResult {
   errors: string[]
 }
 
+export interface BulkDeleteSentencesResult {
+  deletedCount: number
+}
+
 export function listSentences(): Promise<SentenceList> {
   return apiFetch<SentenceList>('/api/sentences')
 }
@@ -66,4 +70,13 @@ export function updateSentence(
 
 export async function deleteSentence(id: string): Promise<void> {
   await apiFetch<void>(`/api/sentences/${id}`, { method: 'DELETE' })
+}
+
+export function deleteSentencesByCategories(
+  categories: string[],
+): Promise<BulkDeleteSentencesResult> {
+  return apiFetch<BulkDeleteSentencesResult>('/api/sentences', {
+    method: 'DELETE',
+    body: JSON.stringify({ categories }),
+  })
 }

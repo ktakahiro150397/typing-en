@@ -316,6 +316,40 @@ export default async function sentenceRoutes(app: FastifyInstance) {
     },
   )
 
+  // DELETE /api/sentences — bulk delete by categories
+  app.delete(
+    '/sentences',
+    { preHandler: [authenticateJWT, requireAdmin] },
+    async (req, reply) => {
+      const { categories } = req.body as { categories?: unknown }
+
+      if (!Array.isArray(categories)) {
+        return reply.status(400).send({ message: 'categories must be an array' })
+      }
+
+      const normalizedCategories = normalizeCategories(
+        categories.filter((value): value is string => typeof value === 'string'),
+      )
+      if (normalizedCategories.length === 0) {
+        return reply.status(400).send({ message: 'at least one category is required' })
+      }
+
+      const result = await prisma.sentence.deleteMany({
+        where: {
+          categories: {
+            some: {
+              category: {
+                in: normalizedCategories,
+              },
+            },
+          },
+        },
+      })
+
+      return { deletedCount: result.count }
+    },
+  )
+
   // DELETE /api/sentences/:id
   app.delete(
     '/sentences/:id',

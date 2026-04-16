@@ -27,11 +27,23 @@ export function SentenceManager({
   onLogout,
   userName,
 }: Props) {
-  const { sentences, total, loading, error, fetchSentences } = useSentenceStore()
+  const {
+    sentences,
+    total,
+    loading,
+    error,
+    fetchSentences,
+    bulkRemoveSentencesByCategories,
+  } = useSentenceStore()
   const [showForm, setShowForm] = useState(false)
   const [showCsv, setShowCsv] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [filterCategories, setFilterCategories] = useState<string[]>([])
+  const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false)
+  const [bulkDeleteFeedback, setBulkDeleteFeedback] = useState<{
+    kind: 'success' | 'error'
+    message: string
+  } | null>(null)
   const availableCategories = listSentenceCategories(sentences)
   const filteredSentences = filterSentencesByCategories(sentences, filterCategories)
 
@@ -50,6 +62,37 @@ export function SentenceManager({
   useEffect(() => {
     void fetchSentences()
   }, [fetchSentences])
+
+  const handleBulkDelete = async () => {
+    if (filterCategories.length === 0 || filteredSentences.length === 0) {
+      return
+    }
+
+    const confirmed = window.confirm(
+      `選択したカテゴリに一致する文章を一括削除します。\n対象: ${filteredSentences.length}件\nカテゴリ: ${filterCategories.join(', ')}`,
+    )
+    if (!confirmed) {
+      return
+    }
+
+    setBulkDeleteLoading(true)
+    setBulkDeleteFeedback(null)
+    try {
+      const deletedCount = await bulkRemoveSentencesByCategories(filterCategories)
+      setFilterCategories([])
+      setBulkDeleteFeedback({
+        kind: 'success',
+        message: `${deletedCount}件の文章を削除しました。`,
+      })
+    } catch (err) {
+      setBulkDeleteFeedback({
+        kind: 'error',
+        message: err instanceof Error ? err.message : '一括削除に失敗しました',
+      })
+    } finally {
+      setBulkDeleteLoading(false)
+    }
+  }
 
   return (
     <DashboardLayout
@@ -137,15 +180,35 @@ export function SentenceManager({
                   <p className="text-sm font-semibold text-slate-900">カテゴリで絞り込む</p>
                   <p className="text-xs text-slate-500">選んだカテゴリを含む文章を表示します。</p>
                 </div>
-                {filterCategories.length > 0 && (
-                  <button
-                    onClick={() => setFilterCategories([])}
-                    className="app-button app-button-subtle min-h-0 self-start px-3 py-1.5 text-xs"
-                  >
-                    クリア
-                  </button>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {filterCategories.length > 0 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleBulkDelete}
+                        disabled={bulkDeleteLoading || filteredSentences.length === 0}
+                        className="app-button app-button-danger min-h-0 self-start px-3 py-1.5 text-xs"
+                      >
+                        {bulkDeleteLoading
+                          ? '削除中...'
+                          : `一致する文章を一括削除 (${filteredSentences.length}件)`}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFilterCategories([])}
+                        className="app-button app-button-subtle min-h-0 self-start px-3 py-1.5 text-xs"
+                      >
+                        クリア
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
+              {bulkDeleteFeedback && (
+                <p className={bulkDeleteFeedback.kind === 'success' ? 'app-banner app-banner-success text-sm' : 'app-banner app-banner-danger text-sm'}>
+                  {bulkDeleteFeedback.message}
+                </p>
+              )}
               <div className="flex flex-wrap gap-2">
                 {availableCategories.map((category) => {
                   const checked = filterCategories.includes(category)
