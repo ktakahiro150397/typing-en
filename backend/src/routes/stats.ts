@@ -11,13 +11,21 @@ function calculateSessionWpm(totalKeys: number, missKeys: number, durationMs: nu
   return Math.round((((totalKeys - missKeys) / 5 / minutes) * 100)) / 100
 }
 
+function calculateAccuracy(totalKeys: number, missKeys: number): number {
+  if (totalKeys <= 0) {
+    return 0
+  }
+
+  return Math.round((((totalKeys - missKeys) / totalKeys) * 100))
+}
+
 export default async function statsRoutes(app: FastifyInstance) {
   // GET /api/stats/lifetime
   // ユーザーの生涯成績を集計して返す。
   app.get('/stats/lifetime', { preHandler: [authenticateJWT] }, async (req) => {
     const userId = req.user!.id
 
-    const [sessionAgg, allSessions, uniqueWords, weakWordAgg, solvedCount] = await Promise.all([
+    const [sessionAgg, allSessions, recentSessions, uniqueWords, weakWordAgg, solvedCount] = await Promise.all([
       prisma.session.aggregate({
         where: { userId },
         _sum: { totalKeys: true, missKeys: true, durationMs: true },
@@ -26,6 +34,12 @@ export default async function statsRoutes(app: FastifyInstance) {
       prisma.session.findMany({
         where: { userId },
         select: { totalKeys: true, missKeys: true, durationMs: true },
+      }),
+      prisma.session.findMany({
+        where: { userId },
+        select: { totalKeys: true, missKeys: true, durationMs: true },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
       }),
       prisma.$queryRaw<[{ cnt: bigint }]>`
         SELECT COUNT(DISTINCT sw.word) AS cnt
@@ -47,6 +61,16 @@ export default async function statsRoutes(app: FastifyInstance) {
       ? Math.round(((totalKeys - totalMissKeys) / 5 / totalMinutes) * 100) / 100
       : 0
 
+    const recentTotals = recentSessions.reduce((agg, session) => ({
+      totalKeys: agg.totalKeys + session.totalKeys,
+      totalMissKeys: agg.totalMissKeys + session.missKeys,
+      totalDurationMs: agg.totalDurationMs + session.durationMs,
+    }), { totalKeys: 0, totalMissKeys: 0, totalDurationMs: 0 })
+    const recentMinutes = recentTotals.totalDurationMs / 60000
+    const recentAverageWpm = recentMinutes > 0
+      ? Math.round(((recentTotals.totalKeys - recentTotals.totalMissKeys) / 5 / recentMinutes) * 100) / 100
+      : 0
+
     const bestWpm = allSessions.reduce((max, s) => {
       const wpm = calculateSessionWpm(s.totalKeys, s.missKeys, s.durationMs)
       return Math.max(max, wpm)
@@ -58,6 +82,10 @@ export default async function statsRoutes(app: FastifyInstance) {
       totalDurationMs,
       totalSessions,
       averageWpm,
+      recentAverageWpm,
+      overallAccuracy: calculateAccuracy(totalKeys, totalMissKeys),
+      recentAccuracy: calculateAccuracy(recentTotals.totalKeys, recentTotals.totalMissKeys),
+      recentSessionCount: recentSessions.length,
       bestWpm: Math.round(bestWpm * 100) / 100,
       uniqueWordCount: Number((uniqueWords[0] as { cnt: bigint }).cnt),
       weakWordTotal: weakWordAgg._count.id,
@@ -77,12 +105,12 @@ export default async function statsRoutes(app: FastifyInstance) {
         createdAt: true,
         mode: true,
       },
-      orderBy: { createdAt: 'asc' },
-      take: 100,
+      orderBy: { createdAt: 'desc' },
+      take: 50,
     })
 
     return {
-      sessions: sessions.map((session, index) => ({
+      sessions: sessions.reverse().map((session, index) => ({
         sessionNumber: index + 1,
         date: session.createdAt.toISOString(),
         wpm: calculateSessionWpm(session.totalKeys, session.missKeys, session.durationMs),

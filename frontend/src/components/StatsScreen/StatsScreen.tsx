@@ -4,6 +4,7 @@ import { DashboardLayout } from '../Layout/DashboardLayout'
 import { WpmDisplay } from '../ui/WpmDisplay'
 import { fetchLifetimeStats, fetchSessionStats } from '../../lib/stats'
 import type { LifetimeStats, SessionPoint } from '../../lib/stats'
+import { getRecentChartTitle, getRecentStatsDescription } from './statsSummary'
 
 const SessionWpmChart = lazy(() => import('./SessionWpmChart'))
 
@@ -60,10 +61,6 @@ export function StatsScreen({ onLogout, userName }: Props) {
       .finally(() => setLoading(false))
   }, [])
 
-  const accuracy = stats && stats.totalKeys > 0
-    ? Math.round(((stats.totalKeys - stats.totalMissKeys) / stats.totalKeys) * 100)
-    : 0
-
   return (
     <DashboardLayout
       title="生涯成績"
@@ -95,16 +92,30 @@ export function StatsScreen({ onLogout, userName }: Props) {
               <p className="text-3xl font-bold text-slate-900">{formatNumber(stats.totalKeys)}</p>
             </StatCard>
 
-            <StatCard label="WPM 平均">
+            <StatCard label="全体 WPM 平均">
               <WpmDisplay wpm={stats.averageWpm} intSize="text-3xl" decSize="text-xl" />
+            </StatCard>
+
+            <StatCard
+              label="直近50セッション WPM 平均"
+              description={getRecentStatsDescription(stats.recentSessionCount)}
+            >
+              <WpmDisplay wpm={stats.recentAverageWpm} intSize="text-3xl" decSize="text-xl" />
             </StatCard>
 
             <StatCard label="最高 WPM">
               <WpmDisplay wpm={stats.bestWpm} intSize="text-3xl" decSize="text-xl" />
             </StatCard>
 
-            <StatCard label="総正確率">
-              <p className="text-3xl font-bold text-emerald-600">{accuracy}%</p>
+            <StatCard label="全体正確率">
+              <p className="text-3xl font-bold text-emerald-600">{stats.overallAccuracy}%</p>
+            </StatCard>
+
+            <StatCard
+              label="直近50セッション正確率"
+              description={getRecentStatsDescription(stats.recentSessionCount)}
+            >
+              <p className="text-3xl font-bold text-emerald-600">{stats.recentAccuracy}%</p>
             </StatCard>
 
             <StatCard label="総セッション数">
@@ -133,10 +144,10 @@ export function StatsScreen({ onLogout, userName }: Props) {
             </StatCard>
           </div>
 
-          {sessionPoints.length >= 2 && (
+          {sessionPoints.length > 0 && (
             <section className="app-card-soft px-5 py-5">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-slate-900">セッションごとの WPM 推移</h3>
+                <h3 className="text-lg font-bold text-slate-900">{getRecentChartTitle(stats.recentSessionCount)}</h3>
                 <p className="text-sm text-slate-500">直近の練習ペースをセッション単位で確認できます。</p>
               </div>
               <div className="mt-4">

@@ -9,6 +9,28 @@ import {
 } from 'recharts'
 import type { SessionPoint } from '../../lib/stats'
 
+interface SessionWpmTooltipContentProps {
+  active?: boolean
+  payload?: Array<{ value?: number | string | null }>
+}
+
+export function SessionWpmTooltipContent({ active, payload }: SessionWpmTooltipContentProps) {
+  const value = payload?.[0]?.value
+
+  if (!active || value == null) {
+    return null
+  }
+
+  return (
+    <div
+      className="rounded-xl border border-[#d6e3ed] bg-white px-3 py-2 text-sm font-semibold text-slate-700"
+      style={{ boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)' }}
+    >
+      {value}
+    </div>
+  )
+}
+
 export default function SessionWpmChart({ sessions }: { sessions: SessionPoint[] }) {
   return (
     <div className="h-[260px] w-full">
@@ -27,13 +49,7 @@ export default function SessionWpmChart({ sessions }: { sessions: SessionPoint[]
             tick={{ fill: '#64748b', fontSize: 12 }}
             allowDecimals
           />
-          <Tooltip
-            contentStyle={{
-              borderRadius: 12,
-              borderColor: '#d6e3ed',
-              boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)',
-            }}
-          />
+          <Tooltip content={<SessionWpmTooltipContent />} />
           <Line
             type="monotone"
             dataKey="wpm"
