@@ -6,6 +6,7 @@ import {
   importSentencesCsv,
   updateSentence,
   deleteSentence,
+  deleteSentencesByCategories,
 } from '../lib/sentences'
 
 interface SentenceState {
@@ -18,6 +19,7 @@ interface SentenceState {
   importCsv: (files: File[]) => Promise<ImportResult & { failedFiles: File[] }>
   patchSentence: (id: string, patch: { text?: string; translation?: string; note?: string; categories?: string[] }) => Promise<void>
   removeSentence: (id: string) => Promise<void>
+  bulkRemoveSentencesByCategories: (categories: string[]) => Promise<number>
 }
 
 export const useSentenceStore = create<SentenceState>((set, get) => ({
@@ -95,5 +97,11 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
       await get().fetchSentences()
       throw e
     }
+  },
+
+  bulkRemoveSentencesByCategories: async (categories) => {
+    const result = await deleteSentencesByCategories(categories)
+    await get().fetchSentences()
+    return result.deletedCount
   },
 }))
