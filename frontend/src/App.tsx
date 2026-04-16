@@ -358,6 +358,11 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
       return
     }
 
+    if (lastSessionConfig.mode === 'sentence' && lastSessionConfig.returnPath === '/') {
+      void handleStartPublicPracticeSession()
+      return
+    }
+
     if (lastSessionConfig.mode === 'sentence' && lastSessionConfig.sourceSentences) {
       const { selectedSentences } = pickSessionSentences(
         lastSessionConfig.sourceSentences,
@@ -379,7 +384,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     setLastSessionConfig(lastSessionConfig)
     setResultsState(null)
     navigate('/practice')
-  }, [handleStartFingeringSession, handleStartWeakWordSession, lastSessionConfig, navigate])
+  }, [handleStartFingeringSession, handleStartPublicPracticeSession, handleStartWeakWordSession, lastSessionConfig, navigate])
 
   const handleGoBackFromResults = useCallback(() => {
     setActiveSession(null)
