@@ -1,28 +1,33 @@
-text,translation,note
-the central bank raised interest rates for the third consecutive month,中央銀行は3か月連続で利上げを実施した,
-lawmakers reached a bipartisan agreement on the infrastructure spending bill,議員らはインフラ支出法案で超党派合意に達した,
-climate scientists warn of unprecedented global average temperature increases,気候科学者らは世界平均気温の前例のない上昇を警告している,
-the company announced a merger valued at approximately twelve billion dollars,その企業は約120億ドル規模の合併を発表した,
-humanitarian aid was deployed to regions most severely affected by the earthquake,人道支援は地震被害が最も深刻な地域に投入された,
-the prime minister called for an emergency session of parliament on Thursday,首相は木曜日に緊急議会を招集すると求めた,
-investigators are looking into allegations of widespread financial misconduct,捜査当局は広範な金融不正の疑いを調べている,
-the trade deficit widened to its highest level in more than two decades,貿易赤字は20年以上で最高水準に拡大した,
-a ceasefire agreement was brokered after weeks of diplomatic negotiations,数週間の外交交渉の末に停戦合意が仲介された,
-the unemployment rate fell to 3.8 percent according to the latest government data,最新の政府統計によると失業率は3.8%に低下した,
-the tech giant faces antitrust scrutiny from regulators in multiple jurisdictions,その巨大テック企業は複数の法域で独占禁止法上の精査を受けている,
-officials confirmed that the suspect was taken into custody without incident,当局は容疑者を騒ぎなく拘束したと確認した,
-the opposition party called the new legislation unconstitutional and vowed to appeal,野党は新法を違憲だとして上訴を誓った,
-record rainfall caused widespread flooding across at least six coastal provinces,記録的な豪雨が少なくとも沿岸6州で広範な洪水を引き起こした,
-the summit concluded with a joint declaration on reducing carbon emissions by 2035,首脳会議は2035年までの炭素排出削減に関する共同宣言で閉幕した,
-shares in the company surged 14 percent following the earnings announcement,その企業の株価は決算発表後に14%急騰した,
-the international court issued a binding ruling on the disputed maritime boundary,国際裁判所は係争中の海洋境界について拘束力のある判断を下した,
-the health ministry urged residents to get vaccinated ahead of the winter season,保健省は冬季を前に住民へワクチン接種を呼びかけた,
-the newly appointed ambassador presented her credentials to the foreign minister,新任大使は外相に信任状を提出した,
-construction of the high-speed rail corridor is expected to begin next spring,高速鉄道回廊の建設は来春に始まる見込みだ,
-the nonprofit organization launched an initiative to provide clean water access,その非営利団体は安全な飲料水へのアクセスを提供する取り組みを開始した,
-authorities are investigating a cyberattack that disrupted critical infrastructure,当局は重要インフラを妨害したサイバー攻撃を調査している,
-the refugee agency reported a sharp increase in displacement across the region,難民機関は地域全体で避難民が急増したと報告した,
-the legislature passed a sweeping reform bill after months of committee deliberation,議会は数か月の委員会審議を経て大規模な改革法案を可決した,
-the central government allocated emergency funds to support disaster relief efforts,中央政府は災害救援を支えるため緊急資金を配分した,
-the presidential election drew a record turnout of over seventy percent of voters,大統領選挙では有権者の70%超という記録的投票率となった,
-analysts predict slower economic growth due to persistent supply chain disruptions,アナリストは継続する供給網の混乱により経済成長の鈍化を予測している,
+text,translation,note,categories
+the central bank raised interest rates for the third consecutive month,中央銀行は3か月連続で利上げを実施した,,"news,journalism,hard"
+lawmakers reached a bipartisan agreement on the infrastructure spending bill,議員らはインフラ支出法案で超党派合意に達した,,"news,journalism,hard"
+climate scientists warn of unprecedented global average temperature increases,気候科学者らは世界平均気温の前例のない上昇を警告している,,"news,journalism,hard"
+the company announced a merger valued at approximately twelve billion dollars,その企業は約120億ドル規模の合併を発表した,,"news,journalism,hard"
+humanitarian aid was deployed to regions most severely affected by the earthquake,人道支援は地震被害が最も深刻な地域に投入された,,"news,journalism,hard"
+the prime minister called for an emergency session of parliament on Thursday,首相は木曜日に緊急議会を招集すると求めた,,"news,journalism,hard"
+investigators are looking into allegations of widespread financial misconduct,捜査当局は広範な金融不正の疑いを調べている,,"news,journalism,hard"
+the trade deficit widened to its highest level in more than two decades,貿易赤字は20年以上で最高水準に拡大した,,"news,journalism,hard"
+a ceasefire agreement was brokered after weeks of diplomatic negotiations,数週間の外交交渉の末に停戦合意が仲介された,,"news,journalism,hard"
+the unemployment rate fell to 3.8 percent according to the latest government data,最新の政府統計によると失業率は3.8%に低下した,,"news,journalism,hard"
+the tech giant faces antitrust scrutiny from regulators in multiple jurisdictions,その巨大テック企業は複数の法域で独占禁止法上の精査を受けている,,"news,journalism,hard"
+officials confirmed that the suspect was taken into custody without incident,当局は容疑者を騒ぎなく拘束したと確認した,,"news,journalism,hard"
+the opposition party called the new legislation unconstitutional and vowed to appeal,野党は新法を違憲だとして上訴を誓った,,"news,journalism,hard"
+record rainfall caused widespread flooding across at least six coastal provinces,記録的な豪雨が少なくとも沿岸6州で広範な洪水を引き起こした,,"news,journalism,hard"
+the summit concluded with a joint declaration on reducing carbon emissions by 2035,首脳会議は2035年までの炭素排出削減に関する共同宣言で閉幕した,,"news,journalism,hard"
+shares in the company surged 14 percent following the earnings announcement,その企業の株価は決算発表後に14%急騰した,,"news,journalism,hard"
+the international court issued a binding ruling on the disputed maritime boundary,国際裁判所は係争中の海洋境界について拘束力のある判断を下した,,"news,journalism,hard"
+the health ministry urged residents to get vaccinated ahead of the winter season,保健省は冬季を前に住民へワクチン接種を呼びかけた,,"news,journalism,hard"
+the newly appointed ambassador presented her credentials to the foreign minister,新任大使は外相に信任状を提出した,,"news,journalism,hard"
+construction of the high-speed rail corridor is expected to begin next spring,高速鉄道回廊の建設は来春に始まる見込みだ,,"news,journalism,hard"
+the nonprofit organization launched an initiative to provide clean water access,その非営利団体は安全な飲料水へのアクセスを提供する取り組みを開始した,,"news,journalism,hard"
+authorities are investigating a cyberattack that disrupted critical infrastructure,当局は重要インフラを妨害したサイバー攻撃を調査している,,"news,journalism,hard"
+the refugee agency reported a sharp increase in displacement across the region,難民機関は地域全体で避難民が急増したと報告した,,"news,journalism,hard"
+the legislature passed a sweeping reform bill after months of committee deliberation,議会は数か月の委員会審議を経て大規模な改革法案を可決した,,"news,journalism,hard"
+the central government allocated emergency funds to support disaster relief efforts,中央政府は災害救援を支えるため緊急資金を配分した,,"news,journalism,hard"
+the presidential election drew a record turnout of over seventy percent of voters,大統領選挙では有権者の70%超という記録的投票率となった,,"news,journalism,hard"
+analysts predict slower economic growth due to persistent supply chain disruptions,アナリストは継続する供給網の混乱により経済成長の鈍化を予測している,,"news,journalism,hard"
+the cabinet pledged additional subsidies to stabilize domestic food prices,内閣は国内食料価格の安定化に向け追加補助金を約束した,,"news,journalism,hard"
+reporters cited anonymous officials familiar with the negotiations,記者らは交渉に詳しい匿名当局者の話を引用した,,"news,journalism,hard"
+voter turnout exceeded expectations in several densely populated districts,いくつかの人口密集選挙区では投票率が予想を上回った,,"news,journalism,hard"
+satellite images revealed fresh damage near the industrial complex,衛星画像は工業団地付近の新たな損傷を明らかにした,,"news,journalism,hard"
+economists debated whether the stimulus package would accelerate inflation,景気刺激策がインフレを加速させるかどうかを経済学者らが議論した,,"news,journalism,hard"

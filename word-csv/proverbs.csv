@@ -1,26 +1,31 @@
-text,translation,note
-practice makes perfect,練習は上達につながる,
-actions speak louder than words,行動は言葉より雄弁だ,
-all that glitters is not gold,光るものすべてが金ではない,
-time flies when you are having fun,楽しい時間はあっという間に過ぎる,
-look before you leap,行動する前によく考えよう,
-the early bird catches the worm,早起きは三文の徳,
-a stitch in time saves nine,早めの対処が大きな手間を防ぐ,
-curiosity killed the cat,好奇心は身を滅ぼすことがある,
-better late than never,遅くてもやらないよりはまし,
-where there is a will there is a way,意志があれば道は開ける,
-two wrongs do not make a right,二つの間違いで正しさにはならない,
-Rome was not built in a day,ローマは一日にして成らず,
-every cloud has a silver lining,どんな不幸にも希望はある,
-do not judge a book by its cover,本を表紙だけで判断してはいけない,
-the pen is mightier than the sword,ペンは剣よりも強し,
-birds of a feather flock together,類は友を呼ぶ,
-you cannot have your cake and eat it too,ケーキを持ったまま食べることはできない,
-good things come to those who wait,良いことは待つ人に訪れる,
-the grass is always greener on the other side,隣の芝生はいつも青く見える,
-honesty is the best policy,正直は最良の策である,
-necessity is the mother of invention,必要は発明の母,
-when in Rome do as the Romans do,郷に入っては郷に従え,
-too many cooks spoil the broth,船頭多くして船山に上る,
-strike while the iron is hot,鉄は熱いうちに打て,
-do not put all your eggs in one basket,卵を一つのかごに盛るな,
+text,translation,note,categories
+practice makes perfect,練習は上達につながる,,"proverb,life-wisdom,medium"
+actions speak louder than words,行動は言葉より雄弁だ,,"proverb,life-wisdom,medium"
+all that glitters is not gold,光るものすべてが金ではない,,"proverb,life-wisdom,medium"
+time flies when you are having fun,楽しい時間はあっという間に過ぎる,,"proverb,life-wisdom,medium"
+look before you leap,行動する前によく考えよう,,"proverb,life-wisdom,medium"
+the early bird catches the worm,早起きは三文の徳,,"proverb,life-wisdom,medium"
+a stitch in time saves nine,早めの対処が大きな手間を防ぐ,,"proverb,life-wisdom,medium"
+curiosity killed the cat,好奇心は身を滅ぼすことがある,,"proverb,life-wisdom,medium"
+better late than never,遅くてもやらないよりはまし,,"proverb,life-wisdom,medium"
+where there is a will there is a way,意志があれば道は開ける,,"proverb,life-wisdom,medium"
+two wrongs do not make a right,二つの間違いで正しさにはならない,,"proverb,life-wisdom,medium"
+Rome was not built in a day,ローマは一日にして成らず,,"proverb,life-wisdom,medium"
+every cloud has a silver lining,どんな不幸にも希望はある,,"proverb,life-wisdom,medium"
+do not judge a book by its cover,本を表紙だけで判断してはいけない,,"proverb,life-wisdom,medium"
+the pen is mightier than the sword,ペンは剣よりも強し,,"proverb,life-wisdom,medium"
+birds of a feather flock together,類は友を呼ぶ,,"proverb,life-wisdom,medium"
+you cannot have your cake and eat it too,ケーキを持ったまま食べることはできない,,"proverb,life-wisdom,medium"
+good things come to those who wait,良いことは待つ人に訪れる,,"proverb,life-wisdom,medium"
+the grass is always greener on the other side,隣の芝生はいつも青く見える,,"proverb,life-wisdom,medium"
+honesty is the best policy,正直は最良の策である,,"proverb,life-wisdom,medium"
+necessity is the mother of invention,必要は発明の母,,"proverb,life-wisdom,medium"
+when in Rome do as the Romans do,郷に入っては郷に従え,,"proverb,life-wisdom,medium"
+too many cooks spoil the broth,船頭多くして船山に上る,,"proverb,life-wisdom,medium"
+strike while the iron is hot,鉄は熱いうちに打て,,"proverb,life-wisdom,medium"
+do not put all your eggs in one basket,卵を一つのかごに盛るな,,"proverb,life-wisdom,medium"
+many hands make light work,人手が多ければ仕事は楽になる,,"proverb,life-wisdom,medium"
+slow and steady wins the race,遅くても着実な者が勝つ,,"proverb,life-wisdom,medium"
+do not count your chickens before they hatch,結果が出る前に当て込みすぎてはいけない,,"proverb,life-wisdom,medium"
+an apple a day keeps the doctor away,一日一個のりんごで医者いらず,,"proverb,life-wisdom,medium"
+easy come easy go,得やすいものは失いやすい,,"proverb,life-wisdom,medium"

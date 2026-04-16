@@ -1,31 +1,36 @@
-text,translation,note
-asdf jkl; asdf jkl; asdf jkl; asdf jkl;,asdf jkl; の反復練習,
-qwer uiop qwer uiop qwer uiop qwer uiop,qwer uiop の反復練習,
-zxcv nm zxcv nm zxcv nm zxcv nm,zxcv nm の反復練習,
-asdf ghjkl asdf ghjkl asdf ghjkl,asdf ghjkl の反復練習,
-the dad had a bad fad and was sad,父さんはひどい流行に巻き込まれて悲しんでいた,
-a safe half life lasts as a flag falls,安全な半生は旗が落ちるように長く続く,
-she sells sea shells by the sea shore,彼女は海辺で貝殻を売っている,
-red lorry yellow lorry red lorry yellow lorry,赤いトラック 黄色いトラック を繰り返す早口言葉,
-unique new york unique new york unique new york,ユニークなニューヨーク を繰り返す早口言葉,
-truly rural truly rural truly rural,truly rural を繰り返す早口言葉,
-six slick slim slippery slicks,six slick slim slippery slicks の早口練習,
-fred fed ted bread and ted fed fred bread,フレッドはテッドにパンを与え テッドはフレッドにパンを与えた,
-flash message cash dash rash splash crash,flash や splash を並べたキー練習,
-kill skill fill hill bill still will spill,kill skill fill hill bill still will spill を並べたキー練習,
-type pipe ripe pipe wipe type ripe pipe type,type pipe ripe pipe wipe type ripe pipe type の連続練習,
-were here there where their were here there,were here there where their を見分ける練習,
-qwerty qwerty qwerty qwerty qwerty qwerty,qwerty の反復練習,
-pop top mop cop hop lop drop stop crop,pop top mop cop hop lop drop stop crop の連続練習,
-flap trap wrap clap snap map tap lap cap gap,flap trap wrap clap snap map tap lap cap gap の連続練習,
-swim trim grim slim him gym dim rim him tim,swim trim grim slim him gym dim rim him tim の連続練習,
-fun sun gun run bun nun hun pun gun fun sun,fun sun gun run bun nun hun pun gun fun sun の連続練習,
-old bold cold fold gold hold mold sold told,old bold cold fold gold hold mold sold told の連続練習,
-bright flight slight tight night right might light,bright flight slight tight night right might light の連続練習,
-duck luck muck puck stuck truck cluck pluck,duck luck muck puck stuck truck cluck pluck の連続練習,
-row flow crow grow throw blow show slow glow,row flow crow grow throw blow show slow glow の連続練習,
-hand band land sand grand stand grand band hand,hand band land sand grand stand grand band hand の連続練習,
-face place space trace grace race lace brace,face place space trace grace race lace brace の連続練習,
-king ring sing wing thing spring string bring,king ring sing wing thing spring string bring の連続練習,
-desk rest best test jest nest vest west pest,desk rest best test jest nest vest west pest の連続練習,
-ask task bask mask flask grasp clasp ask task,ask task bask mask flask grasp clasp ask task の連続練習,
+text,translation,note,categories
+asdf jkl; asdf jkl; asdf jkl; asdf jkl;,asdf jkl; の反復練習,,"typing,drill,medium"
+qwer uiop qwer uiop qwer uiop qwer uiop,qwer uiop の反復練習,,"typing,drill,medium"
+zxcv nm zxcv nm zxcv nm zxcv nm,zxcv nm の反復練習,,"typing,drill,medium"
+asdf ghjkl asdf ghjkl asdf ghjkl,asdf ghjkl の反復練習,,"typing,drill,medium"
+the dad had a bad fad and was sad,父さんはひどい流行に巻き込まれて悲しんでいた,,"typing,drill,medium"
+a safe half life lasts as a flag falls,安全な半生は旗が落ちるように長く続く,,"typing,drill,medium"
+she sells sea shells by the sea shore,彼女は海辺で貝殻を売っている,,"typing,drill,medium"
+red lorry yellow lorry red lorry yellow lorry,赤いトラック 黄色いトラック を繰り返す早口言葉,,"typing,drill,medium"
+unique new york unique new york unique new york,ユニークなニューヨーク を繰り返す早口言葉,,"typing,drill,medium"
+truly rural truly rural truly rural,truly rural を繰り返す早口言葉,,"typing,drill,medium"
+six slick slim slippery slicks,six slick slim slippery slicks の早口練習,,"typing,drill,medium"
+fred fed ted bread and ted fed fred bread,フレッドはテッドにパンを与え テッドはフレッドにパンを与えた,,"typing,drill,medium"
+flash message cash dash rash splash crash,flash や splash を並べたキー練習,,"typing,drill,medium"
+kill skill fill hill bill still will spill,kill skill fill hill bill still will spill を並べたキー練習,,"typing,drill,medium"
+type pipe ripe pipe wipe type ripe pipe type,type pipe ripe pipe wipe type ripe pipe type の連続練習,,"typing,drill,medium"
+were here there where their were here there,were here there where their を見分ける練習,,"typing,drill,medium"
+qwerty qwerty qwerty qwerty qwerty qwerty,qwerty の反復練習,,"typing,drill,medium"
+pop top mop cop hop lop drop stop crop,pop top mop cop hop lop drop stop crop の連続練習,,"typing,drill,medium"
+flap trap wrap clap snap map tap lap cap gap,flap trap wrap clap snap map tap lap cap gap の連続練習,,"typing,drill,medium"
+swim trim grim slim him gym dim rim him tim,swim trim grim slim him gym dim rim him tim の連続練習,,"typing,drill,medium"
+fun sun gun run bun nun hun pun gun fun sun,fun sun gun run bun nun hun pun gun fun sun の連続練習,,"typing,drill,medium"
+old bold cold fold gold hold mold sold told,old bold cold fold gold hold mold sold told の連続練習,,"typing,drill,medium"
+bright flight slight tight night right might light,bright flight slight tight night right might light の連続練習,,"typing,drill,medium"
+duck luck muck puck stuck truck cluck pluck,duck luck muck puck stuck truck cluck pluck の連続練習,,"typing,drill,medium"
+row flow crow grow throw blow show slow glow,row flow crow grow throw blow show slow glow の連続練習,,"typing,drill,medium"
+hand band land sand grand stand grand band hand,hand band land sand grand stand grand band hand の連続練習,,"typing,drill,medium"
+face place space trace grace race lace brace,face place space trace grace race lace brace の連続練習,,"typing,drill,medium"
+king ring sing wing thing spring string bring,king ring sing wing thing spring string bring の連続練習,,"typing,drill,medium"
+desk rest best test jest nest vest west pest,desk rest best test jest nest vest west pest の連続練習,,"typing,drill,medium"
+ask task bask mask flask grasp clasp ask task,ask task bask mask flask grasp clasp ask task の連続練習,,"typing,drill,medium"
+snap crack stack track black slack attack,snap crack stack track black slack attack の連続練習,snap crack 系の連続練習,"typing,drill,medium"
+thin then than them thorn thread three,thin then than them thorn thread three の見分け練習,th 系の打ち分け練習,"typing,drill,medium"
+quick click clock clack black block,quick click clock clack black block の連続練習,cl と ck の切り替え練習,"typing,drill,medium"
+crisp scripts strip grips flip slips,crisp scripts strip grips flip slips の連続練習,script 系の子音連結練習,"typing,drill,medium"
+plane crane grain brain train chain,plane crane grain brain train chain の連続練習,pl cr gr br tr ch の切り替え練習,"typing,drill,medium"

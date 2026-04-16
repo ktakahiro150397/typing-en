@@ -1,26 +1,31 @@
-text,translation,note
-"git commit -m ""initial commit""",git commit で initial commit というメッセージを付ける,
-npm install --save-dev typescript,TypeScript を開発依存としてインストールする,
-docker compose up --build --detach,Docker Compose でビルドしてバックグラウンド起動する,
-const result = await fetch(apiUrl),apiUrl に fetch して結果を待つ,
-function greet(name: string): string { return `Hello ${name}`; },名前を受け取り Hello を返す greet 関数,
-"import React from ""react""",React をインポートする,
-SELECT * FROM users WHERE id = 1,users テーブルから id が1の行を取得する SQL,
-ssh -i ~/.ssh/id_rsa user@192.168.1.100,指定鍵で 192.168.1.100 の user に SSH 接続する,
-export default function App(): JSX.Element,JSX.Element を返す App コンポーネントをデフォルトエクスポートする,
-git push origin main --force-with-lease,main ブランチへ強制保護付きで push する,
-pip install -r requirements.txt,requirements.txt から Python 依存をインストールする,
-curl -X POST https://api.example.com/v1/users,users API に POST リクエストを送る,
-interface User { id: number; name: string; },id と name を持つ User インターフェース,
-"const [state, setState] = useState<string>("""")",state と setState を文字列型で useState 初期化する,
-npx create-react-app my-app --template typescript,TypeScript テンプレートで React アプリを作成する,
-ALTER TABLE users ADD COLUMN email VARCHAR(255),users テーブルに email 列を追加する SQL,
-kubectl apply -f deployment.yaml,deployment.yaml を Kubernetes に適用する,
-"grep -r ""TODO"" ./src --include=""*.ts""",src 配下の TypeScript から TODO を再帰検索する,
-chmod 600 ~/.ssh/id_rsa && chmod 700 ~/.ssh,SSH秘密鍵と ~/.ssh の権限を安全な値に設定する,
-tar -czf archive.tar.gz ./dist,dist ディレクトリを archive.tar.gz に圧縮する,
-type Props = { onClick: () => void; label: string },onClick と label を持つ Props 型,
-"console.error(""Unexpected error:"", err.message)",予期しないエラー内容を console.error で出力する,
-"useEffect(() => { fetchData(); }, [userId])",userId 変更時に fetchData を実行する useEffect,
-prisma migrate dev --name add_user_table,add_user_table という名前で Prisma マイグレーションを作成する,
-docker build -t myapp:latest --no-cache .,キャッシュなしで myapp:latest の Docker イメージをビルドする,
+text,translation,note,categories
+"git commit -m ""initial commit""",git commit で initial commit というメッセージを付ける,,"technology,software,medium"
+npm install --save-dev typescript,TypeScript を開発依存としてインストールする,,"technology,software,medium"
+docker compose up --build --detach,Docker Compose でビルドしてバックグラウンド起動する,,"technology,software,medium"
+const result = await fetch(apiUrl),apiUrl に fetch して結果を待つ,,"technology,software,medium"
+function greet(name: string): string { return `Hello ${name}`; },名前を受け取り Hello を返す greet 関数,,"technology,software,medium"
+"import React from ""react""",React をインポートする,,"technology,software,medium"
+SELECT * FROM users WHERE id = 1,users テーブルから id が1の行を取得する SQL,,"technology,software,medium"
+ssh -i ~/.ssh/id_rsa user@192.168.1.100,指定鍵で 192.168.1.100 の user に SSH 接続する,,"technology,software,medium"
+export default function App(): JSX.Element,JSX.Element を返す App コンポーネントをデフォルトエクスポートする,,"technology,software,medium"
+git push origin main --force-with-lease,main ブランチへ強制保護付きで push する,,"technology,software,medium"
+pip install -r requirements.txt,requirements.txt から Python 依存をインストールする,,"technology,software,medium"
+curl -X POST https://api.example.com/v1/users,users API に POST リクエストを送る,,"technology,software,medium"
+interface User { id: number; name: string; },id と name を持つ User インターフェース,,"technology,software,medium"
+"const [state, setState] = useState<string>("""")",state と setState を文字列型で useState 初期化する,,"technology,software,medium"
+npx create-react-app my-app --template typescript,TypeScript テンプレートで React アプリを作成する,,"technology,software,medium"
+ALTER TABLE users ADD COLUMN email VARCHAR(255),users テーブルに email 列を追加する SQL,,"technology,software,medium"
+kubectl apply -f deployment.yaml,deployment.yaml を Kubernetes に適用する,,"technology,software,medium"
+"grep -r ""TODO"" ./src --include=""*.ts""",src 配下の TypeScript から TODO を再帰検索する,,"technology,software,medium"
+chmod 600 ~/.ssh/id_rsa && chmod 700 ~/.ssh,SSH秘密鍵と ~/.ssh の権限を安全な値に設定する,,"technology,software,medium"
+tar -czf archive.tar.gz ./dist,dist ディレクトリを archive.tar.gz に圧縮する,,"technology,software,medium"
+type Props = { onClick: () => void; label: string },onClick と label を持つ Props 型,,"technology,software,medium"
+"console.error(""Unexpected error:"", err.message)",予期しないエラー内容を console.error で出力する,,"technology,software,medium"
+"useEffect(() => { fetchData(); }, [userId])",userId 変更時に fetchData を実行する useEffect,,"technology,software,medium"
+prisma migrate dev --name add_user_table,add_user_table という名前で Prisma マイグレーションを作成する,,"technology,software,medium"
+docker build -t myapp:latest --no-cache .,キャッシュなしで myapp:latest の Docker イメージをビルドする,,"technology,software,medium"
+kubernetes orchestrates containerized workloads across clustered machines,Kubernetes はクラスタ化されたマシン全体でコンテナ化ワークロードを統括する,,"technology,software,medium"
+end to end encryption prevents intermediaries from reading message contents,エンドツーエンド暗号化は中継者がメッセージ内容を読めないようにする,,"technology,software,medium"
+a cache invalidation bug can surface stale data in production,キャッシュ無効化のバグは本番環境で古いデータを表面化させることがある,,"technology,software,medium"
+continuous integration runs automated checks on every pull request,継続的インテグレーションは各プルリクエストで自動チェックを実行する,,"technology,software,medium"
+schema migration scripts should be tested before a release window,スキーマ移行スクリプトはリリース作業前に検証すべきである,,"technology,software,medium"

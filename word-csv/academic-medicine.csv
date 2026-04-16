@@ -1,28 +1,33 @@
-text,translation,note
-patients with hypertension should monitor their blood pressure regularly,高血圧の患者は定期的に血圧を測定すべきである,
-the electrocardiogram measures the electrical activity of the heart over time,心電図は時間に沿った心臓の電気活動を測定する,
-antibiotics are only effective against bacterial and not viral infections,抗生物質はウイルスではなく細菌感染にのみ有効である,
-the cardiovascular system circulates oxygenated blood throughout the body,心血管系は酸素を含む血液を全身に循環させる,
-a computed tomography scan provides detailed cross-sectional images of the body,CT検査は身体の詳細な断層画像を提供する,
-inflammation is a natural immune response to tissue injury or pathogen invasion,炎症は組織損傷や病原体侵入に対する自然な免疫応答である,
-the physician prescribed a course of anti-inflammatory corticosteroid medication,医師は抗炎症性のコルチコステロイド薬を処方した,
-anesthesia is administered to prevent pain during surgical procedures,麻酔は手術中の痛みを防ぐために投与される,
-the prognosis for patients with early-stage carcinoma is generally favorable,早期癌患者の予後は一般に良好である,
-magnetic resonance imaging uses strong magnetic fields to visualize soft tissue,MRIは強い磁場を用いて軟部組織を可視化する,
-pharmacokinetics describes how the body absorbs distributes and eliminates drugs,薬物動態学は体が薬を吸収し分布させ排泄する過程を説明する,
-the lymphatic system plays a central role in immune surveillance and fluid balance,リンパ系は免疫監視と体液バランスで中心的役割を果たす,
-myocardial infarction occurs when coronary artery blood flow is severely blocked,心筋梗塞は冠動脈の血流が著しく遮断されたときに起こる,
-the blood-brain barrier restricts the passage of most substances into neural tissue,血液脳関門はほとんどの物質が神経組織へ入るのを制限する,
-patients undergoing chemotherapy often experience immunosuppression as a side effect,化学療法を受ける患者は副作用として免疫抑制を経験しがちである,
-the pancreas secretes both insulin and digestive enzymes into the bloodstream,膵臓はインスリンと消化酵素の両方を分泌する,
-differential diagnosis involves systematically evaluating multiple possible conditions,鑑別診断では複数の可能性のある病態を体系的に評価する,
-a biopsy is performed to obtain tissue for histopathological examination,生検は組織病理学的検査のために組織を採取して行う,
-septicemia is a life-threatening bloodstream infection requiring immediate intervention,敗血症は直ちに介入が必要な生命を脅かす血流感染である,
-the pulmonary system facilitates gas exchange between alveoli and capillaries,肺系は肺胞と毛細血管の間でガス交換を行う,
-nonsteroidal anti-inflammatory drugs inhibit prostaglandin synthesis to reduce pain,非ステロイド性抗炎症薬はプロスタグランジン合成を阻害して痛みを和らげる,
-the autonomic nervous system regulates involuntary functions such as heart rate,自律神経系は心拍数などの不随意機能を調節する,
-osteoporosis results from decreased bone mineral density and increased fracture risk,骨粗鬆症は骨密度低下と骨折リスク上昇によって生じる,
-clinical trials evaluate the safety and efficacy of new therapeutic interventions,臨床試験は新しい治療介入の安全性と有効性を評価する,
-the hypothalamus regulates body temperature appetite and hormonal secretion,視床下部は体温・食欲・ホルモン分泌を調節する,
-neuroplasticity allows the brain to reorganize synaptic connections throughout life,神経可塑性により脳は生涯を通じてシナプス結合を再編成できる,
-triage protocols prioritize patients based on severity of injury or illness,トリアージの手順は外傷や病気の重症度に基づいて患者を優先する,
+text,translation,note,categories
+patients with hypertension should monitor their blood pressure regularly,高血圧の患者は定期的に血圧を測定すべきである,,"medicine,academic,hard"
+the electrocardiogram measures the electrical activity of the heart over time,心電図は時間に沿った心臓の電気活動を測定する,,"medicine,academic,hard"
+antibiotics are only effective against bacterial and not viral infections,抗生物質はウイルスではなく細菌感染にのみ有効である,,"medicine,academic,hard"
+the cardiovascular system circulates oxygenated blood throughout the body,心血管系は酸素を含む血液を全身に循環させる,,"medicine,academic,hard"
+a computed tomography scan provides detailed cross-sectional images of the body,CT検査は身体の詳細な断層画像を提供する,,"medicine,academic,hard"
+inflammation is a natural immune response to tissue injury or pathogen invasion,炎症は組織損傷や病原体侵入に対する自然な免疫応答である,,"medicine,academic,hard"
+the physician prescribed a course of anti-inflammatory corticosteroid medication,医師は抗炎症性のコルチコステロイド薬を処方した,,"medicine,academic,hard"
+anesthesia is administered to prevent pain during surgical procedures,麻酔は手術中の痛みを防ぐために投与される,,"medicine,academic,hard"
+the prognosis for patients with early-stage carcinoma is generally favorable,早期癌患者の予後は一般に良好である,,"medicine,academic,hard"
+magnetic resonance imaging uses strong magnetic fields to visualize soft tissue,MRIは強い磁場を用いて軟部組織を可視化する,,"medicine,academic,hard"
+pharmacokinetics describes how the body absorbs distributes and eliminates drugs,薬物動態学は体が薬を吸収し分布させ排泄する過程を説明する,,"medicine,academic,hard"
+the lymphatic system plays a central role in immune surveillance and fluid balance,リンパ系は免疫監視と体液バランスで中心的役割を果たす,,"medicine,academic,hard"
+myocardial infarction occurs when coronary artery blood flow is severely blocked,心筋梗塞は冠動脈の血流が著しく遮断されたときに起こる,,"medicine,academic,hard"
+the blood-brain barrier restricts the passage of most substances into neural tissue,血液脳関門はほとんどの物質が神経組織へ入るのを制限する,,"medicine,academic,hard"
+patients undergoing chemotherapy often experience immunosuppression as a side effect,化学療法を受ける患者は副作用として免疫抑制を経験しがちである,,"medicine,academic,hard"
+the pancreas secretes both insulin and digestive enzymes into the bloodstream,膵臓はインスリンと消化酵素の両方を分泌する,,"medicine,academic,hard"
+differential diagnosis involves systematically evaluating multiple possible conditions,鑑別診断では複数の可能性のある病態を体系的に評価する,,"medicine,academic,hard"
+a biopsy is performed to obtain tissue for histopathological examination,生検は組織病理学的検査のために組織を採取して行う,,"medicine,academic,hard"
+septicemia is a life-threatening bloodstream infection requiring immediate intervention,敗血症は直ちに介入が必要な生命を脅かす血流感染である,,"medicine,academic,hard"
+the pulmonary system facilitates gas exchange between alveoli and capillaries,肺系は肺胞と毛細血管の間でガス交換を行う,,"medicine,academic,hard"
+nonsteroidal anti-inflammatory drugs inhibit prostaglandin synthesis to reduce pain,非ステロイド性抗炎症薬はプロスタグランジン合成を阻害して痛みを和らげる,,"medicine,academic,hard"
+the autonomic nervous system regulates involuntary functions such as heart rate,自律神経系は心拍数などの不随意機能を調節する,,"medicine,academic,hard"
+osteoporosis results from decreased bone mineral density and increased fracture risk,骨粗鬆症は骨密度低下と骨折リスク上昇によって生じる,,"medicine,academic,hard"
+clinical trials evaluate the safety and efficacy of new therapeutic interventions,臨床試験は新しい治療介入の安全性と有効性を評価する,,"medicine,academic,hard"
+the hypothalamus regulates body temperature appetite and hormonal secretion,視床下部は体温・食欲・ホルモン分泌を調節する,,"medicine,academic,hard"
+neuroplasticity allows the brain to reorganize synaptic connections throughout life,神経可塑性により脳は生涯を通じてシナプス結合を再編成できる,,"medicine,academic,hard"
+triage protocols prioritize patients based on severity of injury or illness,トリアージの手順は外傷や病気の重症度に基づいて患者を優先する,,"medicine,academic,hard"
+randomized controlled trials remain a gold standard for clinical evidence,無作為化比較試験は臨床エビデンスの金標準であり続けている,,"medicine,academic,hard"
+insulin resistance is closely associated with metabolic syndrome and obesity,インスリン抵抗性はメタボリックシンドロームと肥満に密接に関連する,,"medicine,academic,hard"
+renal function is commonly assessed using serum creatinine and eGFR,腎機能は血清クレアチニンと eGFR を用いて評価されることが多い,,"medicine,academic,hard"
+palliative care focuses on symptom relief and quality of life,緩和ケアは症状緩和と生活の質の向上に重点を置く,,"medicine,academic,hard"
+the placebo effect can influence subjective outcomes in blinded studies,プラセボ効果は盲検試験の主観的な評価項目に影響しうる,,"medicine,academic,hard"

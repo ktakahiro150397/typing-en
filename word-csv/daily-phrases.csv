@@ -1,26 +1,31 @@
-text,translation,note
-good morning how are you today,おはようございます 今日の調子はいかがですか,
-nice to meet you for the first time,初めまして お会いできてうれしいです,
-could you please repeat that more slowly,もう少しゆっくりもう一度言っていただけますか,
-I am looking forward to hearing from you,ご連絡を楽しみにしています,
-would you like something to drink,何かお飲み物はいかがですか,
-how long have you been waiting here,ここでどのくらい待っていますか,
-can you give me a hand with this,これを手伝ってもらえますか,
-let me know if you need anything else,ほかに必要なものがあれば知らせてください,
-I will be there in about ten minutes,10分ほどでそちらに着きます,
-sorry for the inconvenience caused,ご不便をおかけして申し訳ありません,
-have a great rest of your day,残りの一日も素敵にお過ごしください,
-what do you recommend on the menu,メニューでは何がおすすめですか,
-do you mind if I sit here,ここに座ってもいいですか,
-I really appreciate your help today,今日は助けてくれて本当にありがとうございます,
-where is the nearest train station,一番近い駅はどこですか,
-could you take a photo of us please,私たちの写真を撮っていただけますか,
-I have not seen you in a long time,長い間会っていませんでしたね,
-what are your plans for the weekend,週末はどんな予定ですか,
-it was nice talking with you today,今日はお話しできてよかったです,
-let us catch up over coffee sometime,今度コーヒーでも飲みながら近況を話しましょう,
-I am not sure I understand your point,あなたの言いたいことを十分に理解できていないかもしれません,
-can we reschedule for another time,別の時間に予定を変更できますか,
-thank you so much for everything,本当にいろいろとありがとうございました,
-you did an amazing job on this project,このプロジェクトで素晴らしい仕事をしましたね,
-I will get back to you on that soon,その件についてはすぐに折り返します,
+text,translation,note,categories
+good morning how are you today,おはようございます 今日の調子はいかがですか,,"daily,conversation,easy"
+nice to meet you for the first time,初めまして お会いできてうれしいです,,"daily,conversation,easy"
+could you please repeat that more slowly,もう少しゆっくりもう一度言っていただけますか,,"daily,conversation,easy"
+I am looking forward to hearing from you,ご連絡を楽しみにしています,,"daily,conversation,easy"
+would you like something to drink,何かお飲み物はいかがですか,,"daily,conversation,easy"
+how long have you been waiting here,ここでどのくらい待っていますか,,"daily,conversation,easy"
+can you give me a hand with this,これを手伝ってもらえますか,,"daily,conversation,easy"
+let me know if you need anything else,ほかに必要なものがあれば知らせてください,,"daily,conversation,easy"
+I will be there in about ten minutes,10分ほどでそちらに着きます,,"daily,conversation,easy"
+sorry for the inconvenience caused,ご不便をおかけして申し訳ありません,,"daily,conversation,easy"
+have a great rest of your day,残りの一日も素敵にお過ごしください,,"daily,conversation,easy"
+what do you recommend on the menu,メニューでは何がおすすめですか,,"daily,conversation,easy"
+do you mind if I sit here,ここに座ってもいいですか,,"daily,conversation,easy"
+I really appreciate your help today,今日は助けてくれて本当にありがとうございます,,"daily,conversation,easy"
+where is the nearest train station,一番近い駅はどこですか,,"daily,conversation,easy"
+could you take a photo of us please,私たちの写真を撮っていただけますか,,"daily,conversation,easy"
+I have not seen you in a long time,長い間会っていませんでしたね,,"daily,conversation,easy"
+what are your plans for the weekend,週末はどんな予定ですか,,"daily,conversation,easy"
+it was nice talking with you today,今日はお話しできてよかったです,,"daily,conversation,easy"
+let us catch up over coffee sometime,今度コーヒーでも飲みながら近況を話しましょう,,"daily,conversation,easy"
+I am not sure I understand your point,あなたの言いたいことを十分に理解できていないかもしれません,,"daily,conversation,easy"
+can we reschedule for another time,別の時間に予定を変更できますか,,"daily,conversation,easy"
+thank you so much for everything,本当にいろいろとありがとうございました,,"daily,conversation,easy"
+you did an amazing job on this project,このプロジェクトで素晴らしい仕事をしましたね,,"daily,conversation,easy"
+I will get back to you on that soon,その件についてはすぐに折り返します,,"daily,conversation,easy"
+thanks for waiting I am almost there,お待たせしました もうすぐ着きます,,"daily,conversation,easy"
+could we meet again after lunch,昼食後にもう一度会えますか,,"daily,conversation,easy"
+I left my umbrella on the train,電車に傘を置き忘れました,,"daily,conversation,easy"
+this seat is taken by my friend,この席は友人が使っています,,"daily,conversation,easy"
+please send me the address once more,もう一度住所を送ってください,,"daily,conversation,easy"

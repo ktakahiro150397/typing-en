@@ -1,21 +1,21 @@
-text,translation,note
-the quick brown fox jumps over the lazy dog,すばしこい茶色の狐がのろまな犬を飛び越える,
-pack my box with five dozen liquor jugs,私の箱に酒びんを5ダース詰めて,
-how vexingly quick daft zebras jump,ばかなシマウマがいら立つほど素早く跳ねる,
-sphinx of black quartz judge my vow,黒い水晶のスフィンクスよ私の誓いを裁け,
-the five boxing wizards jump quickly,5人のボクシング魔法使いがすばやく跳ぶ,
-practice makes perfect,練習は上達につながる,
-hello world,こんにちは世界,
-keep calm and carry on,落ち着いてそのまま続けよう,
-every day is a new beginning,毎日が新しい始まりだ,
-actions speak louder than words,行動は言葉より雄弁だ,
-all that glitters is not gold,光るものすべてが金ではない,
-time flies when you are having fun,楽しい時間はあっという間に過ぎる,
-look before you leap,行動する前によく考えよう,
-the early bird catches the worm,早起きは三文の徳,
-a stitch in time saves nine,早めの対処が大きな手間を防ぐ,
-curiosity killed the cat,好奇心は身を滅ぼすことがある,
-better late than never,遅くてもやらないよりはまし,
-where there is a will there is a way,意志があれば道は開ける,
-two wrongs do not make a right,二つの間違いで正しさにはならない,
-Rome was not built in a day,ローマは一日にして成らず,
+text,translation,note,categories
+the quick brown fox jumps over the lazy dog,すばしこい茶色の狐がのろまな犬を飛び越える,,"sample,mixed,starter"
+pack my box with five dozen liquor jugs,私の箱に酒びんを5ダース詰めて,,"sample,mixed,starter"
+how vexingly quick daft zebras jump,ばかなシマウマがいら立つほど素早く跳ねる,,"sample,mixed,starter"
+sphinx of black quartz judge my vow,黒い水晶のスフィンクスよ私の誓いを裁け,,"sample,mixed,starter"
+the five boxing wizards jump quickly,5人のボクシング魔法使いがすばやく跳ぶ,,"sample,mixed,starter"
+practice makes perfect,練習は上達につながる,,"sample,mixed,starter"
+hello world,こんにちは世界,,"sample,mixed,starter"
+keep calm and carry on,落ち着いてそのまま続けよう,,"sample,mixed,starter"
+every day is a new beginning,毎日が新しい始まりだ,,"sample,mixed,starter"
+actions speak louder than words,行動は言葉より雄弁だ,,"sample,mixed,starter"
+all that glitters is not gold,光るものすべてが金ではない,,"sample,mixed,starter"
+time flies when you are having fun,楽しい時間はあっという間に過ぎる,,"sample,mixed,starter"
+look before you leap,行動する前によく考えよう,,"sample,mixed,starter"
+the early bird catches the worm,早起きは三文の徳,,"sample,mixed,starter"
+a stitch in time saves nine,早めの対処が大きな手間を防ぐ,,"sample,mixed,starter"
+curiosity killed the cat,好奇心は身を滅ぼすことがある,,"sample,mixed,starter"
+better late than never,遅くてもやらないよりはまし,,"sample,mixed,starter"
+where there is a will there is a way,意志があれば道は開ける,,"sample,mixed,starter"
+two wrongs do not make a right,二つの間違いで正しさにはならない,,"sample,mixed,starter"
+Rome was not built in a day,ローマは一日にして成らず,,"sample,mixed,starter"
