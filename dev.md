@@ -119,10 +119,10 @@ BigramStat     ← Bigram（運指ペア）統計（User に属する）
 | POST | /api/sentences/import | CSV インポート（1ファイル） |
 
 - 全エンドポイント JWT 認証 + 所有者確認
-- 重複は Prisma P2002 で検知してスキップ（409 or skipped カウント）
+- 重複テキストはスキップせず上書き更新し、カテゴリ・日本語訳・メモを取り込み内容で更新
 - `MAX_TEXT_LENGTH = 5000` 文字
-- CSV は `csv-parse` ライブラリ使用。ヘッダ必須: `text`（`note` は任意）
-- インポート結果: `{ created, skipped, errors }` で部分成功に対応
+- CSV は `csv-parse` ライブラリ使用。ヘッダ必須: `text`（`translation` / `note` / `category` / `categories` は任意）
+- インポート結果: `{ created, updated, errors }` で部分成功に対応
 
 #### フロントエンド
 

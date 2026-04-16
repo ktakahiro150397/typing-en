@@ -12,6 +12,7 @@ const sentences: Sentence[] = [
   {
     id: '1',
     text: 'alpha',
+    translation: null,
     note: null,
     createdAt: '2026-01-01T00:00:00.000Z',
     categories: ['daily-conversation'],
@@ -19,6 +20,7 @@ const sentences: Sentence[] = [
   {
     id: '2',
     text: 'beta',
+    translation: null,
     note: null,
     createdAt: '2026-01-02T00:00:00.000Z',
     categories: ['internet', 'daily-conversation'],
@@ -26,6 +28,7 @@ const sentences: Sentence[] = [
   {
     id: '3',
     text: 'gamma',
+    translation: null,
     note: null,
     createdAt: '2026-01-03T00:00:00.000Z',
     categories: [],

@@ -7,12 +7,14 @@ import { authenticateJWT } from '../middleware/authenticate.js'
 import { requireAdmin } from '../middleware/requireAdmin.js'
 
 const MAX_TEXT_LENGTH = 5000
+const MAX_TRANSLATION_LENGTH = 5000
 const MAX_CATEGORY_COUNT = 20
 const MAX_CATEGORY_LENGTH = 100
 
 const sentenceSelect = {
   id: true,
   text: true,
+  translation: true,
   note: true,
   createdAt: true,
   categories: {
@@ -55,6 +57,7 @@ function getFileNameCategory(filename: string | undefined): string[] {
 function mapSentence(sentence: {
   id: string
   text: string
+  translation: string | null
   note: string | null
   createdAt: Date
   categories: Array<{ category: string }>
@@ -62,6 +65,7 @@ function mapSentence(sentence: {
   return {
     id: sentence.id,
     text: sentence.text,
+    translation: sentence.translation,
     note: sentence.note,
     createdAt: sentence.createdAt,
     categories: sentence.categories.map(({ category }) => category),
@@ -101,7 +105,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       const fileCategories = getFileNameCategory(data.filename)
 
       let created = 0
-      let skipped = 0
+      let updated = 0
       const errors: string[] = []
 
       const parser = data.file.pipe(
@@ -110,6 +114,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
 
       for await (const row of parser as AsyncIterable<Record<string, string>>) {
         const text = (row['text'] ?? '').trim()
+        const translation = (row['translation'] ?? '').trim()
         const categories = normalizeCategories([
           ...fileCategories,
           ...parseCategoryText(row['categories']),
@@ -120,12 +125,22 @@ export default async function sentenceRoutes(app: FastifyInstance) {
           errors.push(`Too long (${text.length} chars): "${text.slice(0, 40)}..."`)
           continue
         }
+        if (translation.length > MAX_TRANSLATION_LENGTH) {
+          errors.push(`Translation too long (${translation.length} chars): "${text.slice(0, 40)}..."`)
+          continue
+        }
         try {
-          await prisma.sentence.create({
-            data: {
+          const existing = await prisma.sentence.findUnique({
+            where: { text },
+            select: { id: true },
+          })
+          await prisma.sentence.upsert({
+            where: { text },
+            create: {
               createdByUserId,
               text,
-              note: row['note'] || null,
+              translation: translation || null,
+              note: row['note']?.trim() || null,
               ...(categories.length > 0
                 ? {
                     categories: {
@@ -134,19 +149,31 @@ export default async function sentenceRoutes(app: FastifyInstance) {
                   }
                 : {}),
             },
+            update: {
+              translation: translation || null,
+              note: row['note']?.trim() || null,
+              categories: {
+                deleteMany: {},
+                ...(categories.length > 0
+                  ? {
+                      create: categories.map((category) => ({ category })),
+                    }
+                  : {}),
+              },
+            },
           })
-          created++
+          if (existing) {
+            updated++
+          } else {
+            created++
+          }
         } catch (e: unknown) {
           const err = e as { code?: string; message?: string }
-          if (err.code === 'P2002') {
-            skipped++
-          } else {
-            errors.push(`Row "${text.slice(0, 40)}": ${err.message ?? 'Unknown error'}`)
-          }
+          errors.push(`Row "${text.slice(0, 40)}": ${err.message ?? 'Unknown error'}`)
         }
       }
 
-      return { created, skipped, errors }
+      return { created, updated, errors }
     },
   )
 
@@ -156,8 +183,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
     { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
       const createdByUserId = req.user!.id
-      const { text, note, categories } = req.body as {
+      const { text, translation, note, categories } = req.body as {
         text?: string
+        translation?: string
         note?: string
         categories?: unknown
       }
@@ -168,6 +196,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       }
       if (trimmed.length > MAX_TEXT_LENGTH) {
         return reply.status(400).send({ message: `text must be ${MAX_TEXT_LENGTH} chars or less` })
+      }
+      if (translation !== undefined && translation.length > MAX_TRANSLATION_LENGTH) {
+        return reply.status(400).send({ message: `translation must be ${MAX_TRANSLATION_LENGTH} chars or less` })
       }
       if (categories !== undefined && !Array.isArray(categories)) {
         return reply.status(400).send({ message: 'categories must be an array' })
@@ -183,6 +214,7 @@ export default async function sentenceRoutes(app: FastifyInstance) {
           data: {
             createdByUserId,
             text: trimmed,
+            translation: translation?.trim() || null,
             note: note?.trim() || null,
             ...(normalizedCategories.length > 0
               ? {
@@ -211,8 +243,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
     { preHandler: [authenticateJWT, requireAdmin] },
     async (req, reply) => {
       const { id } = req.params as { id: string }
-      const { text, note, categories } = req.body as {
+      const { text, translation, note, categories } = req.body as {
         text?: string
+        translation?: string
         note?: string
         categories?: unknown
       }
@@ -227,9 +260,13 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       if (categories !== undefined && !Array.isArray(categories)) {
         return reply.status(400).send({ message: 'categories must be an array' })
       }
+      if (translation !== undefined && translation.length > MAX_TRANSLATION_LENGTH) {
+        return reply.status(400).send({ message: `translation must be ${MAX_TRANSLATION_LENGTH} chars or less` })
+      }
 
       const patch: {
         text?: string
+        translation?: string | null
         note?: string | null
         categories?: {
           deleteMany: Record<string, never>
@@ -244,6 +281,9 @@ export default async function sentenceRoutes(app: FastifyInstance) {
       }
       if (note !== undefined) {
         patch.note = note.trim() || null
+      }
+      if (translation !== undefined) {
+        patch.translation = translation.trim() || null
       }
       if (categories !== undefined) {
         const normalizedCategories = normalizeCategories(

@@ -85,7 +85,7 @@ export function SentenceManager({
         <div className="app-card-soft px-5 py-5">
           <p className="text-sm font-semibold text-slate-900">文章ライブラリを整える</p>
           <p className="mt-2 text-sm text-slate-500">
-            練習で使う文章・攻略メモ・カテゴリをここで管理します。追加した文章はカテゴリ単位でも出題できます。
+            練習で使う文章・日本語訳・攻略メモ・カテゴリをここで管理します。追加した文章はカテゴリ単位でも出題できます。
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl bg-white px-4 py-4">

@@ -14,9 +14,9 @@ interface SentenceState {
   loading: boolean
   error: string | null
   fetchSentences: () => Promise<void>
-  addSentence: (text: string, note?: string, categories?: string[]) => Promise<void>
+  addSentence: (text: string, translation?: string, note?: string, categories?: string[]) => Promise<void>
   importCsv: (files: File[]) => Promise<ImportResult & { failedFiles: File[] }>
-  patchSentence: (id: string, patch: { text?: string; note?: string; categories?: string[] }) => Promise<void>
+  patchSentence: (id: string, patch: { text?: string; translation?: string; note?: string; categories?: string[] }) => Promise<void>
   removeSentence: (id: string) => Promise<void>
 }
 
@@ -36,14 +36,14 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
     }
   },
 
-  addSentence: async (text, note, categories) => {
-    const sentence = await createSentence(text, note, categories)
+  addSentence: async (text, translation, note, categories) => {
+    const sentence = await createSentence(text, translation, note, categories)
     set((s) => ({ sentences: [sentence, ...s.sentences], total: s.total + 1 }))
   },
 
   importCsv: async (files) => {
     let totalCreated = 0
-    let totalSkipped = 0
+    let totalUpdated = 0
     const allErrors: string[] = []
     const failedFiles: File[] = []
     const multipleFiles = files.length > 1
@@ -54,7 +54,7 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
         const result = await importSentencesCsv(file)
         successfulApiCalls++
         totalCreated += result.created
-        totalSkipped += result.skipped
+        totalUpdated += result.updated
         allErrors.push(...result.errors.map((e) => `${prefix}${e}`))
       } catch (err) {
         failedFiles.push(file)
@@ -66,7 +66,7 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
     if (successfulApiCalls === 0) {
       throw new Error(allErrors.join('\n'))
     }
-    if (totalCreated > 0) {
+    if (totalCreated > 0 || totalUpdated > 0) {
       try {
         const data = await listSentences()
         set({ sentences: data.sentences, total: data.total })
@@ -74,7 +74,7 @@ export const useSentenceStore = create<SentenceState>((set, get) => ({
         allErrors.push(`一覧の更新に失敗しました: ${e instanceof Error ? e.message : String(e)}`)
       }
     }
-    return { created: totalCreated, skipped: totalSkipped, errors: allErrors, failedFiles }
+    return { created: totalCreated, updated: totalUpdated, errors: allErrors, failedFiles }
   },
 
   patchSentence: async (id, patch) => {
