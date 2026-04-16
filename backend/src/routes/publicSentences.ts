@@ -42,6 +42,7 @@ export default async function publicSentenceRoutes(app: FastifyInstance) {
       select: {
         id: true,
         text: true,
+        translation: true,
         createdAt: true,
       },
     })
@@ -56,6 +57,7 @@ export default async function publicSentenceRoutes(app: FastifyInstance) {
       sentences: selected.map((sentence) => ({
         id: sentence.id,
         text: sentence.text,
+        translation: sentence.translation,
         note: null,
         createdAt: sentence.createdAt,
         categories: [] as string[],

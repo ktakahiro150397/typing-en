@@ -10,6 +10,7 @@ import { DEFAULT_USER_SETTINGS } from '../../lib/settings'
 interface SessionText {
   text: string
   sentenceId: string | null
+  translation: string | null
 }
 
 interface Props {
@@ -122,6 +123,9 @@ export function PracticeScreen({
 
   const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
   const nextText = currentIndex < texts.length - 1 ? texts[currentIndex + 1] : null
+  const currentTranslation = mode === 'sentence'
+    ? sessionItems[currentIndex]?.translation?.trim() || null
+    : null
   const isLast = currentIndex === totalCount - 1
   const settingsReady = !canUseSavedSettings || settings !== null
 
@@ -265,6 +269,13 @@ export function PracticeScreen({
         <div className={`app-card w-full p-6 shadow-[0_4px_12px_rgba(15,23,42,0.08)] ring-2 transition-colors sm:p-8 ${lockRemaining > 0 ? 'ring-rose-300' : 'ring-[#d6e3ed]'}`}>
           <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
         </div>
+
+        {currentTranslation && (
+          <div className="rounded-3xl border border-[#c7d2fe] bg-[#eef2ff] px-5 py-4 shadow-[0_8px_24px_rgba(99,102,241,0.08)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#4f46e5]">日本語訳</p>
+            <p className="mt-2 text-lg font-semibold leading-relaxed text-slate-900">{currentTranslation}</p>
+          </div>
+        )}
 
         {mode !== 'word_drill' && (
           <div className="min-h-[32px]">

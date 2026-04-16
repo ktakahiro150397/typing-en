@@ -1,26 +1,101 @@
-text,note
-"git commit -m ""initial commit""",
-npm install --save-dev typescript,
-docker compose up --build --detach,
-const result = await fetch(apiUrl),
-function greet(name: string): string { return `Hello ${name}`; },
-"import React from ""react""",
-SELECT * FROM users WHERE id = 1,
-ssh -i ~/.ssh/id_rsa user@192.168.1.100,
-export default function App(): JSX.Element,
-git push origin main --force-with-lease,
-pip install -r requirements.txt,
-curl -X POST https://api.example.com/v1/users,
-interface User { id: number; name: string; },
-"const [state, setState] = useState<string>("""")",
-npx create-react-app my-app --template typescript,
-ALTER TABLE users ADD COLUMN email VARCHAR(255),
-kubectl apply -f deployment.yaml,
-"grep -r ""TODO"" ./src --include=""*.ts""",
-chmod 600 ~/.ssh/id_rsa && chmod 700 ~/.ssh,
-tar -czf archive.tar.gz ./dist,
-type Props = { onClick: () => void; label: string },
-"console.error(""Unexpected error:"", err.message)",
-"useEffect(() => { fetchData(); }, [userId])",
-prisma migrate dev --name add_user_table,
-docker build -t myapp:latest --no-cache .,
+text,translation,note,categories
+"git commit -m ""initial commit""",git commit で initial commit というメッセージを付ける,,"technology,software,medium"
+npm install --save-dev typescript,TypeScript を開発依存としてインストールする,,"technology,software,medium"
+docker compose up --build --detach,Docker Compose でビルドしてバックグラウンド起動する,,"technology,software,medium"
+const result = await fetch(apiUrl),apiUrl に fetch して結果を待つ,,"technology,software,medium"
+SELECT * FROM users WHERE active = true,アクティブなユーザーをすべて取得するSQL,,"technology,software,medium"
+the function returns a promise that resolves to an array,この関数は配列に解決されるプロミスを返す,,"technology,software,medium"
+use environment variables to manage secrets in production,本番環境では環境変数でシークレットを管理する,,"technology,software,medium"
+implement pagination to handle large datasets efficiently,大量データを効率的に扱うためにページネーションを実装する,,"technology,software,medium"
+the API endpoint accepts JSON payloads via POST requests,このAPIエンドポイントはPOSTリクエストでJSONペイロードを受け付ける,,"technology,software,medium"
+configure the load balancer to distribute traffic evenly,ロードバランサーをトラフィックが均等に分散されるように設定する,,"technology,software,medium"
+the microservice architecture decouples business logic into independent services,マイクロサービスアーキテクチャはビジネスロジックを独立したサービスに分離する,,"technology,software,medium"
+run the migration script before deploying the new version,新バージョンのデプロイ前にマイグレーションスクリプトを実行する,,"technology,software,medium"
+the CI pipeline triggers on every push to the main branch,CIパイプラインはメインブランチへのプッシュごとに起動する,,"technology,software,medium"
+use a virtual private network to secure remote connections,リモート接続を安全にするためにVPNを使用する,,"technology,software,medium"
+the garbage collector reclaims memory from unreachable objects,ガベージコレクタは到達不能なオブジェクトからメモリを回収する,,"technology,software,medium"
+implement two-factor authentication for enhanced security,セキュリティ強化のために二要素認証を導入する,,"technology,software,medium"
+the container image is built from a Dockerfile,コンテナイメージはDockerfileからビルドされる,,"technology,software,medium"
+use WebSocket for real-time bidirectional communication,リアルタイム双方向通信にはWebSocketを使用する,,"technology,software,medium"
+the cache invalidation strategy prevents stale data from being served,キャッシュ無効化戦略により古いデータの提供を防ぐ,,"technology,software,medium"
+configure CORS headers to allow cross-origin requests,クロスオリジンリクエストを許可するためにCORSヘッダーを設定する,,"technology,software,medium"
+the ORM maps database tables to application objects,ORMはデータベーステーブルをアプリケーションオブジェクトにマッピングする,,"technology,software,medium"
+use SSH keys instead of passwords for server authentication,サーバー認証にはパスワードの代わりにSSH鍵を使用する,,"technology,software,medium"
+the event loop processes asynchronous callbacks in Node.js,イベントループはNode.jsで非同期コールバックを処理する,,"technology,software,medium"
+set up a reverse proxy to handle incoming HTTPS traffic,受信HTTPSトラフィックを処理するためにリバースプロキシを設定する,,"technology,software,medium"
+the message queue decouples producers from consumers,メッセージキューはプロデューサーとコンシューマーを疎結合にする,,"technology,software,medium"
+implement rate limiting to prevent API abuse,API乱用を防止するためにレート制限を実装する,,"technology,software,medium"
+the index improves query performance on large tables,インデックスは大きなテーブルでのクエリパフォーマンスを向上させる,,"technology,software,medium"
+use a monorepo to manage multiple packages in one repository,1つのリポジトリで複数のパッケージを管理するためにモノレポを使用する,,"technology,software,medium"
+the DNS resolver translates domain names to IP addresses,DNSリゾルバはドメイン名をIPアドレスに変換する,,"technology,software,medium"
+deploy the application using a blue-green deployment strategy,ブルーグリーンデプロイメント戦略でアプリケーションをデプロイする,,"technology,software,medium"
+the compiler transforms source code into machine-readable bytecode,コンパイラはソースコードを機械可読バイトコードに変換する,,"technology,software,medium"
+use GraphQL to allow clients to request exactly the data they need,クライアントが必要なデータだけをリクエストできるようにGraphQLを使用する,,"technology,software,medium"
+the kernel manages hardware resources and process scheduling,カーネルはハードウェアリソースとプロセススケジューリングを管理する,,"technology,software,medium"
+implement lazy loading to reduce initial page load time,初期ページ読み込み時間を短縮するために遅延読み込みを実装する,,"technology,software,medium"
+the regression test suite caught two breaking changes,回帰テストスイートが2つの破壊的変更を検出した,,"technology,software,medium"
+use feature flags to toggle functionality without redeploying,再デプロイなしで機能を切り替えるためにフィーチャーフラグを使用する,,"technology,software,medium"
+the deadlock occurred because two threads held conflicting locks,2つのスレッドが競合するロックを保持したためデッドロックが発生した,,"technology,software,medium"
+encrypt sensitive data at rest and in transit,機密データは保存時と通信時の両方で暗号化する,,"technology,software,medium"
+the load test simulated ten thousand concurrent users,負荷テストは1万人の同時接続ユーザーをシミュレートした,,"technology,software,medium"
+use dependency injection to improve testability and modularity,テスト容易性とモジュール性を向上させるために依存性注入を使用する,,"technology,software,medium"
+the serverless function scales automatically based on demand,サーバーレス関数は需要に基づいて自動的にスケールする,,"technology,software,medium"
+configure the firewall rules to block unauthorized inbound traffic,不正な受信トラフィックをブロックするファイアウォールルールを設定する,,"technology,software,medium"
+the binary search algorithm has O(log n) time complexity,二分探索アルゴリズムの時間計算量はO(log n)である,,"technology,software,medium"
+use content delivery networks to serve static assets globally,静的アセットを世界中に配信するためにCDNを使用する,,"technology,software,medium"
+the webhook notifies our server when a payment is completed,Webhookは決済完了時にサーバーに通知する,,"technology,software,medium"
+implement connection pooling to optimize database performance,データベースパフォーマンスを最適化するためにコネクションプーリングを実装する,,"technology,software,medium"
+the stack trace shows the exact line where the exception was thrown,スタックトレースは例外がスローされた正確な行を示す,,"technology,software,medium"
+use semantic versioning to communicate changes in your library,ライブラリの変更を伝えるためにセマンティックバージョニングを使用する,,"technology,software,medium"
+the distributed system uses consensus algorithms for consistency,分散システムは一貫性のためにコンセンサスアルゴリズムを使用する,,"technology,software,medium"
+configure autoscaling policies to handle traffic spikes,トラフィックの急増に対応するためにオートスケーリングポリシーを設定する,,"technology,software,medium"
+the hash function maps variable-length input to fixed-length output,ハッシュ関数は可変長入力を固定長出力にマッピングする,,"technology,software,medium"
+use infrastructure as code to provision cloud resources reproducibly,クラウドリソースを再現可能にプロビジョニングするためにIaCを使用する,,"technology,software,medium"
+the TLS handshake establishes a secure encrypted connection,TLSハンドシェイクは安全な暗号化接続を確立する,,"technology,software,medium"
+implement circuit breakers to prevent cascading failures,連鎖障害を防止するためにサーキットブレーカーを実装する,,"technology,software,medium"
+the container orchestrator manages deployment across multiple nodes,コンテナオーケストレーターは複数ノードにまたがるデプロイメントを管理する,,"technology,software,medium"
+use Git hooks to enforce coding standards before commits,コミット前にコーディング規約を強制するためにGitフックを使用する,,"technology,software,medium"
+the transaction log ensures data durability after a crash,トランザクションログはクラッシュ後のデータ耐久性を保証する,,"technology,software,medium"
+implement role-based access control for the admin dashboard,管理ダッシュボードにロールベースのアクセス制御を実装する,,"technology,software,medium"
+the pointer references a memory address in the heap,ポインタはヒープ内のメモリアドレスを参照する,,"technology,software,medium"
+use observability tools to monitor logs metrics and traces,ログ・メトリクス・トレースを監視するためにオブザーバビリティツールを使用する,,"technology,software,medium"
+the REST API follows resource-oriented URL naming conventions,REST APIはリソース指向のURL命名規則に従う,,"technology,software,medium"
+configure the service mesh to manage inter-service communication,サービス間通信を管理するためにサービスメッシュを設定する,,"technology,software,medium"
+the recursive function calls itself until the base case is reached,再帰関数は基底条件に達するまで自身を呼び出す,,"technology,software,medium"
+use immutable infrastructure to eliminate configuration drift,構成のドリフトを排除するためにイミュータブルインフラストラクチャを使用する,,"technology,software,medium"
+the thread pool reuses a fixed number of threads for task execution,スレッドプールはタスク実行のために固定数のスレッドを再利用する,,"technology,software,medium"
+implement idempotent operations to safely retry failed requests,失敗したリクエストを安全にリトライするためにべき等な操作を実装する,,"technology,software,medium"
+the B-tree index structure supports efficient range queries,B木インデックス構造は効率的な範囲クエリをサポートする,,"technology,software,medium"
+use canary releases to gradually roll out changes to production,本番環境に段階的に変更を展開するためにカナリアリリースを使用する,,"technology,software,medium"
+the protocol buffer serialization format is smaller than JSON,Protocol Buffersシリアライズ形式はJSONよりもサイズが小さい,,"technology,software,medium"
+configure health check endpoints to monitor service availability,サービスの可用性を監視するためにヘルスチェックエンドポイントを設定する,,"technology,software,medium"
+the global interpreter lock limits true parallelism in Python,グローバルインタプリタロックはPythonでの真の並列処理を制限する,,"technology,software,medium"
+use a write-ahead log to ensure atomicity in database transactions,データベーストランザクションの原子性を保証するためにWALを使用する,,"technology,software,medium"
+the garbage collection pause time affects application latency,ガベージコレクションの停止時間がアプリケーションのレイテンシに影響する,,"technology,software,medium"
+implement event sourcing to capture all changes as a sequence of events,すべての変更をイベントのシーケンスとして記録するためにイベントソーシングを実装する,,"technology,software,medium"
+the sharding strategy distributes data across multiple database instances,シャーディング戦略はデータを複数のデータベースインスタンスに分散する,,"technology,software,medium"
+use chaos engineering to test system resilience under failure conditions,障害条件下でシステムの回復力をテストするためにカオスエンジニアリングを使用する,,"technology,software,medium"
+the type system catches many bugs at compile time rather than runtime,型システムは実行時ではなくコンパイル時に多くのバグを検出する,,"technology,software,medium"
+configure log rotation to prevent disk space exhaustion,ディスク容量の枯渇を防ぐためにログローテーションを設定する,,"technology,software,medium"
+the eventual consistency model allows temporary data divergence,結果整合性モデルは一時的なデータの相違を許容する,,"technology,software,medium"
+use a saga pattern to manage distributed transactions across services,サービス間の分散トランザクションを管理するためにサーガパターンを使用する,,"technology,software,medium"
+the just-in-time compiler optimizes bytecode at runtime for better performance,JITコンパイラはより良いパフォーマンスのために実行時にバイトコードを最適化する,,"technology,software,medium"
+implement structured logging with correlation IDs for distributed tracing,分散トレーシング用の相関IDを含む構造化ログを実装する,,"technology,software,medium"
+the copy-on-write mechanism defers memory duplication until modification,コピーオンライト機構は変更が行われるまでメモリの複製を遅延させる,,"technology,software,medium"
+use a content-addressable store where the hash of data serves as its key,データのハッシュがキーとなるコンテンツアドレッサブルストアを使用する,,"technology,software,medium"
+the round-robin load balancing distributes requests equally among servers,ラウンドロビン負荷分散はリクエストをサーバー間で均等に分配する,,"technology,software,medium"
+implement backpressure handling to avoid overwhelming downstream services,下流サービスの過負荷を避けるためにバックプレッシャー処理を実装する,,"technology,software,medium"
+the bloom filter provides probabilistic membership testing with no false negatives,ブルームフィルタは偽陰性なしの確率的メンバーシップテストを提供する,,"technology,software,medium"
+use a state machine to model complex workflow transitions,複雑なワークフロー遷移をモデル化するためにステートマシンを使用する,,"technology,software,medium"
+the tail call optimization prevents stack overflow in recursive algorithms,末尾呼び出し最適化は再帰アルゴリズムでのスタックオーバーフローを防ぐ,,"technology,software,medium"
+configure mutual TLS to authenticate both client and server,クライアントとサーバーの両方を認証するために相互TLSを設定する,,"technology,software,medium"
+the abstract syntax tree represents the hierarchical structure of source code,抽象構文木はソースコードの階層構造を表現する,,"technology,software,medium"
+use database connection multiplexing to reduce the number of open connections,開いている接続数を削減するためにデータベース接続の多重化を使用する,,"technology,software,medium"
+the CRC checksum detects accidental changes to raw data,CRCチェックサムは生データへの意図しない変更を検出する,,"technology,software,medium"
+implement graceful shutdown to finish in-flight requests before stopping,停止前に処理中のリクエストを完了するためにグレースフルシャットダウンを実装する,,"technology,software,medium"
+the sparse index only stores entries for some of the indexed values,スパースインデックスはインデックス値の一部のエントリのみを格納する,,"technology,software,medium"
+use an API gateway to centralize authentication and request routing,認証とリクエストルーティングを一元化するためにAPIゲートウェイを使用する,,"technology,software,medium"
+the persistent data structure preserves previous versions after modification,永続データ構造は変更後も以前のバージョンを保持する,,"technology,software,medium"
+configure automatic failover so a standby replica takes over when the primary fails,プライマリが障害を起こした際にスタンバイレプリカが引き継ぐ自動フェイルオーバーを設定する,,"technology,software,medium"
+the reference counting algorithm frees memory when no references remain,参照カウントアルゴリズムは参照がなくなるとメモリを解放する,,"technology,software,medium"
+use edge computing to process data closer to the end user,エンドユーザーに近い場所でデータを処理するためにエッジコンピューティングを使用する,,"technology,software,medium"

@@ -1,26 +1,101 @@
-text,note
-practice makes perfect,
-actions speak louder than words,
-all that glitters is not gold,
-time flies when you are having fun,
-look before you leap,
-the early bird catches the worm,
-a stitch in time saves nine,
-curiosity killed the cat,
-better late than never,
-where there is a will there is a way,
-two wrongs do not make a right,
-Rome was not built in a day,
-every cloud has a silver lining,
-do not judge a book by its cover,
-the pen is mightier than the sword,
-birds of a feather flock together,
-you cannot have your cake and eat it too,
-good things come to those who wait,
-the grass is always greener on the other side,
-honesty is the best policy,
-necessity is the mother of invention,
-when in Rome do as the Romans do,
-too many cooks spoil the broth,
-strike while the iron is hot,
-do not put all your eggs in one basket,
+text,translation,note,categories
+practice makes perfect,練習は上達につながる,,"proverb,life-wisdom,medium"
+all that glitters is not gold,光るものすべてが金ではない,,"proverb,life-wisdom,medium"
+honesty is the best policy,正直は最善の方策である,,"proverb,life-wisdom,medium"
+where there is a will there is a way,意志あるところに道は開ける,,"proverb,life-wisdom,medium"
+a stitch in time saves nine,適時の一針は九針の手間を省く,,"proverb,life-wisdom,medium"
+the pen is mightier than the sword,ペンは剣よりも強し,,"proverb,life-wisdom,medium"
+knowledge is power,知識は力なり,,"proverb,life-wisdom,medium"
+patience is a virtue,忍耐は美徳である,,"proverb,life-wisdom,medium"
+necessity is the mother of invention,必要は発明の母,,"proverb,life-wisdom,medium"
+fortune favors the bold,運は勇敢な者に味方する,,"proverb,life-wisdom,medium"
+still waters run deep,静かな水は深く流れる,,"proverb,life-wisdom,medium"
+absence makes the heart grow fonder,離れるほど心は慕う,,"proverb,life-wisdom,medium"
+a rolling stone gathers no moss,転がる石に苔はつかない,,"proverb,life-wisdom,medium"
+time heals all wounds,時はすべての傷を癒す,,"proverb,life-wisdom,medium"
+an ounce of prevention is worth a pound of cure,一オンスの予防は一ポンドの治療に値する,,"proverb,life-wisdom,medium"
+birds of a feather flock together,類は友を呼ぶ,,"proverb,life-wisdom,medium"
+the squeaky wheel gets the grease,きしむ車輪が油をさされる,,"proverb,life-wisdom,medium"
+two heads are better than one,二つの頭は一つに勝る,,"proverb,life-wisdom,medium"
+don't bite the hand that feeds you,自分を養ってくれる手を噛むな,,"proverb,life-wisdom,medium"
+haste makes waste,急がば回れ,,"proverb,life-wisdom,medium"
+a friend in need is a friend indeed,困ったときの友が真の友,,"proverb,life-wisdom,medium"
+the road to hell is paved with good intentions,地獄への道は善意で舗装されている,,"proverb,life-wisdom,medium"
+every dog has its day,誰にでも全盛期がある,,"proverb,life-wisdom,medium"
+don't count your chickens before they hatch,卵がかえる前に鶏を数えるな,,"proverb,life-wisdom,medium"
+out of sight out of mind,去る者は日々に疎し,,"proverb,life-wisdom,medium"
+blood is thicker than water,血は水よりも濃い,,"proverb,life-wisdom,medium"
+strike while the iron is hot,鉄は熱いうちに打て,,"proverb,life-wisdom,medium"
+the early bird catches the worm,早起きは三文の徳,,"proverb,life-wisdom,medium"
+it is no use crying over spilled milk,覆水盆に返らず,,"proverb,life-wisdom,medium"
+don't put off until tomorrow what you can do today,今日できることを明日に延ばすな,,"proverb,life-wisdom,medium"
+a penny saved is a penny earned,一ペニーの節約は一ペニーの稼ぎ,,"proverb,life-wisdom,medium"
+half a loaf is better than none,半斤のパンでもないよりまし,,"proverb,life-wisdom,medium"
+too many cooks spoil the broth,料理人が多すぎるとスープが台無しになる,,"proverb,life-wisdom,medium"
+great minds think alike,優れた頭脳は同じように考える,,"proverb,life-wisdom,medium"
+prevention is better than cure,予防は治療に勝る,,"proverb,life-wisdom,medium"
+an idle mind is the devil's workshop,怠惰な心は悪魔の仕事場,,"proverb,life-wisdom,medium"
+better safe than sorry,安全策をとるほうが後悔するよりまし,,"proverb,life-wisdom,medium"
+look before you leap,跳ぶ前に見よ,,"proverb,life-wisdom,medium"
+one man's trash is another man's treasure,ある人のゴミは別の人の宝,,"proverb,life-wisdom,medium"
+the leopard cannot change its spots,豹はその斑点を変えられない,,"proverb,life-wisdom,medium"
+when the going gets tough the tough get going,状況が厳しくなると強い者が動き出す,,"proverb,life-wisdom,medium"
+you can't make an omelet without breaking eggs,卵を割らずにオムレツは作れない,,"proverb,life-wisdom,medium"
+beggars can't be choosers,物乞いに選り好みはできない,,"proverb,life-wisdom,medium"
+don't judge a book by its cover,本を表紙で判断するな,,"proverb,life-wisdom,medium"
+easy come easy go,簡単に来たものは簡単に去る,,"proverb,life-wisdom,medium"
+familiarity breeds contempt,親しさは軽蔑を生む,,"proverb,life-wisdom,medium"
+give a man a fish and you feed him for a day teach him to fish and you feed him for a lifetime,魚を与えれば一日の糧になるが釣り方を教えれば一生の糧になる,,"proverb,life-wisdom,medium"
+he who hesitates is lost,ためらう者は敗れる,,"proverb,life-wisdom,medium"
+if the shoe fits wear it,靴が合うなら履きなさい,,"proverb,life-wisdom,medium"
+jack of all trades master of none,何でもこなす者は何も極めない,,"proverb,life-wisdom,medium"
+keep your friends close and your enemies closer,友は近くに敵はもっと近くに置け,,"proverb,life-wisdom,medium"
+laughter is the best medicine,笑いは最良の薬,,"proverb,life-wisdom,medium"
+money doesn't grow on trees,お金は木に生えるものではない,,"proverb,life-wisdom,medium"
+no news is good news,便りがないのは良い便り,,"proverb,life-wisdom,medium"
+old habits die hard,古い習慣はなかなか消えない,,"proverb,life-wisdom,medium"
+people who live in glass houses should not throw stones,ガラスの家に住む者は石を投げるべきでない,,"proverb,life-wisdom,medium"
+curiosity killed the cat,好奇心は猫を殺す,,"proverb,life-wisdom,medium"
+the truth will out,真実はいつか明るみに出る,,"proverb,life-wisdom,medium"
+seeing is believing,百聞は一見にしかず,,"proverb,life-wisdom,medium"
+silence is golden,沈黙は金なり,,"proverb,life-wisdom,medium"
+there is no smoke without fire,火のないところに煙は立たぬ,,"proverb,life-wisdom,medium"
+a chain is only as strong as its weakest link,鎖は最も弱い環の強さしかない,,"proverb,life-wisdom,medium"
+what goes around comes around,因果応報,,"proverb,life-wisdom,medium"
+it takes a village to raise a child,子供を育てるには村がいる,,"proverb,life-wisdom,medium"
+pride comes before a fall,おごれる者は久しからず,,"proverb,life-wisdom,medium"
+the best things in life are free,人生で最も良いものは無料である,,"proverb,life-wisdom,medium"
+every cloud has a silver lining,どんな雲にも銀の裏地がある,,"proverb,life-wisdom,medium"
+you reap what you sow,蒔いた種は自分で刈り取る,,"proverb,life-wisdom,medium"
+do unto others as you would have them do unto you,自分がしてほしいことを人にもしなさい,,"proverb,life-wisdom,medium"
+a watched pot never boils,見つめた鍋は沸かない,,"proverb,life-wisdom,medium"
+the grass is always greener on the other side,隣の芝生はいつも青い,,"proverb,life-wisdom,medium"
+a journey of a thousand miles begins with a single step,千里の道も一歩から,,"proverb,life-wisdom,medium"
+slow and steady wins the race,ゆっくり着実に進む者がレースに勝つ,,"proverb,life-wisdom,medium"
+there is no place like home,わが家に勝る場所はない,,"proverb,life-wisdom,medium"
+all good things must come to an end,すべての良いことにはいつか終わりが来る,,"proverb,life-wisdom,medium"
+beauty is in the eye of the beholder,美は見る者の目の中にある,,"proverb,life-wisdom,medium"
+you can't teach an old dog new tricks,老犬に新しい芸は教えられない,,"proverb,life-wisdom,medium"
+a bird in the hand is worth two in the bush,手の中の鳥は藪の中の二羽に値する,,"proverb,life-wisdom,medium"
+the apple does not fall far from the tree,リンゴは木から遠くに落ちない,,"proverb,life-wisdom,medium"
+a fool and his money are soon parted,愚か者と金はすぐに別れる,,"proverb,life-wisdom,medium"
+discretion is the better part of valor,慎重は勇気の良い部分,,"proverb,life-wisdom,medium"
+don't rock the boat,波風を立てるな,,"proverb,life-wisdom,medium"
+the exception proves the rule,例外が規則を証明する,,"proverb,life-wisdom,medium"
+forgive and forget,許して忘れよ,,"proverb,life-wisdom,medium"
+good fences make good neighbors,良い柵は良い隣人を作る,,"proverb,life-wisdom,medium"
+if it ain't broke don't fix it,壊れていないなら直すな,,"proverb,life-wisdom,medium"
+many hands make light work,多くの手が仕事を軽くする,,"proverb,life-wisdom,medium"
+one swallow does not make a summer,一羽のツバメでは夏にならない,,"proverb,life-wisdom,medium"
+robbing Peter to pay Paul,ペテロから奪ってパウロに払う,,"proverb,life-wisdom,medium"
+the bigger they are the harder they fall,大きい者ほど倒れた時の衝撃が大きい,,"proverb,life-wisdom,medium"
+variety is the spice of life,変化は人生のスパイス,,"proverb,life-wisdom,medium"
+a picture is worth a thousand words,一枚の絵は千の言葉に値する,,"proverb,life-wisdom,medium"
+don't throw the baby out with the bathwater,湯を捨てるときに赤ちゃんまで捨てるな,,"proverb,life-wisdom,medium"
+well begun is half done,始め良ければ半ば成功,,"proverb,life-wisdom,medium"
+the proof of the pudding is in the eating,プリンの味は食べてみなければわからない,,"proverb,life-wisdom,medium"
+you can't please everyone,すべての人を喜ばせることはできない,,"proverb,life-wisdom,medium"
+all work and no play makes Jack a dull boy,よく学びよく遊べ,,"proverb,life-wisdom,medium"
+don't cry wolf,オオカミ少年になるな,,"proverb,life-wisdom,medium"
+there is strength in numbers,数に力あり,,"proverb,life-wisdom,medium"
+a leopard can't change its spots,豹は斑点を変えられない,,"proverb,life-wisdom,medium"

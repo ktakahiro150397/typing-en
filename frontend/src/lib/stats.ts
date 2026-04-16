@@ -6,6 +6,10 @@ export interface LifetimeStats {
   totalDurationMs: number
   totalSessions: number
   averageWpm: number
+  recentAverageWpm: number
+  overallAccuracy: number
+  recentAccuracy: number
+  recentSessionCount: number
   bestWpm: number
   uniqueWordCount: number
   weakWordTotal: number

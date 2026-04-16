@@ -1,28 +1,99 @@
-text,note
-the speed of light in a vacuum is approximately 299792458 meters per second,
-atoms consist of protons neutrons and electrons held together by fundamental forces,
-the law of conservation of energy states that energy cannot be created or destroyed,
-the periodic table organizes all known elements by atomic number and chemical properties,
-a light year is the distance light travels in one year roughly 9.46 trillion kilometers,
-the second law of thermodynamics states that entropy in an isolated system always increases,
-gravitational waves were first directly detected by LIGO in September 2015,
-quantum mechanics describes the behavior of matter and energy at subatomic scales,
-the Doppler effect causes a shift in observed frequency as a source moves toward or away,
-nuclear fusion powers the sun by combining hydrogen nuclei into helium at extreme temperatures,
-Bohr's model of the atom introduced discrete quantized energy levels for electrons,
-electromagnetic radiation encompasses radio waves microwaves infrared visible and ultraviolet light,
-the half-life of a radioactive isotope is the time required for half its atoms to decay,
-Newton's third law states that every action has an equal and opposite reaction,
-dark matter does not emit or absorb light yet constitutes most of the universe's mass,
-superconductivity occurs when certain materials lose all electrical resistance near absolute zero,
-the Higgs boson was confirmed at the Large Hadron Collider in July 2012,
-a black hole has a gravitational field so strong that nothing not even light can escape,
-the uncertainty principle states that position and momentum cannot both be precisely known,
-chemical bonds form when atoms share or transfer electrons to achieve stable configurations,
-plate tectonics explains the movement of lithospheric plates and the formation of mountains,
-absolute zero is the lowest possible temperature at minus 273.15 degrees Celsius,
-the wavelength of visible light ranges from approximately 380 to 740 nanometers,
-radioactive decay transforms unstable nuclei into more stable daughter nuclei over time,
-the strong nuclear force holds protons and neutrons together inside the atomic nucleus,
-Avogadro's number is approximately 6.022 times ten to the power of 23 particles per mole,
-thermodynamics studies the relationships between heat work and energy in physical systems,
+text,translation,note,categories
+entropy tends to increase in isolated thermodynamic systems,孤立した熱力学系ではエントロピーが増大する傾向がある,,"science,academic,hard"
+plate tectonics explains the movement of lithospheric plates,プレートテクトニクスは岩石圏プレートの移動を説明する,,"science,academic,hard"
+the speed of light in a vacuum is approximately three hundred thousand kilometers per second,真空中の光速は秒速約30万キロメートルである,,"science,academic,hard"
+chemical bonds store potential energy that is released during reactions,化学結合は反応中に放出されるポテンシャルエネルギーを蓄える,,"science,academic,hard"
+Newton's third law states that every action has an equal and opposite reaction,ニュートンの第三法則はすべての作用には等しく反対の反作用があると述べる,,"science,academic,hard"
+the periodic table organizes elements by atomic number and chemical properties,周期表は元素を原子番号と化学的性質で整理する,,"science,academic,hard"
+the Doppler effect explains the change in frequency of a wave relative to an observer,ドップラー効果は観測者に対する波の周波数の変化を説明する,,"science,academic,hard"
+a catalyst speeds up a chemical reaction without being consumed,触媒は消費されることなく化学反応を加速する,,"science,academic,hard"
+superconductors exhibit zero electrical resistance below a critical temperature,超伝導体は臨界温度以下でゼロの電気抵抗を示す,,"science,academic,hard"
+the Heisenberg uncertainty principle limits the precision of simultaneous measurements of position and momentum,ハイゼンベルクの不確定性原理は位置と運動量の同時測定の精度を制限する,,"science,academic,hard"
+convection currents in the mantle drive the movement of tectonic plates,マントル内の対流が構造プレートの移動を駆動する,,"science,academic,hard"
+the Bohr model describes electrons orbiting the nucleus at specific energy levels,ボーアモデルは電子が特定のエネルギー準位で原子核を周回することを記述する,,"science,academic,hard"
+electrolysis uses electric current to drive a non-spontaneous chemical reaction,電気分解は電流を使って非自発的な化学反応を駆動する,,"science,academic,hard"
+the greenhouse effect traps heat in the atmosphere and warms the planet,温室効果は大気中に熱を閉じ込め地球を温める,,"science,academic,hard"
+the law of conservation of energy states that energy cannot be created or destroyed,エネルギー保存の法則はエネルギーは生成も破壊もされないと述べる,,"science,academic,hard"
+the Coriolis effect deflects moving objects to the right in the Northern Hemisphere,コリオリの力は北半球では移動する物体を右に偏向させる,,"science,academic,hard"
+quantum tunneling allows particles to pass through energy barriers they cannot classically overcome,量子トンネル効果により粒子は古典的には越えられないエネルギー障壁を通過できる,,"science,academic,hard"
+the electromagnetic spectrum ranges from radio waves to gamma rays,電磁スペクトルは電波からガンマ線まで広がる,,"science,academic,hard"
+the Archimedes principle states that buoyant force equals the weight of displaced fluid,アルキメデスの原理は浮力が排除された流体の重さに等しいと述べる,,"science,academic,hard"
+endothermic reactions absorb heat from the surroundings,吸熱反応は周囲から熱を吸収する,,"science,academic,hard"
+the Richter scale quantifies the energy released by an earthquake,リヒタースケールは地震で放出されるエネルギーを定量化する,,"science,academic,hard"
+Bernoulli's principle relates fluid speed to pressure in a flowing liquid,ベルヌーイの原理は流れる液体中の流速と圧力を関連づける,,"science,academic,hard"
+isotopes are atoms of the same element with different numbers of neutrons,同位体は中性子の数が異なる同一元素の原子である,,"science,academic,hard"
+the Van der Waals forces are weak intermolecular interactions,ファンデルワールス力は弱い分子間相互作用である,,"science,academic,hard"
+Kepler's laws describe the elliptical orbits of planets around the sun,ケプラーの法則は惑星の太陽周りの楕円軌道を記述する,,"science,academic,hard"
+the Mohs scale ranks minerals from one to ten based on scratch hardness,モース硬度計は鉱物を引っかき硬度に基づいて1から10にランク付けする,,"science,academic,hard"
+a prism disperses white light into its component spectrum of colors,プリズムは白色光をその構成色のスペクトルに分散させる,,"science,academic,hard"
+oxidation involves the loss of electrons while reduction involves the gain,酸化は電子の損失を伴い還元は電子の獲得を伴う,,"science,academic,hard"
+the Beaufort scale classifies wind speed from calm to hurricane force,ビューフォートスケールは風速を無風からハリケーンの力まで分類する,,"science,academic,hard"
+special relativity shows that time dilates as objects approach the speed of light,特殊相対性理論は物体が光速に近づくと時間が遅くなることを示す,,"science,academic,hard"
+the Pauli exclusion principle prevents two identical fermions from occupying the same quantum state,パウリの排他原理は2つの同一フェルミオンが同じ量子状態を占めることを禁止する,,"science,academic,hard"
+Le Chatelier's principle predicts how equilibrium shifts in response to disturbances,ルシャトリエの原理は擾乱に応じて平衡がどのように移動するかを予測する,,"science,academic,hard"
+seismic waves are classified into primary secondary and surface waves,地震波は縦波・横波・表面波に分類される,,"science,academic,hard"
+Faraday's law states that a changing magnetic field induces an electromotive force,ファラデーの法則は変化する磁場が起電力を誘導すると述べる,,"science,academic,hard"
+the ideal gas law relates pressure volume temperature and amount of gas,理想気体の法則は圧力・体積・温度・気体の量を関連づける,,"science,academic,hard"
+radioactive decay transforms unstable nuclei into more stable configurations,放射性崩壊は不安定な原子核をより安定した配置に変換する,,"science,academic,hard"
+the ozone layer absorbs most of the ultraviolet radiation from the sun,オゾン層は太陽からの紫外線の大部分を吸収する,,"science,academic,hard"
+centripetal force keeps an object moving along a curved path,向心力は物体を曲線経路に沿って運動させ続ける,,"science,academic,hard"
+the pH scale measures the acidity or basicity of a solution,pH尺度は溶液の酸性度または塩基性度を測定する,,"science,academic,hard"
+tectonic subduction occurs when one plate slides beneath another,テクトニック沈み込みは一つのプレートが別のプレートの下に滑り込むときに起こる,,"science,academic,hard"
+Ohm's law states that current equals voltage divided by resistance,オームの法則は電流が電圧を抵抗で割ったものに等しいと述べる,,"science,academic,hard"
+exothermic reactions release heat into the surroundings,発熱反応は周囲に熱を放出する,,"science,academic,hard"
+the Hubble constant measures the rate of expansion of the universe,ハッブル定数は宇宙の膨張速度を測定する,,"science,academic,hard"
+resonance occurs when a system oscillates with greater amplitude at a specific frequency,共鳴はシステムが特定の周波数でより大きな振幅で振動するときに起こる,,"science,academic,hard"
+activation energy is the minimum energy required to initiate a chemical reaction,活性化エネルギーは化学反応を開始するために必要な最小エネルギーである,,"science,academic,hard"
+the Curie temperature is the point at which a ferromagnetic material loses its magnetism,キュリー温度は強磁性体が磁性を失う点である,,"science,academic,hard"
+diffraction occurs when waves encounter an obstacle or opening comparable to their wavelength,回折は波がその波長に匹敵する障害物や開口部に遭遇するときに起こる,,"science,academic,hard"
+the geologic time scale divides Earth history into eons eras periods and epochs,地質年代区分は地球の歴史を累代・代・紀・世に分ける,,"science,academic,hard"
+the photoelectric effect demonstrates that light behaves as particles called photons,光電効果は光が光子と呼ばれる粒子として振る舞うことを示す,,"science,academic,hard"
+refraction is the bending of light as it passes from one medium to another,屈折は光がある媒質から別の媒質へ通過するときの曲がりである,,"science,academic,hard"
+the half-life of a radioactive substance is the time for half its atoms to decay,放射性物質の半減期はその原子の半分が崩壊する時間である,,"science,academic,hard"
+Coulomb's law describes the electrostatic force between two charged particles,クーロンの法則は2つの荷電粒子間の静電気力を記述する,,"science,academic,hard"
+metamorphic rocks form from existing rocks transformed by heat and pressure,変成岩は熱と圧力によって変成された既存の岩石から形成される,,"science,academic,hard"
+the Stefan-Boltzmann law relates a body's radiated power to the fourth power of its temperature,シュテファン・ボルツマンの法則は物体の放射パワーを温度の4乗に関連づける,,"science,academic,hard"
+surface tension causes liquids to minimize their surface area,表面張力は液体がその表面積を最小化する原因となる,,"science,academic,hard"
+the Mach number is the ratio of an object's speed to the speed of sound,マッハ数は物体の速度と音速の比である,,"science,academic,hard"
+chromatography separates mixtures based on differential partitioning between phases,クロマトグラフィーは相間の分配差に基づいて混合物を分離する,,"science,academic,hard"
+the aurora borealis is caused by charged particles interacting with the magnetosphere,オーロラは荷電粒子が磁気圏と相互作用することによって引き起こされる,,"science,academic,hard"
+the Venturi effect describes the reduction in fluid pressure as flow velocity increases,ベンチュリ効果は流速が増加すると流体圧力が減少することを記述する,,"science,academic,hard"
+mass spectrometry identifies chemical substances by measuring mass-to-charge ratios,質量分析法は質量電荷比を測定して化学物質を同定する,,"science,academic,hard"
+the Chandrasekhar limit is the maximum mass of a stable white dwarf star,チャンドラセカール限界は安定した白色矮星の最大質量である,,"science,academic,hard"
+Pascal's principle states that pressure applied to a confined fluid is transmitted equally in all directions,パスカルの原理は閉じ込められた流体に加えられた圧力はすべての方向に均等に伝達されると述べる,,"science,academic,hard"
+fractional distillation separates a mixture into its component parts based on boiling points,分留は沸点に基づいて混合物をその構成成分に分離する,,"science,academic,hard"
+the strong nuclear force binds protons and neutrons together in the atomic nucleus,強い核力は原子核内で陽子と中性子を結合させる,,"science,academic,hard"
+triple point is the temperature and pressure at which three phases of a substance coexist,三重点は物質の三相が共存する温度と圧力である,,"science,academic,hard"
+piezoelectric materials generate an electric charge in response to mechanical stress,圧電材料は機械的応力に応じて電荷を生成する,,"science,academic,hard"
+the Rayleigh scattering of sunlight explains why the sky appears blue,太陽光のレイリー散乱が空が青く見える理由を説明する,,"science,academic,hard"
+Hess's law states that the total enthalpy change of a reaction is independent of the pathway,ヘスの法則は反応の全エンタルピー変化は経路に依存しないと述べる,,"science,academic,hard"
+the Schwarzschild radius defines the event horizon of a non-rotating black hole,シュワルツシルト半径は回転しないブラックホールの事象の地平線を定義する,,"science,academic,hard"
+capillary action draws liquid upward against gravity in narrow tubes,毛細管現象は細い管の中で液体を重力に逆らって上方へ引き上げる,,"science,academic,hard"
+stoichiometry calculates the quantitative relationships between reactants and products,化学量論は反応物と生成物の間の定量的関係を計算する,,"science,academic,hard"
+the Leidenfrost effect causes liquid drops to hover above a surface much hotter than boiling point,ライデンフロスト効果は液滴が沸点よりはるかに高い表面上で浮遊する現象である,,"science,academic,hard"
+wave-particle duality states that all matter exhibits both wave and particle properties,波動粒子二重性はすべての物質が波と粒子の両方の性質を示すと述べる,,"science,academic,hard"
+the Nernst equation relates the reduction potential of a half-cell to the standard potential,ネルンストの式は半電池の還元電位を標準電位に関連づける,,"science,academic,hard"
+the Meissner effect expels magnetic fields from the interior of a superconductor,マイスナー効果は超伝導体の内部から磁場を排除する,,"science,academic,hard"
+sublimation is the phase transition from solid directly to gas without passing through liquid,昇華は液体を経ずに固体から直接気体への相転移である,,"science,academic,hard"
+the de Broglie wavelength associates a wavelength with a moving particle,ド・ブロイ波長は運動する粒子に波長を関連づける,,"science,academic,hard"
+the rock cycle describes the transformation of rocks through igneous sedimentary and metamorphic stages,岩石循環は火成岩・堆積岩・変成岩の段階を通じた岩石の変成を記述する,,"science,academic,hard"
+Snell's law determines the angle of refraction when light passes between two media,スネルの法則は光が2つの媒質間を通過するときの屈折角を決定する,,"science,academic,hard"
+buffer solutions resist changes in pH when small amounts of acid or base are added,緩衝液は少量の酸や塩基が加えられてもpHの変化に抵抗する,,"science,academic,hard"
+the Reynolds number predicts whether fluid flow will be laminar or turbulent,レイノルズ数は流体の流れが層流か乱流かを予測する,,"science,academic,hard"
+diamagnetic materials are weakly repelled by external magnetic fields,反磁性材料は外部磁場によって弱く反発される,,"science,academic,hard"
+the Clausius-Clapeyron equation relates vapor pressure to temperature,クラウジウス・クラペイロンの式は蒸気圧と温度を関連づける,,"science,academic,hard"
+standing waves form when two waves of equal frequency travel in opposite directions,定在波は等しい周波数の2つの波が反対方向に進むとき形成される,,"science,academic,hard"
+Avogadro's number defines the number of particles in one mole of a substance,アボガドロ数は物質1モルの粒子数を定義する,,"science,academic,hard"
+the Casimir effect demonstrates the force between two uncharged parallel plates due to quantum fluctuations,カシミール効果は量子揺らぎによる2つの帯電していない平行板間の力を示す,,"science,academic,hard"
+elastic collisions conserve both kinetic energy and momentum,弾性衝突は運動エネルギーと運動量の両方を保存する,,"science,academic,hard"
+the Gibbs free energy determines whether a reaction occurs spontaneously,ギブズ自由エネルギーは反応が自発的に起こるかどうかを決定する,,"science,academic,hard"
+total internal reflection occurs when light strikes the boundary at an angle greater than the critical angle,全反射は光が臨界角より大きい角度で境界面に当たるときに起こる,,"science,academic,hard"
+Le Chatelier's principle states that a system at equilibrium will shift to counteract applied stress,ルシャトリエの原理は平衡状態の系は加えられたストレスを打ち消す方向に移動すると述べる,,"science,academic,hard"
+supercooling occurs when a liquid is cooled below its freezing point without solidifying,過冷却は液体がその凝固点以下に冷却されても固化しないときに起こる,,"science,academic,hard"
+the photoelectric threshold is the minimum frequency of light needed to eject electrons from a surface,光電しきい値は表面から電子を放出するために必要な光の最小周波数である,,"science,academic,hard"
+valence electrons determine the chemical bonding behavior of an element,価電子は元素の化学結合の振る舞いを決定する,,"science,academic,hard"
+the geothermal gradient describes the rate of increasing temperature with depth in the Earth,地温勾配は地球内部の深さに伴う温度上昇率を記述する,,"science,academic,hard"
+the Carnot cycle defines the maximum possible efficiency for a heat engine,カルノーサイクルは熱機関の可能な最大効率を定義する,,"science,academic,hard"
+hydrogen bonding gives water its unusually high boiling point and surface tension,水素結合は水に異常に高い沸点と表面張力を与える,,"science,academic,hard"
+the Kelvin scale begins at absolute zero where all molecular motion ceases,ケルビン温度はすべての分子運動が停止する絶対零度から始まる,,"science,academic,hard"
+the Chandrasekhar limit determines whether a dying star becomes a white dwarf or undergoes further collapse,チャンドラセカール限界は死にゆく星が白色矮星になるかさらに崩壊するかを決定する,,"science,academic,hard"
