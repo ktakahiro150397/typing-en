@@ -30,6 +30,7 @@ type SessionMode = 'sentence' | 'random' | 'weak_word' | 'word_drill'
 interface SessionText {
   text: string
   sentenceId: string | null
+  translation: string | null
 }
 
 interface SessionConfig {
@@ -61,6 +62,7 @@ function createWordDrillItems(word: string, count: number): SessionText[] {
   return Array.from({ length: count }, () => ({
     text,
     sentenceId: null,
+    translation: null,
   }))
 }
 
@@ -77,6 +79,7 @@ function mapSentencesToSessionItems(sentences: Sentence[]): SessionText[] {
   return sentences.map((sentence) => ({
     text: normalizeText(sentence.text),
     sentenceId: sentence.id,
+    translation: sentence.translation,
   }))
 }
 
@@ -244,7 +247,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
 
     beginSession({
       mode: 'weak_word',
-      items: nextTexts.map((text) => ({ text, sentenceId: null })),
+      items: nextTexts.map((text) => ({ text, sentenceId: null, translation: null })),
       returnPath: '/analysis',
     })
   }, [beginSession, isMockMode, token])
@@ -275,7 +278,7 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
 
     beginSession({
       mode: 'weak_word',
-      items: texts.map((text) => ({ text, sentenceId: null })),
+      items: texts.map((text) => ({ text, sentenceId: null, translation: null })),
       returnPath: '/analysis',
       isFingering: true,
     })

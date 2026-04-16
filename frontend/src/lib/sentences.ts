@@ -5,6 +5,7 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 export interface Sentence {
   id: string
   text: string
+  translation: string | null
   note: string | null
   createdAt: string
   categories: string[]
@@ -17,7 +18,7 @@ export interface SentenceList {
 
 export interface ImportResult {
   created: number
-  skipped: number
+  updated: number
   errors: string[]
 }
 
@@ -25,10 +26,15 @@ export function listSentences(): Promise<SentenceList> {
   return apiFetch<SentenceList>('/api/sentences')
 }
 
-export function createSentence(text: string, note?: string, categories: string[] = []): Promise<Sentence> {
+export function createSentence(
+  text: string,
+  translation?: string,
+  note?: string,
+  categories: string[] = [],
+): Promise<Sentence> {
   return apiFetch<Sentence>('/api/sentences', {
     method: 'POST',
-    body: JSON.stringify({ text, note, categories }),
+    body: JSON.stringify({ text, translation, note, categories }),
   })
 }
 
@@ -50,7 +56,7 @@ export async function importSentencesCsv(file: File): Promise<ImportResult> {
 
 export function updateSentence(
   id: string,
-  patch: { text?: string; note?: string; categories?: string[] },
+  patch: { text?: string; translation?: string; note?: string; categories?: string[] },
 ): Promise<Sentence> {
   return apiFetch<Sentence>(`/api/sentences/${id}`, {
     method: 'PATCH',

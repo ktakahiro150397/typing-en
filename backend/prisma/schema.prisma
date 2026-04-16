@@ -24,6 +24,7 @@ model Sentence {
   id              String           @id @default(cuid())
   createdByUserId String?
   text            String           @db.Text
+  translation     String?          @db.Text
   note            String?          @db.Text
   createdAt       DateTime         @default(now())
   createdBy       User?            @relation("SentenceCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)

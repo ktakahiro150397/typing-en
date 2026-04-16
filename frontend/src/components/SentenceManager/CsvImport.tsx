@@ -37,10 +37,10 @@ export function CsvImport({ onClose }: { onClose: () => void }) {
         <h3 className="text-lg font-bold text-slate-900">CSV インポート</h3>
         <p className="text-sm text-slate-500">
           ヘッダー行ありの CSV をまとめて読み込みます。<code className="font-mono text-[#1d4ed8]">text</code> 列は必須、
-          <code className="font-mono text-[#1d4ed8]">note</code> 列は任意です。ファイル名は自動でカテゴリになります。
+          <code className="font-mono text-[#1d4ed8]">translation</code> / <code className="font-mono text-[#1d4ed8]">note</code> 列は任意です。ファイル名は自動でカテゴリになります。
         </p>
         <p className="text-xs text-slate-500">
-          任意で <code className="font-mono text-[#1d4ed8]">category</code> / <code className="font-mono text-[#1d4ed8]">categories</code> 列も使えます。
+          任意で <code className="font-mono text-[#1d4ed8]">category</code> / <code className="font-mono text-[#1d4ed8]">categories</code> 列も使えます。重複した <code className="font-mono text-[#1d4ed8]">text</code> はスキップせず上書き更新します。
         </p>
       </div>
 
@@ -88,8 +88,7 @@ export function CsvImport({ onClose }: { onClose: () => void }) {
       {result && (
         <div className="space-y-2 text-sm">
           <p className="text-emerald-600">
-            作成: <strong>{result.created}</strong>件 / スキップ（重複）:{' '}
-            <strong>{result.skipped}</strong>件
+            作成: <strong>{result.created}</strong>件 / 更新: <strong>{result.updated}</strong>件
           </p>
           {result.errors.length > 0 && (
             <details className="app-banner app-banner-warning">

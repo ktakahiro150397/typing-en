@@ -9,6 +9,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
 
   const [editing, setEditing] = useState(false)
   const [editText, setEditText] = useState(sentence.text)
+  const [editTranslation, setEditTranslation] = useState(sentence.translation ?? '')
   const [editNote, setEditNote] = useState(sentence.note ?? '')
   const [editCategories, setEditCategories] = useState(formatCategoryInput(sentence.categories))
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -22,6 +23,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
     try {
       await patchSentence(sentence.id, {
         text: editText.trim(),
+        translation: editTranslation.trim(),
         note: editNote.trim(),
         categories: parseCategoryInput(editCategories),
       })
@@ -44,7 +46,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
   if (editing) {
     return (
       <tr className="border-b border-[#d6e3ed] bg-[#f8fbff]">
-        <td colSpan={4} className="px-4 py-3">
+        <td colSpan={5} className="px-4 py-3">
           <div className="space-y-3">
             <input
               type="text"
@@ -52,6 +54,13 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
               onChange={(e) => setEditText(e.target.value)}
               className="app-input font-mono text-sm"
               autoFocus
+            />
+            <textarea
+              value={editTranslation}
+              onChange={(e) => setEditTranslation(e.target.value)}
+              placeholder="日本語訳..."
+              rows={2}
+              className="app-input resize-none text-sm"
             />
             <textarea
               value={editNote}
@@ -80,6 +89,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
                 onClick={() => {
                   setEditing(false)
                   setEditText(sentence.text)
+                  setEditTranslation(sentence.translation ?? '')
                   setEditNote(sentence.note ?? '')
                   setEditCategories(formatCategoryInput(sentence.categories))
                 }}
@@ -96,9 +106,14 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
 
   return (
     <tr className="border-b border-[#d6e3ed] transition-colors hover:bg-[#f8fbff]">
-      <td className="max-w-0 w-1/2 px-4 py-4 font-mono text-sm text-slate-900">
+      <td className="max-w-0 w-[32%] px-4 py-4 font-mono text-sm text-slate-900">
         <span className="block truncate" title={sentence.text}>
           {sentence.text}
+        </span>
+      </td>
+      <td className="max-w-0 w-[28%] px-4 py-4 text-sm text-slate-500">
+        <span className="block truncate" title={sentence.translation ?? ''}>
+          {sentence.translation ?? <span className="text-slate-300">—</span>}
         </span>
       </td>
       <td className="max-w-0 w-1/5 px-4 py-4 text-sm text-slate-500">
@@ -114,7 +129,7 @@ function SentenceRow({ sentence }: { sentence: Sentence }) {
           <span className="text-slate-300">—</span>
         )}
       </td>
-      <td className="max-w-0 w-[30%] px-4 py-4 text-sm text-slate-500">
+      <td className="max-w-0 w-[20%] px-4 py-4 text-sm text-slate-500">
         <span className="block truncate" title={sentence.note ?? ''}>
           {sentence.note ?? <span className="text-slate-300">—</span>}
         </span>
@@ -171,13 +186,16 @@ export function SentenceList({ sentences }: { sentences: Sentence[] }) {
       <table className="w-full text-left">
         <thead>
           <tr className="app-table-head border-b border-[#d6e3ed]">
-            <th className="w-1/2 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+            <th className="w-[32%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
               Text
+            </th>
+            <th className="w-[28%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+              日本語訳
             </th>
             <th className="w-1/5 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
               カテゴリ
             </th>
-            <th className="w-[30%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+            <th className="w-[20%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
               攻略メモ
             </th>
             <th className="px-4 py-3 w-24" />

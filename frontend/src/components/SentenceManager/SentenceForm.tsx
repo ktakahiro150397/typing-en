@@ -5,6 +5,7 @@ import { parseCategoryInput } from '../../lib/sentenceCategories'
 export function SentenceForm({ onClose }: { onClose: () => void }) {
   const addSentence = useSentenceStore((s) => s.addSentence)
   const [text, setText] = useState('')
+  const [translation, setTranslation] = useState('')
   const [note, setNote] = useState('')
   const [categories, setCategories] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -16,8 +17,14 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
     setSubmitting(true)
     setError(null)
     try {
-      await addSentence(text.trim(), note.trim() || undefined, parseCategoryInput(categories))
+      await addSentence(
+        text.trim(),
+        translation.trim() || undefined,
+        note.trim() || undefined,
+        parseCategoryInput(categories),
+      )
       setText('')
+      setTranslation('')
       setNote('')
       setCategories('')
       onClose()
@@ -35,7 +42,7 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
     >
       <div className="space-y-1">
         <h3 className="text-lg font-bold text-slate-900">文章を追加</h3>
-        <p className="text-sm text-slate-500">練習に使う文章と、必要なら攻略メモを登録します。</p>
+        <p className="text-sm text-slate-500">練習に使う文章・日本語訳・必要なら攻略メモを登録します。</p>
       </div>
 
       <div>
@@ -51,6 +58,14 @@ export function SentenceForm({ onClose }: { onClose: () => void }) {
       </div>
 
       <div>
+        <label className="mb-2 block text-sm font-semibold text-slate-700">日本語訳</label>
+        <textarea
+          value={translation}
+          onChange={(e) => setTranslation(e.target.value)}
+          placeholder="例: 落ち着いて続けよう"
+          rows={2}
+          className="app-input mb-3 resize-none text-sm"
+        />
         <label className="mb-2 block text-sm font-semibold text-slate-700">攻略メモ</label>
         <textarea
           value={note}
