@@ -144,7 +144,7 @@ export function StatsScreen({ onLogout, userName }: Props) {
             </StatCard>
           </div>
 
-          {sessionPoints.length > 0 && (
+          {sessionPoints.length >= 2 && (
             <section className="app-card-soft px-5 py-5">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-slate-900">{getRecentChartTitle(stats.recentSessionCount)}</h3>

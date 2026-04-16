@@ -110,7 +110,7 @@ export default async function statsRoutes(app: FastifyInstance) {
     })
 
     return {
-      sessions: sessions.reverse().map((session, index) => ({
+      sessions: [...sessions].reverse().map((session, index) => ({
         sessionNumber: index + 1,
         date: session.createdAt.toISOString(),
         wpm: calculateSessionWpm(session.totalKeys, session.missKeys, session.durationMs),
