@@ -15,9 +15,9 @@ interface SessionWpmTooltipContentProps {
 }
 
 export function SessionWpmTooltipContent({ active, payload }: SessionWpmTooltipContentProps) {
-  const value = payload?.[0]?.value
+  const wpmValue = payload?.[0]?.value
 
-  if (!active || value == null) {
+  if (!active || wpmValue == null) {
     return null
   }
 
@@ -26,7 +26,7 @@ export function SessionWpmTooltipContent({ active, payload }: SessionWpmTooltipC
       className="rounded-xl border border-[#d6e3ed] bg-white px-3 py-2 text-sm font-semibold text-slate-700"
       style={{ boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)' }}
     >
-      {value}
+      {wpmValue}
     </div>
   )
 }
