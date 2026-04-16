@@ -1,31 +1,101 @@
-text,translation,note
-asdf jkl; asdf jkl; asdf jkl; asdf jkl;,asdf jkl; の反復練習,
-qwer uiop qwer uiop qwer uiop qwer uiop,qwer uiop の反復練習,
-zxcv nm zxcv nm zxcv nm zxcv nm,zxcv nm の反復練習,
-asdf ghjkl asdf ghjkl asdf ghjkl,asdf ghjkl の反復練習,
-the dad had a bad fad and was sad,父さんはひどい流行に巻き込まれて悲しんでいた,
-a safe half life lasts as a flag falls,安全な半生は旗が落ちるように長く続く,
-she sells sea shells by the sea shore,彼女は海辺で貝殻を売っている,
-red lorry yellow lorry red lorry yellow lorry,赤いトラック 黄色いトラック を繰り返す早口言葉,
-unique new york unique new york unique new york,ユニークなニューヨーク を繰り返す早口言葉,
-truly rural truly rural truly rural,truly rural を繰り返す早口言葉,
-six slick slim slippery slicks,six slick slim slippery slicks の早口練習,
-fred fed ted bread and ted fed fred bread,フレッドはテッドにパンを与え テッドはフレッドにパンを与えた,
-flash message cash dash rash splash crash,flash や splash を並べたキー練習,
-kill skill fill hill bill still will spill,kill skill fill hill bill still will spill を並べたキー練習,
-type pipe ripe pipe wipe type ripe pipe type,type pipe ripe pipe wipe type ripe pipe type の連続練習,
-were here there where their were here there,were here there where their を見分ける練習,
-qwerty qwerty qwerty qwerty qwerty qwerty,qwerty の反復練習,
-pop top mop cop hop lop drop stop crop,pop top mop cop hop lop drop stop crop の連続練習,
-flap trap wrap clap snap map tap lap cap gap,flap trap wrap clap snap map tap lap cap gap の連続練習,
-swim trim grim slim him gym dim rim him tim,swim trim grim slim him gym dim rim him tim の連続練習,
-fun sun gun run bun nun hun pun gun fun sun,fun sun gun run bun nun hun pun gun fun sun の連続練習,
-old bold cold fold gold hold mold sold told,old bold cold fold gold hold mold sold told の連続練習,
-bright flight slight tight night right might light,bright flight slight tight night right might light の連続練習,
-duck luck muck puck stuck truck cluck pluck,duck luck muck puck stuck truck cluck pluck の連続練習,
-row flow crow grow throw blow show slow glow,row flow crow grow throw blow show slow glow の連続練習,
-hand band land sand grand stand grand band hand,hand band land sand grand stand grand band hand の連続練習,
-face place space trace grace race lace brace,face place space trace grace race lace brace の連続練習,
-king ring sing wing thing spring string bring,king ring sing wing thing spring string bring の連続練習,
-desk rest best test jest nest vest west pest,desk rest best test jest nest vest west pest の連続練習,
-ask task bask mask flask grasp clasp ask task,ask task bask mask flask grasp clasp ask task の連続練習,
+text,translation,note,categories
+asdf jkl; asdf jkl; asdf jkl;,ホームポジション基本ドリル,home row basic,"typing-game,finger-drill,easy"
+the quick brown fox jumps over the lazy dog,素早い茶色のキツネが怠けた犬を飛び越える,pangram,"typing-game,finger-drill,easy"
+aaa sss ddd fff jjj kkk lll ;;;,ホームキー連打ドリル,home keys repeat,"typing-game,finger-drill,easy"
+fff rrr ggg ttt jjj uuu hhh yyy,人差し指拡張ドリル,index finger reach,"typing-game,finger-drill,easy"
+ded kik frf juj sws lol aqa ;p;,交互指ストレッチドリル,alternating stretch,"typing-game,finger-drill,medium"
+the five boxing wizards jump quickly,5人のボクシングウィザードが素早くジャンプする,pangram,"typing-game,finger-drill,easy"
+pack my box with five dozen liquor jugs,私の箱に5ダースの酒瓶を詰めてくれ,pangram,"typing-game,finger-drill,easy"
+how vexingly quick daft zebras jump,なんと苛立たしいほど素早く愚かなシマウマが跳ぶ,pangram,"typing-game,finger-drill,medium"
+the jay pig fox zebra and my wolves quack,カケス ブタ キツネ シマウマ そして私のオオカミが鳴く,pangram,"typing-game,finger-drill,medium"
+sphinx of black quartz judge my vow,黒い水晶のスフィンクスよ 私の誓いを審判せよ,pangram,"typing-game,finger-drill,medium"
+"qwert yuiop asdfg hjkl; zxcvb nm,./ ",キーボード行順ドリル,row sequence,"typing-game,finger-drill,easy"
+aq;p sw;o de;l fr;k gt;j hy,対角移動ドリル,diagonal pairs,"typing-game,finger-drill,medium"
+abcdefghijklmnopqrstuvwxyz,アルファベット順ドリル,alphabet sequence,"typing-game,finger-drill,easy"
+zyxwvutsrqponmlkjihgfedcba,逆アルファベット順ドリル,reverse alphabet,"typing-game,finger-drill,medium"
+"asd fgh jkl qwe rty uio zxc vbn m,.",三文字グループドリル,trigram groups,"typing-game,finger-drill,easy"
+the them then they there their these,th始まり単語連続ドリル,th words,"typing-game,finger-drill,medium"
+was were will would with wish which what when where why,w始まり単語連続ドリル,w words,"typing-game,finger-drill,medium"
+1234567890 0987654321 1234567890,数字行ドリル,number row,"typing-game,finger-drill,medium"
+!@#$%^&*() ()&*^%$#@! !@#$%^&*(),記号行ドリル,symbol row,"typing-game,finger-drill,hard"
+fjfj dkdk slsl a;a; fjdk sla; fjfj,ホーム行交互ドリル,home row alternating,"typing-game,finger-drill,easy"
+"jjj hhh nnn mmm kkk iii ,,, lll ooo ...",右手下行拡張ドリル,right hand lower,"typing-game,finger-drill,medium"
+fff ddd ccc xxx sss www eee aaa qqq zzz,左手全行ドリル,left hand all rows,"typing-game,finger-drill,medium"
+minimum maximum aluminum premium optimum,m重複単語ドリル,m heavy words,"typing-game,finger-drill,medium"
+synchronized hypothetical philosophical,長い単語タイピングドリル,long words,"typing-game,finger-drill,hard"
+antidisestablishmentarianism,超長単語ドリル,very long word,"typing-game,finger-drill,hard"
+ftf gtg rtr ded sws aqa ;p; lol kik juj hyh,全指ストレッチドリル,full finger stretch,"typing-game,finger-drill,medium"
+good food mood pool cool tool fool,oo二重母音ドリル,oo digraph,"typing-game,finger-drill,easy"
+speed breed creek teeth sleep sheep,ee二重母音ドリル,ee digraph,"typing-game,finger-drill,easy"
+right light might tight sight night fight,ight連続ドリル,ight pattern,"typing-game,finger-drill,medium"
+through thought though thorough throughout,th複合語ドリル,th complex,"typing-game,finger-drill,hard"
+strength string strong strap strip stream,str連続ドリル,str cluster,"typing-game,finger-drill,medium"
+splash sprint spread sprout spring,spr連続ドリル,spr cluster,"typing-game,finger-drill,medium"
+twelve twenty twin twist twine twice,tw連続ドリル,tw cluster,"typing-game,finger-drill,medium"
+whale wheat where white while whistle,wh連続ドリル,wh cluster,"typing-game,finger-drill,medium"
+the cat sat on the mat and ate a rat,短い母音練習,short vowels,"typing-game,finger-drill,easy"
+quick quack queen quiz quote quilt,qu連続ドリル,qu cluster,"typing-game,finger-drill,medium"
+church chance change charge choose,ch連続ドリル,ch cluster,"typing-game,finger-drill,medium"
+phone photo phrase phrase physical,ph連続ドリル,ph cluster,"typing-game,finger-drill,medium"
+shoulder should shout show shower,sh連続ドリル,sh cluster,"typing-game,finger-drill,medium"
+brother breathe brave break bright,br連続ドリル,br cluster,"typing-game,finger-drill,medium"
+place plan please play plus plum,pl連続ドリル,pl cluster,"typing-game,finger-drill,medium"
+class clean climb close cloud clap,cl連続ドリル,cl cluster,"typing-game,finger-drill,medium"
+flag flat floor fly flow flower,fl連続ドリル,fl cluster,"typing-game,finger-drill,medium"
+graph great green group grow grade,gr連続ドリル,gr cluster,"typing-game,finger-drill,medium"
+train track tree trip true trust,tr連続ドリル,tr cluster,"typing-game,finger-drill,medium"
+prefix problem program promise protect provide,pr連続ドリル,pr cluster,"typing-game,finger-drill,medium"
+able table cable stable fable enable,ble語尾ドリル,ble ending,"typing-game,finger-drill,medium"
+tion nation station creation education location,tion語尾ドリル,tion ending,"typing-game,finger-drill,medium"
+ment moment movement management development,ment語尾ドリル,ment ending,"typing-game,finger-drill,medium"
+ness kindness darkness sadness happiness,ness語尾ドリル,ness ending,"typing-game,finger-drill,medium"
+fully carefully beautifully wonderfully,fully語尾ドリル,fully ending,"typing-game,finger-drill,medium"
+ing running swimming jumping singing dancing,ing語尾ドリル,ing ending,"typing-game,finger-drill,easy"
+ed walked talked jumped looked played,ed語尾ドリル,ed ending,"typing-game,finger-drill,easy"
+er bigger faster stronger higher deeper,er語尾ドリル,er ending,"typing-game,finger-drill,easy"
+ly quickly slowly carefully happily easily,ly語尾ドリル,ly ending,"typing-game,finger-drill,easy"
+un undo unfair unable unclear unlock,un接頭辞ドリル,un prefix,"typing-game,finger-drill,easy"
+re redo rewrite return review repeat,re接頭辞ドリル,re prefix,"typing-game,finger-drill,easy"
+pre preview prepare predict prevent,pre接頭辞ドリル,pre prefix,"typing-game,finger-drill,medium"
+dis disagree disappear discover disable,dis接頭辞ドリル,dis prefix,"typing-game,finger-drill,medium"
+a;sldkfj a;sldkfj a;sldkfj a;sldkfj,ホーム行ランダムドリル,home row random,"typing-game,finger-drill,easy"
+just jump judge juice jungle junior,j連続ドリル,j words,"typing-game,finger-drill,medium"
+zero zone zoom zombie zigzag zenith,z連続ドリル,z words,"typing-game,finger-drill,medium"
+extra exotic example exercise examine,ex連続ドリル,ex words,"typing-game,finger-drill,medium"
+quick quiet question quality quarter,q連続ドリル,q words,"typing-game,finger-drill,medium"
+very voice value view village visit,v連続ドリル,v words,"typing-game,finger-drill,medium"
+fox fix fax flux flex,x含有短語ドリル,x words,"typing-game,finger-drill,medium"
+keyboard typewriter monitor printer mouse,PC関連語ドリル,pc words,"typing-game,finger-drill,medium"
+sympathy symphony hypothesis synthesis,sy始まり長語ドリル,sy long words,"typing-game,finger-drill,hard"
+communication accommodation recommendation,長い名詞ドリル,long nouns,"typing-game,finger-drill,hard"
+abbreviation acceleration accommodation,長いa始まり語ドリル,long a words,"typing-game,finger-drill,hard"
+fj dk sl a; fj dk sl a; fj dk sl a;,基本交互ドリル,basic alternating,"typing-game,finger-drill,easy"
+1q2w3e4r5t 6y7u8i9o0p,数字文字混合ドリル,number letter mix,"typing-game,finger-drill,hard"
+p0o9i8u7y6 t5r4e3w2q1,逆順数字文字ドリル,reverse number letter,"typing-game,finger-drill,hard"
+The quick brown fox jumped over thirteen lazy dogs.,素早い茶色のキツネが13匹の怠けた犬を跳び越えた,number in pangram,"typing-game,finger-drill,medium"
+"Mr. Jock, TV quiz PhD, bags few lynx.",Jockさん TVクイズ博士はリンクスをわずかに捕獲した,short pangram,"typing-game,finger-drill,hard"
+Cwm fjord bank glyphs vext quiz.,峡谷 フィヨルド 銀行 グリフ 苛立つ クイズ,minimal pangram,"typing-game,finger-drill,hard"
+jackdaws love my big sphinx of quartz,ニシコクマルガラスは私の大きな石英のスフィンクスが好きだ,pangram,"typing-game,finger-drill,medium"
+two driven jocks help fax my big quiz,2人のやる気のある選手が私の大きなクイズをFAXするのを手伝う,pangram,"typing-game,finger-drill,medium"
+the five boxing wizards jump quickly at dawn,夜明けに5人のボクシングウィザードが素早くジャンプする,pangram,"typing-game,finger-drill,medium"
+waltz nymph for quick jigs vex bud,ワルツのニンフが素早いジグに興奮する,pangram,"typing-game,finger-drill,hard"
+glib jocks quiz nymph to vex dwarf,口の達者なアスリートがニンフにクイズを出し小人を困らせる,pangram,"typing-game,finger-drill,hard"
+few quips galvanized the mock jury box,いくつかの冗談が模擬陪審席を活気づけた,pangram,"typing-game,finger-drill,hard"
+sympathized exchanged qualification,長い混合語ドリル,mixed long words,"typing-game,finger-drill,hard"
+typewriter is a word you can type using only the top row of the keyboard,typewriterはキーボードの最上段だけで打てる言葉だ,fun fact,"typing-game,finger-drill,medium"
+properly assesses Mississippi bookkeeping,二重文字語ドリル,double letter words,"typing-game,finger-drill,hard"
+five plus seven equals twelve,数式単語ドリル,number words,"typing-game,finger-drill,easy"
+rhythm myth gym crypt glyph,母音なし単語ドリル,no standard vowel,"typing-game,finger-drill,hard"
+strengths is the longest word with one vowel,strengthsは母音一つの最長単語だ,word trivia,"typing-game,finger-drill,hard"
+queue is the only word where removing four letters still sounds the same,queueは4文字削除しても同じ発音の唯一の単語だ,word trivia,"typing-game,finger-drill,medium"
+palindrome racecar level civic kayak madam radar refer rotor,回文単語連続ドリル,palindrome words,"typing-game,finger-drill,medium"
+onomatopoeia buzz hiss splash crack boom pop,擬音語ドリル,onomatopoeia,"typing-game,finger-drill,medium"
+xylophone saxophone auxiliary ambidextrous,x含有長語ドリル,x long words,"typing-game,finger-drill,hard"
+knack knee knife knight knit knock know knot,黙字k単語ドリル,silent k words,"typing-game,finger-drill,medium"
+write wrong wrist wrap wreck wrinkle,黙字w単語ドリル,silent w words,"typing-game,finger-drill,medium"
+pneumonia psychology pterodactyl pseudo,黙字頭文字ドリル,silent initial letter,"typing-game,finger-drill,hard"
+eighth height neighbor weigh freight sleigh,gh/eigh連続ドリル,eigh pattern,"typing-game,finger-drill,medium"
+ought thought bought brought fought,ought連続ドリル,ought pattern,"typing-game,finger-drill,medium"
+catch match watch patch scratch dispatch,atch連続ドリル,atch pattern,"typing-game,finger-drill,medium"
+judge bridge edge ledge badge fudge,dge連続ドリル,dge pattern,"typing-game,finger-drill,medium"
+would could should,助動詞ドリル,modal verbs,"typing-game,finger-drill,easy"

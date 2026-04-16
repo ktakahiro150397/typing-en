@@ -1,26 +1,102 @@
-text,translation,note
-good morning how are you today,おはようございます 今日の調子はいかがですか,
-nice to meet you for the first time,初めまして お会いできてうれしいです,
-could you please repeat that more slowly,もう少しゆっくりもう一度言っていただけますか,
-I am looking forward to hearing from you,ご連絡を楽しみにしています,
-would you like something to drink,何かお飲み物はいかがですか,
-how long have you been waiting here,ここでどのくらい待っていますか,
-can you give me a hand with this,これを手伝ってもらえますか,
-let me know if you need anything else,ほかに必要なものがあれば知らせてください,
-I will be there in about ten minutes,10分ほどでそちらに着きます,
-sorry for the inconvenience caused,ご不便をおかけして申し訳ありません,
-have a great rest of your day,残りの一日も素敵にお過ごしください,
-what do you recommend on the menu,メニューでは何がおすすめですか,
-do you mind if I sit here,ここに座ってもいいですか,
-I really appreciate your help today,今日は助けてくれて本当にありがとうございます,
-where is the nearest train station,一番近い駅はどこですか,
-could you take a photo of us please,私たちの写真を撮っていただけますか,
-I have not seen you in a long time,長い間会っていませんでしたね,
-what are your plans for the weekend,週末はどんな予定ですか,
-it was nice talking with you today,今日はお話しできてよかったです,
-let us catch up over coffee sometime,今度コーヒーでも飲みながら近況を話しましょう,
-I am not sure I understand your point,あなたの言いたいことを十分に理解できていないかもしれません,
-can we reschedule for another time,別の時間に予定を変更できますか,
-thank you so much for everything,本当にいろいろとありがとうございました,
-you did an amazing job on this project,このプロジェクトで素晴らしい仕事をしましたね,
-I will get back to you on that soon,その件についてはすぐに折り返します,
+text,translation,note,categories
+good morning how are you today,おはようございます 今日の調子はいかがですか,,"daily,conversation,easy"
+nice to meet you for the first time,初めまして お会いできてうれしいです,,"daily,conversation,easy"
+could you please repeat that more slowly,もう少しゆっくりもう一度言っていただけますか,,"daily,conversation,easy"
+I am looking forward to hearing from you,ご連絡を楽しみにしています,,"daily,conversation,easy"
+would you like something to drink,何かお飲み物はいかがですか,,"daily,conversation,easy"
+how long have you been waiting here,ここでどのくらい待っていますか,,"daily,conversation,easy"
+can you give me a hand with this,これを手伝ってもらえますか,,"daily,conversation,easy"
+let me know if you need anything else,ほかに必要なものがあれば知らせてください,,"daily,conversation,easy"
+I will be there in about ten minutes,10分ほどでそちらに着きます,,"daily,conversation,easy"
+sorry for the inconvenience caused,ご不便をおかけして申し訳ありません,,"daily,conversation,easy"
+have a great rest of your day,残りの一日も素敵にお過ごしください,,"daily,conversation,easy"
+what do you recommend on the menu,メニューでは何がおすすめですか,,"daily,conversation,easy"
+do you mind if I sit here,ここに座ってもいいですか,,"daily,conversation,easy"
+I really appreciate your help today,今日は助けてくれて本当にありがとうございます,,"daily,conversation,easy"
+where is the nearest train station,一番近い駅はどこですか,,"daily,conversation,easy"
+could you take a photo of us please,私たちの写真を撮っていただけますか,,"daily,conversation,easy"
+I have not seen you in a long time,長い間会っていませんでしたね,,"daily,conversation,easy"
+what are your plans for the weekend,週末はどんな予定ですか,,"daily,conversation,easy"
+it was nice talking with you today,今日はお話しできてよかったです,,"daily,conversation,easy"
+let us catch up over coffee sometime,今度コーヒーでも飲みながら近況を話しましょう,,"daily,conversation,easy"
+I am not sure I understand your point,あなたの言いたいことを十分に理解できていないかもしれません,,"daily,conversation,easy"
+can we reschedule for another time,別の時間に予定を変更できますか,,"daily,conversation,easy"
+thank you so much for everything,本当にいろいろとありがとうございました,,"daily,conversation,easy"
+you did an amazing job on this project,このプロジェクトで素晴らしい仕事をしましたね,,"daily,conversation,easy"
+I will get back to you on that soon,その件についてはすぐに折り返します,,"daily,conversation,easy"
+thanks for waiting I am almost there,お待たせしました もうすぐ着きます,,"daily,conversation,easy"
+could we meet again after lunch,昼食後にもう一度会えますか,,"daily,conversation,easy"
+I left my umbrella on the train,電車に傘を置き忘れました,,"daily,conversation,easy"
+this seat is taken by my friend,この席は友人が使っています,,"daily,conversation,easy"
+please send me the address once more,もう一度住所を送ってください,,"daily,conversation,easy"
+excuse me where is the restroom,すみません お手洗いはどこですか,,"daily,conversation,easy"
+what time does the store close today,今日そのお店は何時に閉まりますか,,"daily,conversation,easy"
+I forgot my wallet at home,家に財布を忘れてきました,,"daily,conversation,easy"
+can I pay with a credit card,クレジットカードで支払えますか,,"daily,conversation,easy"
+the weather is really nice today,今日は本当にいい天気ですね,,"daily,conversation,easy"
+how much does this cost,これはいくらですか,,"daily,conversation,easy"
+I would like a table for two please,二人用のテーブルをお願いします,,"daily,conversation,easy"
+could you speak a little louder,もう少し大きな声で話していただけますか,,"daily,conversation,easy"
+I am sorry I did not catch your name,すみません お名前を聞きそびれました,,"daily,conversation,easy"
+what floor is the meeting room on,会議室は何階にありますか,,"daily,conversation,easy"
+is there a pharmacy nearby,近くに薬局はありますか,,"daily,conversation,easy"
+I need to charge my phone,携帯電話を充電する必要があります,,"daily,conversation,easy"
+do you have this in a different size,これの別のサイズはありますか,,"daily,conversation,easy"
+I am allergic to peanuts,私はピーナッツアレルギーです,,"daily,conversation,easy"
+can you recommend a good restaurant around here,この辺りで良いレストランを教えていただけますか,,"daily,conversation,easy"
+I am running a little late,少し遅れています,,"daily,conversation,easy"
+where can I find a taxi,タクシーはどこで拾えますか,,"daily,conversation,easy"
+the train is delayed by twenty minutes,電車が20分遅延しています,,"daily,conversation,easy"
+I would like to make a reservation for tonight,今夜の予約をしたいのですが,,"daily,conversation,easy"
+could you please turn down the music,音楽の音量を下げていただけますか,,"daily,conversation,easy"
+I accidentally sent the wrong message,間違ったメッセージを送ってしまいました,,"daily,conversation,easy"
+do you know what time it is,今何時かわかりますか,,"daily,conversation,easy"
+I am looking for the exit,出口を探しています,,"daily,conversation,easy"
+could you help me carry this bag,このカバンを運ぶのを手伝っていただけますか,,"daily,conversation,easy"
+the air conditioning is too cold,エアコンが寒すぎます,,"daily,conversation,easy"
+I think I left something behind,何か忘れ物をした気がします,,"daily,conversation,easy"
+what is the Wi-Fi password here,ここのWi-Fiパスワードは何ですか,,"daily,conversation,easy"
+I need to buy some groceries after work,仕事の後に食料品を買わなければなりません,,"daily,conversation,easy"
+can I have the check please,お会計をお願いします,,"daily,conversation,easy"
+I am not feeling very well today,今日はあまり体調がよくありません,,"daily,conversation,easy"
+do you have any plans for the holiday,休日の予定はありますか,,"daily,conversation,easy"
+I just moved to this neighborhood last month,先月この地域に引っ越してきたばかりです,,"daily,conversation,easy"
+please take your time there is no rush,急がなくて大丈夫ですよ ごゆっくりどうぞ,,"daily,conversation,easy"
+I will pick you up at the station,駅まで迎えに行きますよ,,"daily,conversation,easy"
+the package should arrive by tomorrow,荷物は明日までに届くはずです,,"daily,conversation,easy"
+could you watch my seat for a moment,少しの間 席を見ていてもらえますか,,"daily,conversation,easy"
+I think we have met before somewhere,以前どこかでお会いしたことがある気がします,,"daily,conversation,easy"
+what kind of music do you like,どんな音楽が好きですか,,"daily,conversation,easy"
+I usually go jogging in the morning,普段は朝にジョギングをしています,,"daily,conversation,easy"
+the sunset looks beautiful from here,ここから見る夕日は美しいですね,,"daily,conversation,easy"
+would you like to join us for dinner,一緒に夕食はいかがですか,,"daily,conversation,easy"
+I need to renew my passport before the trip,旅行前にパスポートを更新しなければなりません,,"daily,conversation,easy"
+the elevator is out of order today,今日はエレベーターが故障しています,,"daily,conversation,easy"
+I am trying to learn a new language,新しい言語を学ぼうとしています,,"daily,conversation,easy"
+could you explain that in simpler words,もっと簡単な言葉で説明していただけますか,,"daily,conversation,easy"
+the meeting has been moved to three o clock,会議は3時に変更になりました,,"daily,conversation,easy"
+what is the best way to get to the airport,空港への最善の行き方は何ですか,,"daily,conversation,easy"
+I did not realize it was already so late,もうこんなに遅いとは気づきませんでした,,"daily,conversation,easy"
+the coffee machine is not working again,コーヒーマシンがまた動かなくなっています,,"daily,conversation,easy"
+do you prefer tea or coffee,紅茶とコーヒーどちらがお好きですか,,"daily,conversation,easy"
+the traffic is really bad this morning,今朝は交通渋滞がひどいです,,"daily,conversation,easy"
+I think there is a mistake on the bill,請求書に間違いがある気がします,,"daily,conversation,easy"
+we should get together more often,もっと頻繁に集まるべきですね,,"daily,conversation,easy"
+I will text you when I get there,着いたらメッセージしますね,,"daily,conversation,easy"
+the power went out during the storm,嵐の間に停電しました,,"daily,conversation,easy"
+have you ever been to that new bookstore,あの新しい書店に行ったことはありますか,,"daily,conversation,easy"
+I cannot find my keys anywhere,鍵がどこにも見つかりません,,"daily,conversation,easy"
+please let me know if anything changes,何か変更があれば知らせてください,,"daily,conversation,easy"
+I am thinking about getting a pet,ペットを飼おうかと考えています,,"daily,conversation,easy"
+the park is a great place for a walk,公園は散歩に最適な場所です,,"daily,conversation,easy"
+I missed the last bus home,家に帰る最終バスを逃しました,,"daily,conversation,easy"
+could you hold the door for me,ドアを押さえていただけますか,,"daily,conversation,easy"
+the supermarket closes at nine tonight,スーパーは今夜9時に閉まります,,"daily,conversation,easy"
+I have been meaning to call you,あなたに電話しようと思っていたんです,,"daily,conversation,easy"
+do you know a good dentist in this area,この辺りで良い歯医者を知っていますか,,"daily,conversation,easy"
+I need to do my laundry this weekend,今週末に洗濯をしなければなりません,,"daily,conversation,easy"
+the internet connection is very slow today,今日はインターネット接続がとても遅いです,,"daily,conversation,easy"
+I will bring some snacks for the party,パーティーにお菓子を持っていきますね,,"daily,conversation,easy"
+what time should I set my alarm for,アラームは何時にセットすればいいですか,,"daily,conversation,easy"
+I slept through my alarm this morning,今朝アラームに気づかず寝過ごしました,,"daily,conversation,easy"
+do you want me to pick up anything from the store,お店で何か買ってきましょうか,,"daily,conversation,easy"

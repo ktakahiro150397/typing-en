@@ -1,28 +1,97 @@
-text,translation,note
-the central bank raised interest rates for the third consecutive month,中央銀行は3か月連続で利上げを実施した,
-lawmakers reached a bipartisan agreement on the infrastructure spending bill,議員らはインフラ支出法案で超党派合意に達した,
-climate scientists warn of unprecedented global average temperature increases,気候科学者らは世界平均気温の前例のない上昇を警告している,
-the company announced a merger valued at approximately twelve billion dollars,その企業は約120億ドル規模の合併を発表した,
-humanitarian aid was deployed to regions most severely affected by the earthquake,人道支援は地震被害が最も深刻な地域に投入された,
-the prime minister called for an emergency session of parliament on Thursday,首相は木曜日に緊急議会を招集すると求めた,
-investigators are looking into allegations of widespread financial misconduct,捜査当局は広範な金融不正の疑いを調べている,
-the trade deficit widened to its highest level in more than two decades,貿易赤字は20年以上で最高水準に拡大した,
-a ceasefire agreement was brokered after weeks of diplomatic negotiations,数週間の外交交渉の末に停戦合意が仲介された,
-the unemployment rate fell to 3.8 percent according to the latest government data,最新の政府統計によると失業率は3.8%に低下した,
-the tech giant faces antitrust scrutiny from regulators in multiple jurisdictions,その巨大テック企業は複数の法域で独占禁止法上の精査を受けている,
-officials confirmed that the suspect was taken into custody without incident,当局は容疑者を騒ぎなく拘束したと確認した,
-the opposition party called the new legislation unconstitutional and vowed to appeal,野党は新法を違憲だとして上訴を誓った,
-record rainfall caused widespread flooding across at least six coastal provinces,記録的な豪雨が少なくとも沿岸6州で広範な洪水を引き起こした,
-the summit concluded with a joint declaration on reducing carbon emissions by 2035,首脳会議は2035年までの炭素排出削減に関する共同宣言で閉幕した,
-shares in the company surged 14 percent following the earnings announcement,その企業の株価は決算発表後に14%急騰した,
-the international court issued a binding ruling on the disputed maritime boundary,国際裁判所は係争中の海洋境界について拘束力のある判断を下した,
-the health ministry urged residents to get vaccinated ahead of the winter season,保健省は冬季を前に住民へワクチン接種を呼びかけた,
-the newly appointed ambassador presented her credentials to the foreign minister,新任大使は外相に信任状を提出した,
-construction of the high-speed rail corridor is expected to begin next spring,高速鉄道回廊の建設は来春に始まる見込みだ,
-the nonprofit organization launched an initiative to provide clean water access,その非営利団体は安全な飲料水へのアクセスを提供する取り組みを開始した,
-authorities are investigating a cyberattack that disrupted critical infrastructure,当局は重要インフラを妨害したサイバー攻撃を調査している,
-the refugee agency reported a sharp increase in displacement across the region,難民機関は地域全体で避難民が急増したと報告した,
-the legislature passed a sweeping reform bill after months of committee deliberation,議会は数か月の委員会審議を経て大規模な改革法案を可決した,
-the central government allocated emergency funds to support disaster relief efforts,中央政府は災害救援を支えるため緊急資金を配分した,
-the presidential election drew a record turnout of over seventy percent of voters,大統領選挙では有権者の70%超という記録的投票率となった,
-analysts predict slower economic growth due to persistent supply chain disruptions,アナリストは継続する供給網の混乱により経済成長の鈍化を予測している,
+text,translation,note,categories
+the central bank raised interest rates for the third consecutive month,中央銀行は3か月連続で利上げを実施した,,"news,journalism,hard"
+lawmakers reached a bipartisan agreement on the infrastructure spending bill,議員らはインフラ支出法案で超党派合意に達した,,"news,journalism,hard"
+the unemployment rate dropped to its lowest level in two decades,失業率は20年ぶりの最低水準に低下した,,"news,journalism,hard"
+rescue teams continued search operations after the earthquake struck at dawn,救助隊は夜明けに発生した地震の後も捜索活動を続けた,,"news,journalism,hard"
+the technology giant announced plans to invest billions in renewable energy infrastructure,テクノロジー大手は再生可能エネルギーインフラに数十億ドルの投資計画を発表した,,"news,journalism,hard"
+the World Health Organization declared a global health emergency,世界保健機関はグローバルな健康緊急事態を宣言した,,"news,journalism,hard"
+a landmark ruling by the supreme court reshaped privacy protections for citizens,最高裁の画期的な判決が市民のプライバシー保護を再形成した,,"news,journalism,hard"
+climate activists staged a peaceful demonstration outside the parliament building,気候活動家が議会ビルの前で平和的なデモを行った,,"news,journalism,hard"
+the stock market rallied sharply after the release of positive employment data,好調な雇用データの発表後に株式市場は急上昇した,,"news,journalism,hard"
+international trade negotiations stalled over disagreements on tariff structures,関税構造に関する不一致により国際貿易交渉が行き詰まった,,"news,journalism,hard"
+the new space telescope captured unprecedented images of distant galaxies,新しい宇宙望遠鏡が遠方銀河の前例のない画像を撮影した,,"news,journalism,hard"
+wildfire season arrived earlier than expected destroying thousands of acres,山火事の季節が予想より早く到来し数千エーカーが焼失した,,"news,journalism,hard"
+a pharmaceutical company received approval for a groundbreaking cancer treatment,製薬会社が画期的ながん治療法の承認を受けた,,"news,journalism,hard"
+the prime minister reshuffled the cabinet to address declining approval ratings,首相は低下する支持率に対処するために内閣改造を行った,,"news,journalism,hard"
+severe flooding displaced hundreds of families across the southern provinces,大規模な洪水が南部の州で数百の家族を避難させた,,"news,journalism,hard"
+autonomous vehicles completed their first cross-country test drive without incident,自動運転車が初の大陸横断テスト走行を無事故で完了した,,"news,journalism,hard"
+the national debt surpassed a record high prompting calls for fiscal reform,国家債務が過去最高を超え財政改革の要求が高まった,,"news,journalism,hard"
+scientists discovered a new species of deep-sea fish near the volcanic vent,科学者たちが火山噴出口付近で深海魚の新種を発見した,,"news,journalism,hard"
+voter turnout reached historic levels in the midterm elections,中間選挙で投票率が歴史的な水準に達した,,"news,journalism,hard"
+cybersecurity experts warned of increasing threats from state-sponsored hackers,サイバーセキュリティ専門家が国家支援のハッカーからの脅威の増大を警告した,,"news,journalism,hard"
+the airline industry reported its first profitable quarter since the pandemic began,航空業界はパンデミック開始以来初めての黒字四半期を報告した,,"news,journalism,hard"
+drought conditions threatened agricultural output in the central plains region,干ばつ状態が中央平原地域の農業生産を脅かした,,"news,journalism,hard"
+a historic peace accord was signed between the two nations ending decades of conflict,歴史的な和平協定が両国間で署名され数十年の紛争に終止符が打たれた,,"news,journalism,hard"
+the housing market showed signs of cooling after years of rapid price increases,住宅市場は数年間の急速な価格上昇の後 冷え込みの兆候を示した,,"news,journalism,hard"
+renewable energy now accounts for thirty percent of the national power grid,再生可能エネルギーが国の送電網の30%を占めるようになった,,"news,journalism,hard"
+public health officials urged vaccination ahead of the upcoming flu season,公衆衛生当局は次のインフルエンザシーズンに先立ちワクチン接種を促した,,"news,journalism,hard"
+the education minister unveiled a comprehensive school reform package,教育大臣が包括的な学校改革パッケージを発表した,,"news,journalism,hard"
+a major data breach exposed millions of customer records at a global retailer,大規模なデータ侵害により世界的な小売業者で数百万の顧客記録が漏洩した,,"news,journalism,hard"
+the United Nations called for immediate humanitarian aid to the conflict zone,国連が紛争地帯への即時人道支援を要請した,,"news,journalism,hard"
+inflation rates exceeded expectations raising concerns about consumer spending,インフレ率が予想を上回り消費者支出への懸念が高まった,,"news,journalism,hard"
+the electric vehicle market saw a forty percent increase in sales this quarter,電気自動車市場は今四半期に販売が40%増加した,,"news,journalism,hard"
+a record-breaking heatwave engulfed southern Europe for the second consecutive week,記録的な熱波が2週連続で南ヨーロッパを覆った,,"news,journalism,hard"
+the central intelligence agency declassified thousands of cold war documents,中央情報局が数千の冷戦時代の文書の機密指定を解除した,,"news,journalism,hard"
+local communities rallied to support small businesses affected by the economic downturn,地域社会が景気後退の影響を受けた中小企業の支援に集結した,,"news,journalism,hard"
+the automotive industry is transitioning rapidly toward electric powertrains,自動車業界は電動パワートレインに向けて急速に移行している,,"news,journalism,hard"
+a massive oil spill threatened marine ecosystems along the Pacific coast,大規模な油流出が太平洋沿岸の海洋生態系を脅かした,,"news,journalism,hard"
+the ministry of health reported a significant decline in childhood obesity rates,保健省は小児肥満率の大幅な低下を報告した,,"news,journalism,hard"
+digital currencies faced increased regulatory scrutiny from financial authorities,デジタル通貨は金融当局からの規制監視の強化に直面した,,"news,journalism,hard"
+the refugee crisis intensified as border crossings reached a five-year high,国境越えが5年ぶりの高水準に達し難民危機が激化した,,"news,journalism,hard"
+a pioneering gene therapy trial showed promising results for rare blood disorders,先駆的な遺伝子治療試験が希少な血液疾患に対して有望な結果を示した,,"news,journalism,hard"
+the opposition party called for a parliamentary investigation into corruption allegations,野党が汚職疑惑に関する議会調査を要求した,,"news,journalism,hard"
+coastal erosion accelerated due to rising sea levels and extreme weather events,海面上昇と異常気象により海岸浸食が加速した,,"news,journalism,hard"
+the government announced a stimulus package aimed at reviving the manufacturing sector,政府は製造業の復興を目的とした景気刺激策を発表した,,"news,journalism,hard"
+artificial intelligence applications are reshaping the landscape of modern journalism,人工知能アプリケーションが現代ジャーナリズムの景観を再形成している,,"news,journalism,hard"
+a trade embargo imposed on the neighboring country disrupted regional supply chains,隣国に課された貿易禁輸が地域のサプライチェーンを混乱させた,,"news,journalism,hard"
+the space agency confirmed plans for a manned mission to Mars by the end of the decade,宇宙機関はこの10年の終わりまでに有人火星ミッションの計画を確認した,,"news,journalism,hard"
+water scarcity has become a critical issue in rapidly urbanizing developing nations,水不足が急速に都市化する発展途上国で深刻な問題となっている,,"news,journalism,hard"
+the film industry broke box office records with a billion-dollar opening weekend,映画業界が10億ドルの初週末興行収入で興行記録を更新した,,"news,journalism,hard"
+a diplomatic crisis emerged after the ambassador was recalled from the host country,大使が駐在国から召還された後に外交危機が浮上した,,"news,journalism,hard"
+renewable energy subsidies sparked debate among legislators over budget priorities,再生可能エネルギー補助金が予算の優先順位について議員間で議論を引き起こした,,"news,journalism,hard"
+the pension reform bill passed its third reading in the national assembly,年金改革法案が国民議会で三読を通過した,,"news,journalism,hard"
+an archaeological team unearthed a two-thousand-year-old temple beneath the city center,考古学チームが市の中心部の地下から2千年前の寺院を発掘した,,"news,journalism,hard"
+the telecommunications regulator imposed heavy fines for spectrum licensing violations,電気通信規制当局が周波数免許違反に対して高額の罰金を課した,,"news,journalism,hard"
+global shipping costs surged amid container shortages and port congestion,コンテナ不足と港湾の混雑の中で世界の輸送コストが急騰した,,"news,journalism,hard"
+the minister of defense outlined a five-year modernization plan for the armed forces,防衛大臣が軍の5年間の近代化計画を概説した,,"news,journalism,hard"
+consumer confidence rebounded strongly in the third quarter economic survey,第3四半期の経済調査で消費者信頼感が力強く回復した,,"news,journalism,hard"
+the endangered species protection act was amended to include marine habitats,絶滅危惧種保護法が海洋生息地を含むよう改正された,,"news,journalism,hard"
+a new high-speed rail link between the two capitals reduced travel time by half,両首都間の新しい高速鉄道リンクが移動時間を半減させた,,"news,journalism,hard"
+the labor union threatened a nationwide strike unless wage demands were met,労働組合は賃金要求が満たされなければ全国ストライキを行うと脅した,,"news,journalism,hard"
+heavy rainfall triggered mudslides in the mountainous northern provinces,大雨が山岳地帯の北部州で土砂崩れを引き起こした,,"news,journalism,hard"
+the antitrust regulator blocked the proposed merger of two telecommunications giants,独占禁止規制当局が通信大手2社の合併提案を阻止した,,"news,journalism,hard"
+a whistleblower revealed systemic fraud within the national healthcare program,内部告発者が国民医療プログラム内の組織的な不正を暴露した,,"news,journalism,hard"
+the agricultural sector adopted precision farming techniques to boost crop yields,農業部門が作物収量を向上させるために精密農業技術を採用した,,"news,journalism,hard"
+international observers praised the transparency of the general election process,国際監視団が総選挙プロセスの透明性を称賛した,,"news,journalism,hard"
+the tourism industry projected a full recovery to pre-pandemic visitor numbers,観光業界はパンデミック前の訪問者数への完全回復を予測した,,"news,journalism,hard"
+police arrested several suspects in connection with the organized crime network,警察が組織犯罪ネットワークに関連して数名の容疑者を逮捕した,,"news,journalism,hard"
+the central bank governor addressed concerns about currency depreciation,中央銀行総裁が通貨の下落に関する懸念に対処した,,"news,journalism,hard"
+university researchers published findings linking microplastics to cardiovascular disease,大学の研究者がマイクロプラスチックと心血管疾患を結びつける研究結果を発表した,,"news,journalism,hard"
+the ministry of transport approved construction of a new international airport,運輸省が新しい国際空港の建設を承認した,,"news,journalism,hard"
+an underwater cable failure disrupted internet connectivity across the island nation,海底ケーブルの故障が島国全体のインターネット接続を混乱させた,,"news,journalism,hard"
+the annual summit addressed critical issues including poverty and climate adaptation,年次サミットが貧困と気候適応を含む重要な問題に取り組んだ,,"news,journalism,hard"
+exports of rare earth minerals surged following new trade agreements with Asian markets,アジア市場との新たな貿易協定に続きレアアースの輸出が急増した,,"news,journalism,hard"
+the city council approved a comprehensive urban renewal project for the waterfront district,市議会がウォーターフロント地区の包括的な都市再生プロジェクトを承認した,,"news,journalism,hard"
+humanitarian organizations warned of an imminent famine in the drought-stricken region,人道支援組織が干ばつに見舞われた地域での差し迫った飢饉を警告した,,"news,journalism,hard"
+the national rugby team clinched the championship title with a dramatic last-minute try,ラグビーナショナルチームが劇的なラスト1分のトライで選手権タイトルを獲得した,,"news,journalism,hard"
+fiscal austerity measures drew widespread protests from public sector workers,財政緊縮措置が公共部門の労働者から広範な抗議を引き起こした,,"news,journalism,hard"
+the construction of a floating solar farm was completed ahead of schedule,浮体式太陽光発電所の建設が予定より早く完了した,,"news,journalism,hard"
+the cultural heritage site was added to the UNESCO World Heritage list,その文化遺産地はユネスコ世界遺産リストに追加された,,"news,journalism,hard"
+the election commission announced new measures to prevent voter fraud,選挙管理委員会が投票詐欺防止のための新しい措置を発表した,,"news,journalism,hard"
+a multinational corporation pledged carbon neutrality by the year 2030,多国籍企業が2030年までにカーボンニュートラルを約束した,,"news,journalism,hard"
+the securities regulator launched an investigation into insider trading allegations,証券規制当局がインサイダー取引の疑惑に対する調査を開始した,,"news,journalism,hard"
+a volcanic eruption forced the evacuation of nearby coastal communities,火山噴火により近隣の沿岸地域の住民が避難を余儀なくされた,,"news,journalism,hard"
+the public broadcaster announced a major overhaul of its digital news platform,公共放送がデジタルニュースプラットフォームの大規模な刷新を発表した,,"news,journalism,hard"
+foreign direct investment in the technology sector doubled year over year,テクノロジーセクターへの海外直接投資が前年比で倍増した,,"news,journalism,hard"
+the health minister confirmed the launch of a nationwide mental health initiative,保健大臣が全国的なメンタルヘルスイニシアチブの立ち上げを確認した,,"news,journalism,hard"
+a magnitude seven earthquake struck the coastal city causing widespread structural damage,マグニチュード7の地震が沿岸都市を襲い広範な構造的被害をもたらした,,"news,journalism,hard"
+the parliament passed a historic bill granting equal rights to all citizens regardless of gender,議会がジェンダーに関わらずすべての市民に平等な権利を付与する歴史的法案を可決した,,"news,journalism,hard"
+ocean temperatures reached record levels raising alarm among marine biologists,海水温が記録的水準に達し海洋生物学者の間で警鐘が鳴った,,"news,journalism,hard"
+the finance ministry revised the GDP growth forecast upward to four percent,財務省がGDP成長予測を4%に上方修正した,,"news,journalism,hard"
+a joint military exercise between allied nations strengthened regional security cooperation,同盟国間の合同軍事演習が地域安全保障協力を強化した,,"news,journalism,hard"
+the cultural minister inaugurated a new national museum dedicated to modern art,文化大臣が現代美術専門の新しい国立美術館を開館した,,"news,journalism,hard"
+the pharmaceutical industry faces pressure to lower drug prices for essential medicines,製薬業界は必須医薬品の薬価引き下げの圧力に直面している,,"news,journalism,hard"
+commuter rail services were suspended after a signal failure during morning rush hour,朝のラッシュ時の信号故障後に通勤電車が運休となった,,"news,journalism,hard"
+the cyber defense agency issued an alert about a sophisticated phishing campaign,サイバー防衛機関が巧妙なフィッシングキャンペーンに関する警報を発令した,,"news,journalism,hard"
+indigenous communities demanded greater representation in the constitutional reform process,先住民族コミュニティが憲法改正プロセスにおけるより大きな代表権を要求した,,"news,journalism,hard"
+the national weather service issued a tornado warning for the central valley region,国立気象局が中央谷地域に竜巻警報を発令した,,"news,journalism,hard"

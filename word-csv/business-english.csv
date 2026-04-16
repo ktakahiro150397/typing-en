@@ -1,26 +1,101 @@
-text,translation,note
-I am writing to follow up on our previous conversation,先日の会話についてフォローアップのためご連絡しています,
-please find the attached report for your review,ご確認用に報告書を添付いたします,
-could you please confirm your availability for next week,来週のご都合をご確認いただけますでしょうか,
-I wanted to touch base regarding the upcoming deadline,近づいている締切について確認のためご連絡しました,
-we appreciate your continued support and partnership,継続的なご支援とご協力に感謝いたします,
-kindly review the document and provide your feedback,資料をご確認のうえご意見をお聞かせください,
-I look forward to our meeting on Thursday afternoon,木曜午後の打ち合わせを楽しみにしております,
-please do not hesitate to contact me if you have any questions,ご質問がありましたらどうぞご遠慮なくご連絡ください,
-we regret to inform you that the event has been postponed,イベント延期となったことを残念ながらお知らせいたします,
-the project is currently on track and within budget,プロジェクトは現在予定どおりかつ予算内で進行しています,
-I am pleased to inform you that your application has been approved,あなたの申請が承認されたことをお知らせできてうれしく思います,
-as per our discussion we have revised the proposal accordingly,ご相談に基づき提案書を修正いたしました,
-let us schedule a call to discuss the next steps in detail,次のステップを詳しく話すために通話を設定しましょう,
-please ensure all deliverables are submitted before the deadline,すべての成果物を締切前に提出するようにしてください,
-I would like to request an extension until the end of the month,月末まで延長をご依頼したく存じます,
-thank you for bringing this matter to our attention,この件をご指摘いただきありがとうございます,
-we are committed to resolving this issue as quickly as possible,この問題をできるだけ早く解決することをお約束します,
-your feedback has been shared with the relevant team members,あなたのご意見は関係チームへ共有済みです,
-this is a gentle reminder about the invoice due on April 30,4月30日期限の請求書について念のためご連絡します,
-we have successfully completed the onboarding process,オンボーディング手続きを無事完了しました,
-the board has approved the budget for the next fiscal year,取締役会は次年度の予算を承認しました,
-I will circle back with you after the internal review is done,社内レビュー完了後に改めてご連絡します,
-please confirm receipt of this message at your earliest convenience,このメッセージを受領したらお早めにご確認ください,
-the terms and conditions are subject to change without notice,利用条件は予告なく変更される場合があります,
-we value your business and strive to exceed your expectations,私たちはお客様を大切にし期待を超える価値提供に努めます,
+text,translation,note,categories
+I am writing to follow up on our previous conversation,先日の会話についてフォローアップのためご連絡しています,,"business,workplace,medium"
+please find the attached report for your review,ご確認用に報告書を添付いたします,,"business,workplace,medium"
+could you please confirm your availability for next week,来週のご都合をご確認いただけますでしょうか,,"business,workplace,medium"
+we would like to schedule a meeting at your earliest convenience,ご都合のつく最も早い時期に会議を設定したいと存じます,,"business,workplace,medium"
+the quarterly earnings report has been finalized,四半期収益報告書が確定しました,,"business,workplace,medium"
+let us circle back on this topic during the next sprint,次のスプリントでこの話題を再度取り上げましょう,,"business,workplace,medium"
+I appreciate your prompt response to my inquiry,お問い合わせへの迅速なご返信に感謝いたします,,"business,workplace,medium"
+the board of directors approved the new policy yesterday,取締役会は昨日新しい方針を承認しました,,"business,workplace,medium"
+please submit your expense reports by end of month,月末までに経費報告書を提出してください,,"business,workplace,medium"
+we need to align our strategies across all departments,すべての部門で戦略を一致させる必要があります,,"business,workplace,medium"
+the stakeholders have raised concerns about the timeline,ステークホルダーがスケジュールについて懸念を示しています,,"business,workplace,medium"
+let me walk you through the key highlights of the proposal,提案のポイントをご説明いたします,,"business,workplace,medium"
+the company is expanding its operations to Southeast Asia,当社は東南アジアへ事業を拡大しています,,"business,workplace,medium"
+we need to conduct a thorough risk assessment first,まず徹底的なリスク評価を実施する必要があります,,"business,workplace,medium"
+the project deadline has been moved up by two weeks,プロジェクトの締め切りが2週間繰り上げられました,,"business,workplace,medium"
+I will prepare a detailed cost breakdown for the meeting,会議に向けて詳細なコスト内訳を準備します,,"business,workplace,medium"
+your input on this matter would be greatly valued,この件に関するご意見は大変貴重です,,"business,workplace,medium"
+the annual budget review is scheduled for next Friday,年間予算レビューは来週金曜日に予定されています,,"business,workplace,medium"
+we achieved a fifteen percent increase in revenue this quarter,今四半期は売上高が15%増加しました,,"business,workplace,medium"
+the marketing team proposed a new campaign strategy,マーケティングチームが新しいキャンペーン戦略を提案しました,,"business,workplace,medium"
+please keep me updated on any developments,進展があれば随時お知らせください,,"business,workplace,medium"
+the merger negotiations are progressing smoothly,合併交渉は順調に進んでいます,,"business,workplace,medium"
+I would like to request a brief extension for the deliverable,成果物について短期間の延長をお願いしたいのですが,,"business,workplace,medium"
+the customer satisfaction survey results were encouraging,顧客満足度調査の結果は心強いものでした,,"business,workplace,medium"
+we should prioritize tasks based on their business impact,ビジネスへの影響度に基づいてタスクの優先順位を決めるべきです,,"business,workplace,medium"
+the new hire orientation will take place on Monday morning,新入社員オリエンテーションは月曜日の午前中に行われます,,"business,workplace,medium"
+I recommend we outsource this particular function,この特定の機能は外部委託することをお勧めします,,"business,workplace,medium"
+the contract terms need to be reviewed by legal,契約条件は法務部の確認が必要です,,"business,workplace,medium"
+our competitive advantage lies in our innovative approach,当社の競争優位性は革新的なアプローチにあります,,"business,workplace,medium"
+please ensure all documents are signed before the deadline,締め切り前にすべての書類に署名を済ませてください,,"business,workplace,medium"
+the leadership team announced a restructuring plan,経営陣が組織再編計画を発表しました,,"business,workplace,medium"
+we exceeded our sales targets for the third straight quarter,3四半期連続で売上目標を上回りました,,"business,workplace,medium"
+the vendor has offered a volume discount on bulk orders,業者が大量注文にボリュームディスカウントを提示しました,,"business,workplace,medium"
+I will coordinate with the logistics team on shipping,出荷について物流チームと調整します,,"business,workplace,medium"
+the compliance audit is expected to finish by Thursday,コンプライアンス監査は木曜日までに完了する予定です,,"business,workplace,medium"
+please review the attached slides before the presentation,プレゼンテーション前に添付のスライドをご確認ください,,"business,workplace,medium"
+the return on investment exceeded our initial projections,投資収益率は当初の予測を上回りました,,"business,workplace,medium"
+we are seeking strategic partnerships in the European market,ヨーロッパ市場での戦略的パートナーシップを模索しています,,"business,workplace,medium"
+the product launch is set for the first week of September,製品発売は9月第1週に予定されています,,"business,workplace,medium"
+I suggest we allocate more resources to customer support,カスタマーサポートにより多くのリソースを割り当てることを提案します,,"business,workplace,medium"
+the performance review cycle begins next month,業績評価サイクルが来月始まります,,"business,workplace,medium"
+we received positive feedback from the pilot program,パイロットプログラムから好評をいただきました,,"business,workplace,medium"
+the supply chain disruption has impacted delivery schedules,サプライチェーンの混乱が納品スケジュールに影響を与えています,,"business,workplace,medium"
+I need to escalate this issue to senior management,この問題を上級管理職にエスカレーションする必要があります,,"business,workplace,medium"
+the intellectual property rights belong to the company,知的財産権は会社に帰属します,,"business,workplace,medium"
+we should leverage data analytics for better decision making,より良い意思決定のためにデータ分析を活用すべきです,,"business,workplace,medium"
+the financial forecast indicates steady growth ahead,財務予測は今後の安定した成長を示しています,,"business,workplace,medium"
+please provide a summary of action items from the meeting,会議からのアクションアイテムの要約を提供してください,,"business,workplace,medium"
+the employee engagement scores improved significantly this year,今年は従業員エンゲージメントスコアが大幅に向上しました,,"business,workplace,medium"
+we need to streamline our procurement process,調達プロセスを効率化する必要があります,,"business,workplace,medium"
+the joint venture agreement was signed last week,合弁事業契約が先週締結されました,,"business,workplace,medium"
+I will follow up with the client after the holiday,休暇後にクライアントにフォローアップします,,"business,workplace,medium"
+the operating expenses have been reduced by eight percent,営業費用が8%削減されました,,"business,workplace,medium"
+we plan to hire twenty additional engineers by year end,年末までに追加で20名のエンジニアを採用する計画です,,"business,workplace,medium"
+the brand refresh strategy includes a new logo and tagline,ブランドリフレッシュ戦略には新しいロゴとタグラインが含まれます,,"business,workplace,medium"
+please share the updated project timeline with the team,更新されたプロジェクトスケジュールをチームと共有してください,,"business,workplace,medium"
+the due diligence process is still ongoing,デューデリジェンスプロセスはまだ進行中です,,"business,workplace,medium"
+we anticipate a strong demand in the fourth quarter,第4四半期には強い需要を見込んでいます,,"business,workplace,medium"
+the accounts payable team processed all invoices on time,買掛金チームがすべての請求書を期日通りに処理しました,,"business,workplace,medium"
+I recommend we revisit the pricing strategy before launch,発売前に価格戦略を見直すことをお勧めします,,"business,workplace,medium"
+the warehouse capacity has been expanded to handle peak season,ピークシーズンに対応するため倉庫の容量が拡張されました,,"business,workplace,medium"
+we should set up a cross-functional task force for this initiative,この取り組みのために部門横断的なタスクフォースを設置すべきです,,"business,workplace,medium"
+the profit margin on this product line is declining,この製品ラインの利益率が低下しています,,"business,workplace,medium"
+I have scheduled a one-on-one meeting with each team member,各チームメンバーとの一対一の面談を設定しました,,"business,workplace,medium"
+the regulatory approval is expected within six weeks,規制当局の承認は6週間以内に見込まれています,,"business,workplace,medium"
+we are implementing a new enterprise resource planning system,新しい統合基幹業務システムを導入しています,,"business,workplace,medium"
+the trade show exhibit generated over two hundred leads,展示会では200件以上のリードが発生しました,,"business,workplace,medium"
+please finalize the vendor selection by end of this week,今週末までにベンダー選定を確定してください,,"business,workplace,medium"
+the customer churn rate has decreased by three percent,顧客解約率が3%減少しました,,"business,workplace,medium"
+we need a contingency plan in case the deal falls through,取引が不成立になった場合の緊急対応計画が必要です,,"business,workplace,medium"
+the board has approved a stock buyback program,取締役会が自社株買いプログラムを承認しました,,"business,workplace,medium"
+I will draft the proposal and send it for internal review,提案書を作成し社内レビューに送ります,,"business,workplace,medium"
+the net promoter score reached an all-time high this quarter,今四半期のネットプロモータースコアが過去最高を記録しました,,"business,workplace,medium"
+we should benchmark our processes against industry standards,業界標準に対してプロセスのベンチマークを行うべきです,,"business,workplace,medium"
+the corporate social responsibility report is due in March,企業の社会的責任報告書は3月が期限です,,"business,workplace,medium"
+I have arranged a conference call with the overseas branch,海外支店との電話会議を手配しました,,"business,workplace,medium"
+the subscription model has increased recurring revenue,サブスクリプションモデルにより定期収益が増加しました,,"business,workplace,medium"
+we need to reduce the time-to-market for new products,新製品の市場投入までの時間を短縮する必要があります,,"business,workplace,medium"
+the non-disclosure agreement must be signed before discussions begin,協議開始前に秘密保持契約に署名する必要があります,,"business,workplace,medium"
+the fiscal year ends on the thirty-first of March,会計年度は3月31日に終了します,,"business,workplace,medium"
+I will arrange for an interpreter at the international meeting,国際会議に通訳を手配します,,"business,workplace,medium"
+the depreciation of assets has been calculated for the report,資産の減価償却が報告書のために計算されました,,"business,workplace,medium"
+we plan to diversify our product portfolio next year,来年は製品ポートフォリオの多角化を計画しています,,"business,workplace,medium"
+the tender submission deadline is the fifteenth of this month,入札書の提出締め切りは今月15日です,,"business,workplace,medium"
+I need the latest cash flow statement for the investor meeting,投資家会議のために最新のキャッシュフロー計算書が必要です,,"business,workplace,medium"
+we should develop a succession plan for key leadership roles,主要なリーダーシップ職の後継者育成計画を策定すべきです,,"business,workplace,medium"
+the customer retention program has shown measurable results,顧客維持プログラムが測定可能な成果を示しています,,"business,workplace,medium"
+please circulate the meeting minutes to all attendees,議事録をすべての出席者に回覧してください,,"business,workplace,medium"
+the gross domestic product grew by two point three percent,国内総生産が2.3%成長しました,,"business,workplace,medium"
+we received a request for proposal from a Fortune 500 company,フォーチュン500企業から提案依頼書を受け取りました,,"business,workplace,medium"
+the internal audit found no significant discrepancies,内部監査で重大な不一致は見つかりませんでした,,"business,workplace,medium"
+I will present the quarterly results at the town hall meeting,タウンホールミーティングで四半期の実績を発表します,,"business,workplace,medium"
+the working capital ratio is within the acceptable range,運転資本比率は許容範囲内です,,"business,workplace,medium"
+we are rolling out a new employee wellness program,新しい従業員ウェルネスプログラムを展開しています,,"business,workplace,medium"
+the beta testing phase revealed several areas for improvement,ベータテスト段階でいくつかの改善点が明らかになりました,,"business,workplace,medium"
+please update the stakeholder register with the new contacts,新しい連絡先でステークホルダー登録簿を更新してください,,"business,workplace,medium"
+the break-even analysis shows profitability within eighteen months,損益分岐点分析では18か月以内に黒字化する見込みです,,"business,workplace,medium"
+we should negotiate better terms with our primary suppliers,主要サプライヤーとより良い条件を交渉すべきです,,"business,workplace,medium"
+the cybersecurity insurance policy has been renewed for another year,サイバーセキュリティ保険が1年間更新されました,,"business,workplace,medium"
+I recommend conducting a SWOT analysis before the strategy session,戦略セッション前にSWOT分析を実施することをお勧めします,,"business,workplace,medium"
