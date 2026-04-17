@@ -65,4 +65,32 @@ export default async function publicSentenceRoutes(app: FastifyInstance) {
       total: sentences.length,
     }
   })
+
+  app.get('/public/sentences/browse', async (_req, _reply) => {
+    const MAX_BROWSE = 200
+
+    const sentences = await prisma.sentence.findMany({
+      take: MAX_BROWSE,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        text: true,
+        translation: true,
+        createdAt: true,
+        categories: { select: { category: true } },
+      },
+    })
+
+    return {
+      sentences: sentences.map((sentence) => ({
+        id: sentence.id,
+        text: sentence.text,
+        translation: sentence.translation,
+        note: null,
+        createdAt: sentence.createdAt,
+        categories: sentence.categories.map((c) => c.category),
+      })),
+      total: sentences.length,
+    }
+  })
 }

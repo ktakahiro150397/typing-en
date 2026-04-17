@@ -3,8 +3,6 @@ import { useSentenceStore } from '../../stores/sentenceStore'
 import { SentenceList } from './SentenceList'
 import { SentenceForm } from './SentenceForm'
 import { CsvImport } from './CsvImport'
-import { StartSessionModal } from './StartSessionModal'
-import type { Sentence } from '../../lib/sentences'
 import { DashboardLayout } from '../Layout/DashboardLayout'
 import {
   filterSentencesByCategories,
@@ -12,18 +10,11 @@ import {
 } from '../../lib/sentenceCategories'
 
 interface Props {
-  onStartSession: (
-    selectedSentences: Sentence[],
-    sourceSentences: Sentence[],
-    count: number,
-    categories: string[],
-  ) => void
   onLogout: () => void
   userName: string
 }
 
 export function SentenceManager({
-  onStartSession,
   onLogout,
   userName,
 }: Props) {
@@ -37,7 +28,6 @@ export function SentenceManager({
   } = useSentenceStore()
   const [showForm, setShowForm] = useState(false)
   const [showCsv, setShowCsv] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [filterCategories, setFilterCategories] = useState<string[]>([])
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false)
   const [bulkDeleteFeedback, setBulkDeleteFeedback] = useState<{
@@ -113,13 +103,6 @@ export function SentenceManager({
             className="app-button app-button-subtle"
           >
             {showCsv ? 'インポートを閉じる' : 'CSV インポート'}
-          </button>
-          <button
-            onClick={() => setShowModal(true)}
-            disabled={sentences.length === 0}
-            className="app-button app-button-primary"
-          >
-            練習開始
           </button>
         </>
       )}
@@ -239,16 +222,6 @@ export function SentenceManager({
         </>
       )}
 
-      {showModal && (
-        <StartSessionModal
-          sentences={sentences}
-          onStart={(selectedSentences, sourceSentences, count, categories) => {
-            setShowModal(false)
-            onStartSession(selectedSentences, sourceSentences, count, categories)
-          }}
-          onClose={() => setShowModal(false)}
-        />
-      )}
     </DashboardLayout>
   )
 }
