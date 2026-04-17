@@ -143,7 +143,16 @@ export function WeakWordManager({
       onLogout={onLogout}
       actions={!isMockMode ? (
         <>
-          {tabSwitcher}
+          <button
+            onClick={() => void handleWeakWordClick()}
+            disabled={startingWeakWordSession}
+            className="app-button app-button-primary"
+          >
+            {startingWeakWordSession && (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            )}
+            練習開始
+          </button>
           <label className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#d6e3ed] bg-white px-4 py-2 text-sm text-slate-600">
             <input
               type="checkbox"
@@ -153,23 +162,6 @@ export function WeakWordManager({
             />
             攻略済みを隠す
           </label>
-          <button
-            onClick={() => void handleWeakWordClick()}
-            disabled={startingWeakWordSession}
-            className="app-button app-button-primary"
-          >
-            {startingWeakWordSession && (
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-            )}
-            苦手ワード練習
-          </button>
-          <button
-            onClick={() => void loadWeakWords()}
-            disabled={loadingWeakWords}
-            className="app-button app-button-subtle"
-          >
-            再読込
-          </button>
         </>
       ) : undefined}
     >
@@ -178,6 +170,8 @@ export function WeakWordManager({
           {practiceError}
         </div>
       )}
+
+      {tabSwitcher && <div className="mb-2">{tabSwitcher}</div>}
 
       {isMockMode ? (
         <div className="app-card-soft px-4 py-6 text-sm text-slate-500">

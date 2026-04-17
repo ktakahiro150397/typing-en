@@ -189,22 +189,6 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
     navigate('/practice')
   }, [navigate])
 
-  const handleStartSentenceSession = useCallback((
-    selectedSentences: Sentence[],
-    sourceSentences: Sentence[],
-    count: number,
-    categories: string[],
-  ) => {
-    beginSession({
-      mode: 'sentence',
-      items: mapSentencesToSessionItems(selectedSentences),
-      returnPath: '/library',
-      sourceSentences,
-      sessionCount: count,
-      sessionCategories: categories,
-    })
-  }, [beginSession])
-
   const handleStartPublicPracticeSession = useCallback(async () => {
     await pendingSaveRef.current
 
@@ -405,6 +389,16 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         element={(
           <HomeScreen
             onStartPracticeSession={handleStartPublicPracticeSession}
+            onStartSessionWithModal={(selectedSentences, sourceSentences, count, categories) => {
+              beginSession({
+                mode: 'sentence',
+                items: mapSentencesToSessionItems(selectedSentences),
+                returnPath: '/',
+                sourceSentences,
+                sessionCount: count,
+                sessionCategories: categories,
+              })
+            }}
             onStartWeakWordSession={handleStartWeakWordSession}
             onStartFingeringSession={handleStartFingeringSession}
             isMockMode={isMockMode}
@@ -423,7 +417,6 @@ function AppRouter({ user, token, authError, isMockMode, onLogout }: AppRouterPr
         path="/library"
         element={user?.isAdmin ? (
           <SentenceManager
-            onStartSession={handleStartSentenceSession}
             onLogout={handleLogout}
             userName={user.name}
           />

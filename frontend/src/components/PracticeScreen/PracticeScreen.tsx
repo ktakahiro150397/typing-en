@@ -121,7 +121,6 @@ export function PracticeScreen({
     return () => window.removeEventListener('keydown', handleEscape)
   }, [onAbort])
 
-  const prevText = currentIndex > 0 ? texts[currentIndex - 1] : null
   const nextText = currentIndex < texts.length - 1 ? texts[currentIndex + 1] : null
   const currentTranslation = mode === 'sentence'
     ? sessionItems[currentIndex]?.translation?.trim() || null
@@ -260,14 +259,12 @@ export function PracticeScreen({
       </header>
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center gap-4 px-5 py-8 lg:px-8">
-        <div className="app-card-soft flex min-h-[64px] items-center px-5 py-4">
-          {prevText && (
-            <div className="truncate font-mono text-sm text-slate-400 line-through">{prevText}</div>
-          )}
-        </div>
-
-        <div className={`app-card w-full p-6 shadow-[0_4px_12px_rgba(15,23,42,0.08)] ring-2 transition-colors sm:p-8 ${lockRemaining > 0 ? 'ring-rose-300' : 'ring-[#d6e3ed]'}`}>
-          <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="app-chip app-chip-info">{currentIndex + 1} / {totalCount}</div>
+          <div className="app-chip app-chip-danger">ミス {sessionMisses}</div>
+          <div className="app-chip app-chip-info">
+            penalty {activeSettings.missLockMs}ms / {activeSettings.penaltyResume === 'word' ? 'word' : 'current'}
+          </div>
         </div>
 
         {currentTranslation && (
@@ -276,6 +273,10 @@ export function PracticeScreen({
             <p className="mt-2 text-lg font-semibold leading-relaxed text-slate-900">{currentTranslation}</p>
           </div>
         )}
+
+        <div className={`app-card w-full min-h-[180px] p-6 shadow-[0_4px_12px_rgba(15,23,42,0.08)] ring-2 transition-colors sm:p-8 ${lockRemaining > 0 ? 'ring-rose-300' : 'ring-[#d6e3ed]'}`}>
+          <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
+        </div>
 
         {mode !== 'word_drill' && (
           <div className="min-h-[32px]">

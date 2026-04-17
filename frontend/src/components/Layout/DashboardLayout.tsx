@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useAuthStore } from '../../stores/authStore'
 
 interface Props {
   title: string
@@ -26,12 +27,14 @@ export function DashboardLayout({
   subtitle,
   userName,
   isAuthenticated,
-  isAdmin = false,
+  isAdmin: isAdminProp = false,
   onLogout,
   actions,
   children,
 }: Props) {
+  const storeUser = useAuthStore((state) => state.user)
   const signedIn = isAuthenticated ?? Boolean(userName)
+  const showLibrary = isAdminProp || Boolean(storeUser?.isAdmin)
 
   return (
     <div className="app-page flex flex-col">
@@ -60,7 +63,7 @@ export function DashboardLayout({
                     </NavLink>
                   </>
                 )}
-                {signedIn && isAdmin && (
+                {signedIn && showLibrary && (
                   <NavLink to="/library" className={navLinkClassName}>
                     ライブラリ
                   </NavLink>

@@ -4,3 +4,7 @@ import { apiFetch } from './api'
 export function fetchPublicPracticeSentences(count = 5): Promise<SentenceList> {
   return apiFetch<SentenceList>(`/api/public/sentences?count=${count}`)
 }
+
+export function fetchPublicSentencesBrowse(): Promise<SentenceList> {
+  return apiFetch<SentenceList>('/api/public/sentences/browse')
+}

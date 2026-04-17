@@ -73,7 +73,6 @@ export function FingeringManager({
       onLogout={onLogout}
       actions={!isMockMode ? (
         <>
-          {tabSwitcher}
           <button
             onClick={() => void handleStartSession()}
             disabled={startingSession || bigramCount === 0}
@@ -82,14 +81,7 @@ export function FingeringManager({
             {startingSession && (
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             )}
-            練習する
-          </button>
-          <button
-            onClick={() => void loadBigrams()}
-            disabled={loadingBigrams}
-            className="app-button app-button-subtle"
-          >
-            再読込
+            練習開始
           </button>
         </>
       ) : undefined}
@@ -99,6 +91,8 @@ export function FingeringManager({
           {practiceError}
         </div>
       )}
+
+      {tabSwitcher && <div className="mb-2">{tabSwitcher}</div>}
 
       {isMockMode ? (
         <div className="app-card-soft px-4 py-6 text-sm text-slate-500">
