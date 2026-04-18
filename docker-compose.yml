@@ -23,7 +23,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL}
@@ -31,6 +31,7 @@ services:
       FRONTEND_URL: ${FRONTEND_URL}
       PORT: ${PORT}
       AUTH_MOCK: ${AUTH_MOCK:-false}
+      ADMIN_GOOGLE_EMAILS: ${ADMIN_GOOGLE_EMAILS}
     depends_on:
       mysql:
         condition: service_healthy
