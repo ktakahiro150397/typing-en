@@ -114,9 +114,13 @@ model BigramStat {
 }
 
 model UserSettings {
-  id            String @id @default(cuid())
-  userId        String @unique
-  missLockMs    Int    @default(1000)
-  penaltyResume String @default("current")
-  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String  @id @default(cuid())
+  userId        String  @unique
+  missLockMs    Int     @default(1000)
+  penaltyResume String  @default("current")
+  focusMode     Boolean @default(false)
+  focusStart    Int     @default(2)
+  focusEnd      Int     @default(10)
+  focusRevealMs Int     @default(1000)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

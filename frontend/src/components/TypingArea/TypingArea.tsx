@@ -1,13 +1,25 @@
 import { useEffect } from 'react'
 import type { TypingState } from '../../hooks/useTypingEngine'
+import { useFocusReveal } from '../../hooks/useFocusReveal'
+
+const FOCUS_BLUR_AMOUNT = '6px'
+const FOCUS_BLUR_TRANSITION_MS = 250
+
+interface FocusModeSettings {
+  enabled: boolean
+  focusStart: number
+  focusEnd: number
+  focusRevealMs: number
+}
 
 interface Props {
   state: TypingState
   onKey: (key: string) => void
   lockRemaining: number
+  focusMode?: FocusModeSettings
 }
 
-export function TypingArea({ state, onKey, lockRemaining }: Props) {
+export function TypingArea({ state, onKey, lockRemaining, focusMode }: Props) {
   // ブラウザフォーカスで入力受付
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -20,7 +32,7 @@ export function TypingArea({ state, onKey, lockRemaining }: Props) {
 
   return (
     <div className="select-none">
-      <TextDisplay state={state} />
+      <TextDisplay state={state} focusMode={focusMode} />
       <div className="mt-3 flex h-6 items-center justify-end">
         {lockRemaining > 0 && (
           <span className="animate-pulse font-mono text-sm text-rose-600">
@@ -32,8 +44,21 @@ export function TypingArea({ state, onKey, lockRemaining }: Props) {
   )
 }
 
-function TextDisplay({ state }: { state: TypingState }) {
-  const { text, cursor, currentMiss, isComplete } = state
+interface TextDisplayProps {
+  state: TypingState
+  focusMode?: FocusModeSettings
+}
+
+function TextDisplay({ state, focusMode }: TextDisplayProps) {
+  const { text, cursor, currentMiss, isComplete, keyHistory, startedAt } = state
+
+  const isRevealed = useFocusReveal({
+    enabled: focusMode?.enabled ?? false,
+    currentMiss,
+    keyHistory,
+    startedAt,
+    focusRevealMs: focusMode?.focusRevealMs ?? 1000,
+  })
 
   const groups: Array<
     | { type: 'word'; chars: Array<{ char: string; i: number }> }
@@ -66,6 +91,21 @@ function TextDisplay({ state }: { state: TypingState }) {
     return isSpace ? 'text-amber-500/70' : 'text-slate-300'
   }
 
+  const getWordStyle = (wordFirstCharIdx: number, wordLastCharIdx: number): React.CSSProperties => {
+    if (!focusMode?.enabled) return {}
+    if (!startedAt) return {}
+    if (isComplete) return {}
+    if (isRevealed) return {}
+    // Typed words: no blur
+    if (wordLastCharIdx < cursor) return {}
+    // Current word (cursor is within this word): no blur
+    if (wordFirstCharIdx <= cursor && cursor <= wordLastCharIdx) return {}
+    // Focus window: words starting at or before cursor+focusEnd are visible
+    if (wordFirstCharIdx <= cursor + (focusMode.focusEnd)) return {}
+    // Beyond focus window: blur with animation
+    return { filter: `blur(${FOCUS_BLUR_AMOUNT})`, transition: `filter ${FOCUS_BLUR_TRANSITION_MS}ms ease` }
+  }
+
   return (
     <div className="whitespace-pre-wrap font-mono text-[2rem] leading-[1.7] tracking-[0.02em] text-slate-900 sm:text-[2.25rem]">
       {groups.map((group) =>
@@ -74,7 +114,11 @@ function TextDisplay({ state }: { state: TypingState }) {
             ·
           </span>
         ) : (
-          <span key={group.chars[0].i} className="inline-block">
+          <span
+            key={group.chars[0].i}
+            className="inline-block"
+            style={getWordStyle(group.chars[0].i, group.chars[group.chars.length - 1].i)}
+          >
             {group.chars.map(({ char, i }) => (
               <span key={i} className={getCharClass(i, false)}>
                 {char}

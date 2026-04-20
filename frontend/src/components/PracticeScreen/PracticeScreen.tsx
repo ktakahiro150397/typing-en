@@ -275,7 +275,17 @@ export function PracticeScreen({
         )}
 
         <div className={`app-card w-full min-h-[180px] p-6 shadow-[0_4px_12px_rgba(15,23,42,0.08)] ring-2 transition-colors sm:p-8 ${lockRemaining > 0 ? 'ring-rose-300' : 'ring-[#d6e3ed]'}`}>
-          <TypingArea state={engineState} onKey={handleKey} lockRemaining={lockRemaining} />
+          <TypingArea
+            state={engineState}
+            onKey={handleKey}
+            lockRemaining={lockRemaining}
+            focusMode={{
+              enabled: activeSettings.focusMode ?? false,
+              focusStart: activeSettings.focusStart ?? 2,
+              focusEnd: activeSettings.focusEnd ?? 10,
+              focusRevealMs: activeSettings.focusRevealMs ?? 1000,
+            }}
+          />
         </div>
 
         {mode !== 'word_drill' && (
