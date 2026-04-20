@@ -20,36 +20,190 @@
 
 ## セットアップ
 
-### 前提条件
+3つの構成パターンに対応しています。目的に合わせて選択してください。
 
-- Docker / Docker Compose
-- Google Cloud Console でのOAuth 2.0 認証情報
+---
 
-### 手順
+### A. 本番サーバー環境
+
+**前提条件**: Docker / Docker Compose、独自ドメイン、Cloudflare Tunnel、Google OAuth 2.0 認証情報
 
 ```bash
 # 1. リポジトリをクローン
-git clone https://github.com/your-username/typing-en.git
+git clone https://github.com/ktakahiro150397/typing-en.git
 cd typing-en
 
 # 2. 環境変数を設定
 cp .env.example .env
-# .env を編集して以下を設定:
-#   GOOGLE_CLIENT_ID=...
-#   GOOGLE_CLIENT_SECRET=...
-#   JWT_SECRET=...
-#   MYSQL_ROOT_PASSWORD=...
-#   ADMIN_GOOGLE_EMAILS=admin1@gmail.com,admin2@gmail.com
-
-# 3. 起動
-docker compose up -d
-
-# 4. DBマイグレーション
-docker compose exec backend npx prisma migrate deploy
 ```
 
-フロントエンド: http://localhost:5173
+`.env` を編集して以下を設定:
+
+| 変数 | 説明 |
+|---|---|
+| `GOOGLE_CLIENT_ID` | Google Cloud Console で取得 |
+| `GOOGLE_CLIENT_SECRET` | Google Cloud Console で取得 |
+| `GOOGLE_CALLBACK_URL` | `https://api.your-domain.com/auth/google/callback` |
+| `JWT_SECRET` | `openssl rand -hex 32` で生成（32文字以上） |
+| `MYSQL_ROOT_PASSWORD` | 強力なパスワード |
+| `MYSQL_USER` / `MYSQL_PASSWORD` | DBユーザー情報 |
+| `MYSQL_DATABASE` | `typing_en` |
+| `FRONTEND_URL` | `https://your-domain.com` |
+| `ADMIN_GOOGLE_EMAILS` | 管理者Gmailアドレス（カンマ区切り） |
+| `CLOUDFLARE_TUNNEL_TOKEN` | Cloudflare Zero Trust ダッシュボードで取得 |
+
+> **Note**: `DATABASE_URL` は `docker-compose.prod.yml` の `env_file: .env` で読まれます。ホスト名は `mysql`（Dockerサービス名）にしてください。
+> 例: `DATABASE_URL=mysql://typing_user:password@mysql:3306/typing_en`
+
+```bash
+# 3. 起動（ビルド済みイメージを使用）
+docker compose -f docker-compose.prod.yml up -d
+
+# 4. 状態確認
+docker compose -f docker-compose.prod.yml logs -f backend
+```
+
+フロントエンドの `VITE_API_URL` はGitHub Actions Secretとして管理され、ビルド時に埋め込まれます。
+
+---
+
+### B. 開発環境 — 全てコンテナで動作させる場合
+
+**前提条件**: Docker / Docker Compose のみ
+
+```bash
+# 1. リポジトリをクローン
+git clone https://github.com/ktakahiro150397/typing-en.git
+cd typing-en
+
+# 2. 環境変数を設定
+cp .env.example .env
+```
+
+`.env` を最低限以下の内容で設定:
+
+```ini
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+JWT_SECRET=your-jwt-secret-at-least-32-chars
+MYSQL_ROOT_PASSWORD=rootpassword
+MYSQL_DATABASE=typing_en
+MYSQL_USER=typing_user
+MYSQL_PASSWORD=typing_password
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+ADMIN_GOOGLE_EMAILS=your-email@gmail.com
+
+# Google 認証情報なしで動かす場合（任意）— 詳細は下記「AUTH_MOCK モードについて」を参照
+# AUTH_MOCK=true
+# VITE_AUTH_MOCK=true
+```
+
+> **Note**: `docker-compose.yml` はコンテナ内のMySQLに自動接続するため、`DATABASE_URL` の設定は不要です。
+
+```bash
+# 3. 起動（初回はイメージビルドを含む）
+docker compose up -d
+
+# 4. ログ確認
+docker compose logs -f backend
+```
+
+フロントエンド: http://localhost:5173  
 バックエンドAPI: http://localhost:3000
+
+---
+
+### C. 開発環境 — MySQLのみコンテナ、フロント/バックはローカル実行
+
+ホットリロードを活かしたコード編集向けの構成です。
+
+**前提条件**: Docker / Docker Compose + Node.js 22+ + [pnpm](https://pnpm.io/)
+
+```bash
+# pnpm のインストール（未導入の場合）
+npm install -g pnpm
+```
+
+```bash
+# 1. リポジトリをクローン
+git clone https://github.com/ktakahiro150397/typing-en.git
+cd typing-en
+
+# 2. 環境変数を設定
+cp .env.example .env
+```
+
+`.env` を以下の内容で設定:
+
+```ini
+# Google OAuth（AUTH_MOCK=true を使う場合は不要）
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+
+JWT_SECRET=your-jwt-secret-at-least-32-chars
+
+MYSQL_ROOT_PASSWORD=rootpassword
+MYSQL_DATABASE=typing_en
+MYSQL_USER=typing_user
+MYSQL_PASSWORD=typing_password
+
+# ローカル実行では localhost を使用（コンテナ内とは異なる）
+DATABASE_URL=mysql://typing_user:typing_password@localhost:3306/typing_en
+
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+ADMIN_GOOGLE_EMAILS=your-email@gmail.com
+
+# Google 認証情報なしで動かす場合（任意）
+# AUTH_MOCK=true
+```
+
+```bash
+# 3. MySQLコンテナのみ起動
+docker compose up mysql -d
+
+# 4. バックエンドをローカルで起動（別ターミナル）
+cd backend
+pnpm install
+pnpm run dev
+
+# 5. フロントエンドをローカルで起動（別ターミナル）
+cd frontend
+pnpm install
+pnpm run dev
+```
+
+フロントエンド: http://localhost:5173  
+バックエンドAPI: http://localhost:3000
+
+#### AUTH_MOCK モードについて
+
+Google Cloud Console の設定なしにアプリ全体を動かしたい場合に使用するモックフラグです。  
+**バックエンドとフロントエンドの両方で設定が必要です。**
+
+| 場所 | 変数 | 値 |
+|---|---|---|
+| `.env`（バックエンド用） | `AUTH_MOCK` | `true` |
+| `frontend/.env.local`（フロントエンド用） | `VITE_AUTH_MOCK` | `true` |
+
+**Section B（全コンテナ）の場合**: `.env` に両方を設定すると `docker-compose.yml` が各コンテナへ自動的に渡します。
+
+**Section C（ローカル実行）の場合**: `.env` の `AUTH_MOCK=true` に加え、以下のファイルを作成してください。
+
+```ini
+# frontend/.env.local
+VITE_AUTH_MOCK=true
+```
+
+有効にすると:
+- フロントエンドが Google ログイン画面を表示せず、自動的にダミーユーザー（`mock@example.com`）でログイン状態になります
+- バックエンドが `mock-token` を有効な認証トークンとして扱い、ダミーユーザーへのAPIアクセスを許可します
+- ダミーユーザーには管理者権限が付与されます（管理機能の動作確認が可能）
+
+> **注意**: 本番環境では絶対に有効にしないでください。
 
 ---
 
