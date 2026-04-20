@@ -94,6 +94,10 @@ MYSQL_PASSWORD=typing_password
 PORT=3000
 FRONTEND_URL=http://localhost:5173
 ADMIN_GOOGLE_EMAILS=your-email@gmail.com
+
+# Google 認証情報なしで動かす場合（任意）— 詳細は下記「AUTH_MOCK モードについて」を参照
+# AUTH_MOCK=true
+# VITE_AUTH_MOCK=true
 ```
 
 > **Note**: `docker-compose.yml` はコンテナ内のMySQLに自動接続するため、`DATABASE_URL` の設定は不要です。
@@ -177,7 +181,29 @@ pnpm run dev
 
 #### AUTH_MOCK モードについて
 
-`AUTH_MOCK=true` を `.env` に設定すると Google OAuth 認証をスキップし、固定のダミーユーザーとしてログイン状態になります。Google Cloud Console での設定なしにアプリ全体を動かしたい場合に便利です。
+Google Cloud Console の設定なしにアプリ全体を動かしたい場合に使用するモックフラグです。  
+**バックエンドとフロントエンドの両方で設定が必要です。**
+
+| 場所 | 変数 | 値 |
+|---|---|---|
+| `.env`（バックエンド用） | `AUTH_MOCK` | `true` |
+| `frontend/.env.local`（フロントエンド用） | `VITE_AUTH_MOCK` | `true` |
+
+**Section B（全コンテナ）の場合**: `.env` に両方を設定すると `docker-compose.yml` が各コンテナへ自動的に渡します。
+
+**Section C（ローカル実行）の場合**: `.env` の `AUTH_MOCK=true` に加え、以下のファイルを作成してください。
+
+```ini
+# frontend/.env.local
+VITE_AUTH_MOCK=true
+```
+
+有効にすると:
+- フロントエンドが Google ログイン画面を表示せず、自動的にダミーユーザー（`mock@example.com`）でログイン状態になります
+- バックエンドが `mock-token` を有効な認証トークンとして扱い、ダミーユーザーへのAPIアクセスを許可します
+- ダミーユーザーには管理者権限が付与されます（管理機能の動作確認が可能）
+
+> **注意**: 本番環境では絶対に有効にしないでください。
 
 ---
 
