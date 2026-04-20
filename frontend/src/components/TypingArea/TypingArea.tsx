@@ -2,6 +2,9 @@ import { useEffect } from 'react'
 import type { TypingState } from '../../hooks/useTypingEngine'
 import { useFocusReveal } from '../../hooks/useFocusReveal'
 
+const FOCUS_BLUR_AMOUNT = '6px'
+const FOCUS_BLUR_TRANSITION_MS = 250
+
 interface FocusModeSettings {
   enabled: boolean
   focusStart: number
@@ -100,7 +103,7 @@ function TextDisplay({ state, focusMode }: TextDisplayProps) {
     // Focus window: words starting at or before cursor+focusEnd are visible
     if (wordFirstCharIdx <= cursor + (focusMode.focusEnd)) return {}
     // Beyond focus window: blur with animation
-    return { filter: 'blur(6px)', transition: 'filter 250ms ease' }
+    return { filter: `blur(${FOCUS_BLUR_AMOUNT})`, transition: `filter ${FOCUS_BLUR_TRANSITION_MS}ms ease` }
   }
 
   return (

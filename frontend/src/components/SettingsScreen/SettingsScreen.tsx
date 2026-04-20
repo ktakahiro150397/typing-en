@@ -289,7 +289,7 @@ export function SettingsScreen({ onLogout, userName }: Props) {
                 </div>
               </label>
 
-              <div className={`space-y-4 ${!focusMode ? 'opacity-50 pointer-events-none' : ''}`}>
+              <div className={`space-y-4 ${!focusMode ? 'opacity-50' : ''}`}>
                 <div className="flex flex-wrap gap-4">
                   <div className="min-w-[140px] flex-1">
                     <label htmlFor="focus-start" className="mb-2 block text-sm font-semibold text-slate-700">
@@ -302,6 +302,7 @@ export function SettingsScreen({ onLogout, userName }: Props) {
                       max={100}
                       step={1}
                       value={focusStart}
+                      disabled={!focusMode}
                       onChange={(event) => {
                         setFocusStart(event.target.value)
                         setSuccessMessage(null)
@@ -321,6 +322,7 @@ export function SettingsScreen({ onLogout, userName }: Props) {
                       max={200}
                       step={1}
                       value={focusEnd}
+                      disabled={!focusMode}
                       onChange={(event) => {
                         setFocusEnd(event.target.value)
                         setSuccessMessage(null)
@@ -342,6 +344,7 @@ export function SettingsScreen({ onLogout, userName }: Props) {
                     max={10000}
                     step={100}
                     value={focusRevealMs}
+                    disabled={!focusMode}
                     onChange={(event) => {
                       setFocusRevealMs(event.target.value)
                       setSuccessMessage(null)
